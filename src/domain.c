@@ -88,8 +88,9 @@ void print_domain(void* vd){
 
 	while(domain_can_iterate(d)){
 		value = get_current_value(d);
-		printf("%d\n",value);
+		printf("%d ",value);
 	}
+	printf("\n");
 }
 
 int insert_in_domain(Pdomain d, int* value){

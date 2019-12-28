@@ -35,7 +35,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * \struct variables
  * \brief variables structure
  *
- * \a A variables tructure is a set of variables associated to a domain
+ * \a A variables structure is a set of variables associated to a domain
  *
  */
 typedef struct variables {
@@ -56,6 +56,13 @@ Pvariables new_variables();
  * @return   A NULL pointer;
  */
 Pvariables free_variables(Pvariables v);
+
+/**
+ * This function free the allocated space on the heap for our variables struc.
+ * @param  v The variables struct.
+ * @return   A NULL pointer;
+ */
+void free_variables_bis(void *v);
 
 /**
  * This functions computes the number of variables we have.
@@ -86,7 +93,7 @@ void begin_variables_iteration(Pvariables v);
 
 /**
  * This function iterates over the variables struct until it's empty.
- * @param  v The variabales struct.
+ * @param  v The variables struct.
  * @return 1 if we can iterate, 0 otherwise.
  */
 int variables_can_iterate(Pvariables v);

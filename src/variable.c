@@ -42,6 +42,13 @@ Pvariables free_variables(Pvariables v){
 	return v;
 }
 
+void free_variables_bis(void *vv){
+	Pvariables v = (Pvariables)vv;
+	avl_tree_free_and_node(get_var_dom(v),free_domain_bis);
+	free(v->var_dom_tab);
+	free(v);
+}
+
 unsigned int get_variables_number(Pvariables v){
 	return avl_tree_num_entries(get_var_dom(v));
 }
@@ -102,6 +109,8 @@ int insert_variables(Pvariables v, char* variable, Pdomain d){
 
 int remove_variables(Pvariables v, char* variable){
 	PAVLTree var_dom = get_var_dom(v);
+	Pdomain d = query_variables(v,variable);
+	free_domain_bis(d);
 	int res = avl_tree_remove(var_dom,variable);
 
 	return res;

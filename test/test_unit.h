@@ -70,6 +70,22 @@ void test_remove_from_variables(void);
 void test_remove_value(void);
 
 /* ########################################################## */
+/* ##################### TUPLE.C TESTS ###################### */
+/* ########################################################## */
+
+void test_new_tuples(void);
+
+void test_tuples_size(void);
+
+void test_tuples_iteration(void);
+
+void test_insert_in_tuples(void);
+
+void test_remove_from_tuples(void);
+
+void test_remove_content(void);
+
+/* ########################################################## */
 /* ################## COMPARE_TUPLE.C TESTS ################# */
 /* ########################################################## */
 

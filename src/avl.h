@@ -292,7 +292,7 @@ unsigned int avl_tree_num_entries(AVLTree *tree);
 
 AVLTreeValue avl_tree_change_value(AVLTree *tree, AVLTreeKey key, AVLTreeValue new_value);
 
-void print_avl_tree(AVLTree *tree, void (*f)(AVLTreeValue));
+void print_avl_tree(AVLTree *tree, void (*f1)(AVLTreeValue), void (*f2)(AVLTreeValue));
 
 #ifdef __cplusplus
 }

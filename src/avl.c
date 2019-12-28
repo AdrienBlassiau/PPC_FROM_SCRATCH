@@ -641,6 +641,30 @@ static void avl_tree_to_array_add_subtree(AVLTreeNode *subtree,
 	                              array, index);
 }
 
+static void avl_tree_to_array_add_subtree_2(AVLTreeNode *subtree,
+                                         AVLTreeValue *array,
+                                         int *index)
+{
+	if (subtree == NULL) {
+		return;
+	}
+
+	/* Add left subtree first */
+
+	avl_tree_to_array_add_subtree_2(subtree->children[AVL_TREE_NODE_LEFT],
+	                              array, index);
+
+	/* Add this node */
+
+	array[*index] = subtree->key;
+	++*index;
+
+	/* Finally add right subtree */
+
+	avl_tree_to_array_add_subtree_2(subtree->children[AVL_TREE_NODE_RIGHT],
+	                              array, index);
+}
+
 AVLTreeValue *avl_tree_to_array(AVLTree *tree)
 {
 	AVLTreeValue *array;
@@ -663,15 +687,39 @@ AVLTreeValue *avl_tree_to_array(AVLTree *tree)
 	return array;
 }
 
-void print_avl_tree(AVLTree *tree, void (*f)(AVLTreeValue))
+AVLTreeValue *avl_tree_to_array_2(AVLTree *tree)
+{
+	AVLTreeValue *array;
+	int index;
+
+	/* Allocate the array */
+
+	array = malloc(sizeof(AVLTreeValue) * tree->num_nodes);
+
+	if (array == NULL) {
+		return NULL;
+	}
+
+	index = 0;
+
+	/* Add all keys */
+
+	avl_tree_to_array_add_subtree_2(tree->root_node, array, &index);
+
+	return array;
+}
+
+void print_avl_tree(AVLTree *tree, void (*f1)(AVLTreeValue),  void (*f2)(AVLTreeValue))
 {
 	AVLTreeValue *array = avl_tree_to_array(tree);
 	int i;
 	int avl_length = avl_tree_num_entries(tree);
 
-	for(i = 0; i < avl_length; i++)
-	{
-		f(array[i]);
+	AVLTreeValue *key_array = avl_tree_to_array_2(tree);
+
+	for(i = 0; i < avl_length; i++){
+		f1(key_array[i]);
+		f2(array[i]);
 	}
 	free(array);
 }

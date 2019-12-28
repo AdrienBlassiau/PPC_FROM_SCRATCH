@@ -25,8 +25,9 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "../src/include.h"
 #include "../src/domain.h"
 #include "../src/variable.h"
+#include "../src/tuple.h"
 #include "../src/compare_tuple.h"
-#include "../src/constraint.h"
+// #include "../src/constraint.h"
 
 int setup(void)  { return 0; }
 int teardown(void) { return 0; }
@@ -63,7 +64,20 @@ int init_test(void){
 
 	CU_pSuite suite3 = CU_add_suite("tuple_test",setup,teardown);
 
-	if((NULL==CU_add_test(suite3, "Test compare tuple", test_compare_tuple)))
+	if((NULL==CU_add_test(suite3, "Test new tuples", test_new_tuples)||
+		(NULL==CU_add_test(suite3, "Test tup size", test_tuples_size))||
+		(NULL==CU_add_test(suite3, "Test tup it", test_tuples_iteration))||
+		(NULL==CU_add_test(suite3, "Test insert", test_insert_in_tuples))||
+		(NULL==CU_add_test(suite3, "Test rm", test_remove_from_tuples))||
+		(NULL==CU_add_test(suite3, "Test rm content", test_remove_content))))
+	{
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
+	CU_pSuite suite4 = CU_add_suite("tuple_test",setup,teardown);
+
+	if((NULL==CU_add_test(suite4, "Test compare tuple", test_compare_tuple)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -229,14 +243,16 @@ void test_variables_size(void){
 
 	Pdomain d1 = new_domain();
 	int tab1[6] = {1,2,5,6,12,23};
-	for (i = 0; i < 6; ++i) insert_in_domain(d1,&tab1[i]);
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d1,&tab1[i]);
 
-		Pdomain d2 = new_domain();
+	Pdomain d2 = new_domain();
 	int tab2[6] = {1,2,5,6,12,23};
-	for (i = 0; i < 6; ++i) insert_in_domain(d2,&tab2[i]);
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d2,&tab2[i]);
 
 
-		char var_name1[256] = "test1";
+	char var_name1[256] = "test1";
 	insert_variables(v,var_name1,d1);
 
 	char var_name2[256] = "test2";
@@ -256,17 +272,20 @@ void test_variables_iteration(void){
 
 	Pdomain d1 = new_domain();
 	int tab1[4] = {1,2,5,6};
-	for (i = 0; i < 4; ++i) insert_in_domain(d1,&tab1[i]);
+	for (i = 0; i < 4; ++i)
+		insert_in_domain(d1,&tab1[i]);
 
-		Pdomain d2 = new_domain();
+	Pdomain d2 = new_domain();
 	int tab2[2] = {3,8};
-	for (i = 0; i < 2; ++i) insert_in_domain(d2,&tab2[i]);
+	for (i = 0; i < 2; ++i)
+		insert_in_domain(d2,&tab2[i]);
 
-		Pdomain d3 = new_domain();
+	Pdomain d3 = new_domain();
 	int tab3[6] = {6,7,8,9,10,11};
-	for (i = 0; i < 6; ++i) insert_in_domain(d3,&tab3[i]);
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d3,&tab3[i]);
 
-		char var_name1[256] = "test1";
+	char var_name1[256] = "test1";
 	insert_variables(v,var_name1,d1);
 
 	char var_name2[256] = "test2";
@@ -300,17 +319,20 @@ void test_insert_in_variables(void){
 
 	Pdomain d1 = new_domain();
 	int tab1[4] = {1,2,5,6};
-	for (i = 0; i < 4; ++i) insert_in_domain(d1,&tab1[i]);
+	for (i = 0; i < 4; ++i)
+		insert_in_domain(d1,&tab1[i]);
 
-		Pdomain d2 = new_domain();
+	Pdomain d2 = new_domain();
 	int tab2[2] = {3,8};
-	for (i = 0; i < 2; ++i) insert_in_domain(d2,&tab2[i]);
+	for (i = 0; i < 2; ++i)
+		insert_in_domain(d2,&tab2[i]);
 
-		Pdomain d3 = new_domain();
+	Pdomain d3 = new_domain();
 	int tab3[6] = {6,7,8,9,10,11};
-	for (i = 0; i < 6; ++i) insert_in_domain(d3,&tab3[i]);
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d3,&tab3[i]);
 
-		char var_name1[256] = "test1";
+	char var_name1[256] = "test1";
 	insert_variables(v,var_name1,d1);
 
 	char var_name2[256] = "test2";
@@ -336,17 +358,20 @@ void test_remove_from_variables(void){
 
 	Pdomain d1 = new_domain();
 	int tab1[4] = {1,2,5,6};
-	for (i = 0; i < 4; ++i) insert_in_domain(d1,&tab1[i]);
+	for (i = 0; i < 4; ++i)
+		insert_in_domain(d1,&tab1[i]);
 
-		Pdomain d2 = new_domain();
+	Pdomain d2 = new_domain();
 	int tab2[2] = {3,8};
-	for (i = 0; i < 2; ++i) insert_in_domain(d2,&tab2[i]);
+	for (i = 0; i < 2; ++i)
+		insert_in_domain(d2,&tab2[i]);
 
-		Pdomain d3 = new_domain();
+	Pdomain d3 = new_domain();
 	int tab3[6] = {6,7,8,9,10,11};
-	for (i = 0; i < 6; ++i) insert_in_domain(d3,&tab3[i]);
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d3,&tab3[i]);
 
-		char var_name1[256] = "test1";
+	char var_name1[256] = "test1";
 	insert_variables(v,var_name1,d1);
 
 	char var_name2[256] = "test2";
@@ -382,7 +407,6 @@ void test_remove_from_variables(void){
 
 	size = get_variables_number(v);
 	CU_ASSERT_EQUAL(size,0);
-
 
 	free_variables(v);
 }
@@ -423,7 +447,240 @@ void test_remove_value(void){
 
 	CU_ASSERT_EQUAL(size,5);
 
-	free_variables(v);
+	free_variables_bis(v);
+}
+
+/* ########################################################## */
+/* ##################### TUPLE.C TESTS ###################### */
+/* ########################################################## */
+
+void test_new_tuples(void){
+
+	Ptuples t = new_tuples();
+
+	CU_ASSERT_NOT_EQUAL(t,NULL);
+
+	free_tuples(t);
+}
+
+void test_tuples_size(void){
+	int i;
+	Ptuples t = new_tuples();
+	int size = get_tuples_number(t);
+
+	CU_ASSERT_EQUAL(size,0);
+
+	Pdomain d1 = new_domain();
+	int tab1[6] = {1,2,5,6,12,23};
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d1,&tab1[i]);
+
+	Pdomain d2 = new_domain();
+	int tab2[6] = {1,2,5,6,12,23};
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d2,&tab2[i]);
+
+
+	int content1 = 1;
+	insert_tuples(t,&content1,d1);
+
+	int content2 = 2;
+	insert_tuples(t,&content2,d2);
+
+	size = get_tuples_number(t);
+	CU_ASSERT_EQUAL(size,2);
+
+	free_tuples(t);
+}
+
+void test_tuples_iteration(void){
+	int i;
+	Pdomain value;
+	Ptuples t = new_tuples();
+	int data_size[3] = {4,2,6};
+
+	Pdomain d1 = new_domain();
+	int tab1[4] = {1,2,5,6};
+	for (i = 0; i < 4; ++i)
+		insert_in_domain(d1,&tab1[i]);
+
+	Pdomain d2 = new_domain();
+	int tab2[2] = {3,8};
+	for (i = 0; i < 2; ++i)
+		insert_in_domain(d2,&tab2[i]);
+
+	Pdomain d3 = new_domain();
+	int tab3[6] = {6,7,8,9,10,11};
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d3,&tab3[i]);
+
+	int content1 = 1;
+	insert_tuples(t,&content1,d1);
+
+	int content2 = 2;
+	insert_tuples(t,&content2,d2);
+
+	int content3 = 3;
+	insert_tuples(t,&content3,d3);
+
+	CU_ASSERT_EQUAL(get_tuple_iterator(t),0);
+	begin_tuples_iteration(t);
+	CU_ASSERT_EQUAL(get_tuple_iterator(t),0);
+
+	int size = get_tuples_number(t);
+	CU_ASSERT_EQUAL(size,3);
+
+	i = 0;
+	while(tuples_can_iterate(t)){
+		value = get_tuple_current_value(t);
+		CU_ASSERT_EQUAL(get_domain_size(value),data_size[i]);
+		i++;
+	};
+	CU_ASSERT_EQUAL(get_tuple_iterator(t),0);
+
+	free_tuples(t);
+}
+
+void test_insert_in_tuples(void){
+	int i;
+	Ptuples t = new_tuples();
+	int data_size[3] = {4,2,6};
+
+	Pdomain d1 = new_domain();
+	int tab1[4] = {1,2,5,6};
+	for (i = 0; i < 4; ++i)
+		insert_in_domain(d1,&tab1[i]);
+
+	Pdomain d2 = new_domain();
+	int tab2[2] = {3,8};
+	for (i = 0; i < 2; ++i)
+		insert_in_domain(d2,&tab2[i]);
+
+	Pdomain d3 = new_domain();
+	int tab3[6] = {6,7,8,9,10,11};
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d3,&tab3[i]);
+
+	int content1 = 1;
+	insert_tuples(t,&content1,d1);
+
+	int content2 = 2;
+	insert_tuples(t,&content2,d2);
+
+	int content3 = 3;
+	insert_tuples(t,&content3,d3);
+
+	Pdomain d11 = query_tuples(t,&content1);
+	CU_ASSERT_EQUAL(get_domain_size(d11),data_size[0]);
+	Pdomain d12 = query_tuples(t,&content2);
+	CU_ASSERT_EQUAL(get_domain_size(d12),data_size[1]);
+	Pdomain d13 = query_tuples(t,&content3);
+	CU_ASSERT_EQUAL(get_domain_size(d13),data_size[2]);
+
+	free_tuples(t);
+}
+
+void test_remove_from_tuples(void){
+	int i,size;
+	Ptuples t = new_tuples();
+	int data_size[3] = {4,2,6};
+
+	Pdomain d1 = new_domain();
+	int tab1[4] = {1,2,5,6};
+	for (i = 0; i < 4; ++i)
+		insert_in_domain(d1,&tab1[i]);
+
+	Pdomain d2 = new_domain();
+	int tab2[2] = {3,8};
+	for (i = 0; i < 2; ++i)
+		insert_in_domain(d2,&tab2[i]);
+
+	Pdomain d3 = new_domain();
+	int tab3[6] = {6,7,8,9,10,11};
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d3,&tab3[i]);
+
+	int content1 = 1;
+	insert_tuples(t,&content1,d1);
+
+	int content2 = 2;
+	insert_tuples(t,&content2,d2);
+
+	int content3 = 3;
+	insert_tuples(t,&content3,d3);
+
+	Pdomain d11 = query_tuples(t,&content1);
+	CU_ASSERT_EQUAL(get_domain_size(d11),data_size[0]);
+	Pdomain d12 = query_tuples(t,&content2);
+	CU_ASSERT_EQUAL(get_domain_size(d12),data_size[1]);
+	Pdomain d13 = query_tuples(t,&content3);
+	CU_ASSERT_EQUAL(get_domain_size(d13),data_size[2]);
+
+	size = get_tuples_number(t);
+	print_tuples(t);
+	CU_ASSERT_EQUAL(size,3);
+
+	remove_tuples(t,&content3);
+	CU_ASSERT_EQUAL(query_tuples(t,&content3),NULL);
+
+	size = get_tuples_number(t);
+	CU_ASSERT_EQUAL(size,2);
+
+	remove_tuples(t,&content1);
+	CU_ASSERT_EQUAL(query_tuples(t,&content1),NULL);
+
+	size = get_tuples_number(t);
+	CU_ASSERT_EQUAL(size,1);
+
+	remove_tuples(t,&content2);
+	CU_ASSERT_EQUAL(query_tuples(t,&content2),NULL);
+
+	size = get_tuples_number(t);
+	CU_ASSERT_EQUAL(size,0);
+
+	free_tuples(t);
+}
+
+void test_remove_content(void){
+	int i,size;
+	Ptuples t = new_tuples();
+
+	Pdomain d1 = new_domain();
+	int tab1[4] = {1,2,5,6};
+	for (i = 0; i < 4; ++i)
+		insert_in_domain(d1,&tab1[i]);
+
+	Pdomain d2 = new_domain();
+	int tab2[2] = {3,8};
+	for (i = 0; i < 2; ++i)
+		insert_in_domain(d2,&tab2[i]);
+
+	Pdomain d3 = new_domain();
+	int tab3[6] = {6,7,8,9,10,11};
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d3,&tab3[i]);
+
+	int content1 = 1;
+	insert_tuples(t,&content1,d1);
+
+	int content2 = 2;
+	insert_tuples(t,&content2,d2);
+
+	int content3 = 3;
+	insert_tuples(t,&content3,d3);
+
+	size = get_tuples_number(t);
+	CU_ASSERT_EQUAL(size,3);
+
+	int val_test = 8;
+	remove_value_of_content_domain(t,&content3,&val_test);
+
+	Pdomain d13 = query_tuples(t,&content3);
+	size = get_domain_size(d13);
+
+	CU_ASSERT_EQUAL(size,5);
+
+	free_tuples_bis(t);
 }
 
 /* ########################################################## */
