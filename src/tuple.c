@@ -23,59 +23,67 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "avl.h"
 #include "compare_int.h"
 
-Ptuples new_tuples(){
-	Ptuples t = (tuples*) malloc(sizeof(tuples));
+Ptuple new_tuple(){
+	Ptuple t = (tuple*) malloc(sizeof(tuple));
 	PAVLTree avl = avl_tree_new((AVLTreeCompareFunc) int_compare);
 
-	t->tup_dom = avl;
-	t->tup_dom_tab = NULL;
+	t->tuples = avl;
+	t->tuples_tab = NULL;
+	t->tuples_key = NULL;
 	t->iterator = 0;
 
 	return t;
 }
 
-Ptuples free_tuples(Ptuples t){
-	avl_tree_free_and_node(get_tup_dom(t),free_domain_bis);
-	free(t->tup_dom_tab);
+Ptuple free_tuple(Ptuple t){
+	avl_tree_free_and_node(get_tuples(t),free_domain_bis);
+	free(t->tuples_tab);
+	free(t->tuples_key);
 	free(t);
 
 	return t;
 }
 
-void free_tuples_bis(void *vt){
-	Ptuples t = (Ptuples)vt;
-	avl_tree_free_and_node(get_tup_dom(t),free_domain_bis);
-	free(t->tup_dom_tab);
+void free_tuple_bis(void *vt){
+	Ptuple t = (Ptuple)vt;
+	avl_tree_free_and_node(get_tuples(t),free_domain_bis);
+	free(t->tuples_tab);
+	free(t->tuples_key);
 	free(t);
 }
 
-unsigned int get_tuples_number(Ptuples t){
-	return avl_tree_num_entries(get_tup_dom(t));
+unsigned int get_tuple_number(Ptuple t){
+	return avl_tree_num_entries(get_tuples(t));
 }
 
-PAVLTree get_tup_dom(Ptuples t){
-	return t->tup_dom;
+PAVLTree get_tuples(Ptuple t){
+	return t->tuples;
 }
 
-void set_tuple_iterator(Ptuples t,unsigned int val){
+void set_tuple_iterator(Ptuple t,unsigned int val){
 	t->iterator = val;
 }
 
-unsigned int get_tuple_iterator(Ptuples t){
+unsigned int get_tuple_iterator(Ptuple t){
 	return t->iterator;
 }
 
-void begin_tuples_iteration(Ptuples t){
-	PAVLTree tup_dom = get_tup_dom(t);
+void begin_tuple_iteration(Ptuple t){
+	free(t->tuples_tab);
+	free(t->tuples_key);
+
+	PAVLTree tuples = get_tuples(t);
 	set_tuple_iterator(t,0);
-	AVLTreeValue * array = avl_tree_to_array(tup_dom);
-	t->tup_dom_tab = array;
+	AVLTreeValue * array1 = avl_tree_to_array(tuples);
+	AVLTreeValue * array2 = avl_tree_to_array_2(tuples);
+	t->tuples_tab = array1;
+	t->tuples_key = array2;
 }
 
-int tuples_can_iterate(Ptuples t){
+int tuple_can_iterate(Ptuple t){
 	unsigned int iterator = get_tuple_iterator(t);
 
-	if (iterator < get_tuples_number(t)){
+	if (iterator < get_tuple_number(t)){
 		return 1;
 	}
 	else{
@@ -84,56 +92,75 @@ int tuples_can_iterate(Ptuples t){
 	}
 }
 
-Pdomain get_tuple_current_value(Ptuples t){
+int get_tuple_current_key(Ptuple t){
 	int iterator = get_tuple_iterator(t);
 
-	AVLTreeValue* data_list = t->tup_dom_tab;
+	AVLTreeValue* data_list = t->tuples_key;
+	int* data = (int*)(data_list[iterator]);
+
+	return *data;
+}
+
+Pdomain get_tuple_current_value(Ptuple t){
+	int iterator = get_tuple_iterator(t);
+
+	AVLTreeValue* data_list = t->tuples_tab;
 	Pdomain data = (Pdomain)(data_list[iterator]);
 
-	set_tuple_iterator(t,iterator+1);
 	return data;
 }
 
+void get_next_tuple(Ptuple t){
+	int iterator = get_tuple_iterator(t);
+
+	set_tuple_iterator(t,iterator+1);
+}
+
 void print_content(void *vc){
-	int c= (Ptuples) vc;
-	printf("%d -> \n",c);
+	int *c = (int*) vc;
+	printf("%d -> ",*c);
 }
 
-void print_tuples(void *vt){
-	Ptuples t = (Ptuples) vt;
-	print_avl_tree(get_tup_dom(t),print_domain,print_content);
+void print_tuple(void *vt){
+	Ptuple t = (Ptuple) vt;
+	print_avl_tree(get_tuples(t),print_domain,print_content);
 }
 
-int insert_tuples(Ptuples t, int* content, Pdomain d){
-	PAVLTree tup_dom = get_tup_dom(t);
-	AVLTreeNode *res = avl_tree_insert(tup_dom,content,d);
+int insert_tuple(Ptuple t, int* content, Pdomain d){
+	PAVLTree tuples = get_tuples(t);
+	AVLTreeNode *res = avl_tree_insert(tuples,content,d);
 	if (res == NULL){
 		return 0;
 	}
 	return 1;
 }
 
-int remove_tuples(Ptuples t, int* content){
-	PAVLTree tup_dom = get_tup_dom(t);
-	Pdomain d = query_tuples(t,content);
-	free_domain_bis(d);
-	int res = avl_tree_remove(tup_dom,content);
+int remove_tuple(Ptuple t, int* content){
+	PAVLTree tuples = get_tuples(t);
+
+	Pdomain d = query_tuple(t,content);
+
+	if (d != NULL){
+		free_domain_bis(d);
+	}
+
+	int res = avl_tree_remove(tuples,content);
 
 	return res;
 }
 
-Pdomain remove_value_of_content_domain(Ptuples t, int* content, int* value){
-	PAVLTree tup_dom = get_tup_dom(t);
-	Pdomain d = query_tuples(t,content);
+Pdomain remove_value_of_content_domain(Ptuple t, int* content, int* value){
+	PAVLTree tuples = get_tuples(t);
+	Pdomain d = query_tuple(t,content);
 	remove_from_domain(d,value);
-	Pdomain res = avl_tree_change_value(tup_dom,content,d);
+	Pdomain res = avl_tree_change_value(tuples,content,d);
 
 	return res;
 }
 
-Pdomain query_tuples(Ptuples t, int* content){
-	PAVLTree tup_dom = get_tup_dom(t);
-	Pdomain d =  avl_tree_lookup(tup_dom,content);
+Pdomain query_tuple(Ptuple t, int* content){
+	PAVLTree tuples = get_tuples(t);
+	Pdomain d =  avl_tree_lookup(tuples,content);
 
 	return d;
 }

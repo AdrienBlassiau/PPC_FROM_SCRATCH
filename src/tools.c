@@ -21,6 +21,10 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "include.h"
 #include "tools.h"
 
+void print_string(void *vs){
+	char *s = (char*) vs;
+	printf("%s -> \n",s);
+}
 
 void print_matrix(int** m, int size){
 	int i,j;

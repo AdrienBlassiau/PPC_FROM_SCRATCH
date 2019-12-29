@@ -33,100 +33,114 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "domain.h"
 
 /**
- * \struct tuples
- * \brief tuples structure
+ * \struct tuple
+ * \brief tuple structure
  *
- * \a A tuples structure is a set of tuples associated to a domain
+ * \a A tuple structure is a set of tuple associated to a domain
  *
  */
-typedef struct tuples {
-  PAVLTree tup_dom;
+typedef struct tuple {
+  PAVLTree tuples;
   unsigned int iterator;
-  AVLTreeValue *tup_dom_tab;
-} tuples, *Ptuples;
+  AVLTreeValue *tuples_tab;
+  AVLTreeValue *tuples_key;
+} tuple, *Ptuple;
 
 /**
- * This function creates a new tuples list.
+ * This function creates a new tuple list.
  * @return The function returns a new variable list.
  */
-Ptuples new_tuples();
+Ptuple new_tuple();
 
 /**
- * This function free the allocated space on the heap for our tuples struc.
- * @param  t The tuples struct.
+ * This function free the allocated space on the heap for our tuple struc.
+ * @param  t The tuple struct.
  * @return   A NULL pointer;
  */
-Ptuples free_tuples(Ptuples t);
+Ptuple free_tuple(Ptuple t);
 
 /**
- * This function free the allocated space on the heap for our tuples struc.
- * @param  t The tuples struct.
+ * This function free the allocated space on the heap for our tuple struc.
+ * @param  t The tuple struct.
  * @return   A NULL pointer;
  */
-void free_tuples_bis(void *vt);
+void free_tuple_bis(void *vt);
 
 /**
- * This functions computes the number of tuples we have.
- * @param  t The tuples struct.
- * @return   The number of tuples.
+ * This functions computes the number of tuple we have.
+ * @param  t The tuple struct.
+ * @return   The number of tuple.
  */
-unsigned int get_tuples_number(Ptuples t);
+unsigned int get_tuple_number(Ptuple t);
 
 /**
- * This function returns the domains of all tuples.
- * @param  t The tuples struct.
- * @return   The domain of all tuples
+ * This function returns the domains of all tuple.
+ * @param  t The tuple struct.
+ * @return   The domain of all tuple
  */
-PAVLTree get_tup_dom(Ptuples t);
+PAVLTree get_tuples(Ptuple t);
 
 /**
- * This function set the tuples struc iterator.
- * @param v   The tuples struct.
+ * This function set the tuple struc iterator.
+ * @param v   The tuple struct.
  * @param val The value of the iterator.
  */
-void set_tuple_iterator(Ptuples t, unsigned int val);
+void set_tuple_iterator(Ptuple t, unsigned int val);
 
 /**
- * This function begins the tuples list iterations.
- * @param v The tuples struct.
+ * This function begins the tuple list iterations.
+ * @param v The tuple struct.
  */
-void begin_tuples_iteration(Ptuples t);
+void begin_tuple_iteration(Ptuple t);
 
 /**
- * This function iterates over the tuples struct until it's empty.
- * @param  t The tuples struct.
+ * This function iterates over the tuple struct until it's empty.
+ * @param  t The tuple struct.
  * @return 1 if we can iterate, 0 otherwise.
  */
-int tuples_can_iterate(Ptuples t);
+int tuple_can_iterate(Ptuple t);
 
 /**
  * This function returns the current value pointed by the iterator.
- * @param  t The tuples struct.
+ * @param  t The tuple struct.
  * @return   The domain of the current variable.
  */
-Pdomain get_tuple_current_value(Ptuples t);
+int get_tuple_current_key(Ptuple t);
+
+/**
+ * This function returns the current value pointed by the iterator.
+ * @param  t The tuple struct.
+ * @return   The domain of the current variable.
+ */
+Pdomain get_tuple_current_value(Ptuple t);
+
+/**
+ * This function iterates one more step/
+ * @param v The vrariable structure.
+ */
+void get_next_tuple(Ptuple v);
 
 /**
  * This function returns the value of the iterator.
- * @param  t The tuples struct.
+ * @param  t The tuple struct.
  * @return   The value of the iterator.
  */
-unsigned int get_tuple_iterator(Ptuples t);
+unsigned int get_tuple_iterator(Ptuple t);
 
 /**
- * Thi function prints the tuples struct.
- * @param v The tuples struct.
+ * Thi function prints the tuple struct.
+ * @param v The tuple struct.
  */
-void print_tuples(void *t);
+void print_tuple(void *t);
 
 /**
  * This function inserts the content of a variable and is associated domain.
- * @param  t        The tuples struct.
+ * @param  t        The tuple struct.
  * @param  content  The content name.
  * @param  d        The content domain.
  * @return          1 if success, 0 if the content already exists.
  */
-int insert_tuples(Ptuples t, int* content,  Pdomain d);
+int insert_tuple(Ptuple t, int* content,  Pdomain d);
 
 /**
  * This function removes a content
@@ -134,25 +148,25 @@ int insert_tuples(Ptuples t, int* content,  Pdomain d);
  * @param  variable The content we want to remove.
  * @return          1 if success, 0 if the content do not exist.
  */
-int remove_tuples(Ptuples t, int* content);
+int remove_tuple(Ptuple t, int* content);
 
 /**
  * This function removes a value of a content domain.
- * @param  t        The tuples struct.
+ * @param  t        The tuple struct.
  * @param  content  The content we want to remove a value from its domain.
  * @param  value    The value of the content we want to remove.
  * @return          The new domain.
  */
-Pdomain remove_value_of_content_domain(Ptuples t, int* content, int* value);
+Pdomain remove_value_of_content_domain(Ptuple t, int* content, int* value);
 
 /**
- * This function queries the tuples struct.
- * @param  t       The tuples struct we want to query.
- * @param  content The content we are looking for in the tuples.
+ * This function queries the tuple struct.
+ * @param  t       The tuple struct we want to query.
+ * @param  content The content we are looking for in the tuple.
  * @return         Zero if the variable is not in the struct, non-zero if the
  *                 variable is in the dtruct.
  */
-Pdomain query_tuples(Ptuples t, int* content);
+Pdomain query_tuple(Ptuple t, int* content);
 
 
 #endif

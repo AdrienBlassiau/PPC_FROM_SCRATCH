@@ -27,11 +27,12 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef CONSTRAINT__H
 #define CONSTRAINT__H
 
-#include "avl.h"
+#include "tuple.h"
 #include "domain.h"
+#include "avl.h"
 
 /**
- * \struct constraints
+ * \struct constraint
  * \brief contraints structure
  *
  * \a A constraint structure is a map of map of set of variable
@@ -39,16 +40,20 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 typedef struct constraint {
   PAVLTree constraints;
-  unsigned int iterator;
-  AVLTreeValue *constraints_tab;
+  unsigned int iterator1;
+  unsigned int iterator2;
+  AVLTreeValue *constraint_tab1;
+  AVLTreeValue *constraint_tab2;
+  AVLTreeValue *constraint_key1;
+  AVLTreeValue *constraint_key2;
 } constraint, *Pconstraint;
 
 
 /**
- * This function creates a new constraints list.
+ * This function creates a new constraint list.
  * @return The function returns a new constraint list.
  */
-Pconstraint new_constraints();
+Pconstraint new_constraint();
 
 /**
  * This function free the allocated space on the heap for a constraint.
@@ -58,86 +63,180 @@ Pconstraint new_constraints();
 void free_content(void *vv);
 
 /**
- * This function free the allocated space on the heap for our constraints struc.
- * @param  c The constraints struct.
+ * This function free the allocated space on the heap for our constraint struc.
+ * @param  c The constraint struct.
  * @return   A NULL pointer;
  */
-Pconstraint free_constraints(Pconstraint c);
+Pconstraint free_constraint(Pconstraint c);
 
 /**
- * This functions computes the number of constraints we have.
- * @param  c The constraints struct.
- * @return   The number of constraints.
+ * This functions computes the total number of constraint we have.
+ * @param  c The constraint struct.
+ * @return   The number of constraint.
  */
-unsigned int get_constraints_number(Pconstraint c);
+unsigned int get_constraint_total_number(Pconstraint c);
 
 /**
- * This function returns the content of all constraints.
- * @param  c The constraints struct.
- * @return   THe domain of all constraints
+ * This functions computes the number of constraint we have (partially).
+ * @param  c The constraint struct.
+ * @return   The number of constraint.
  */
-PAVLTree get_constraints(Pconstraint c);
+unsigned int get_constraint_number1(Pconstraint c);
 
 /**
- * This function set the constraints struc iterator.
- * @param c   The constraints struct.
- * @param val The value of the iterator.
+ * This functions computes the number of sub_constraint we have.
+ * @param  c         The constraint struct.
+ * @param  variable1 The first variables of the constraint.
+ * @return           The number of constraint.
  */
-void set_constraints_iterator(Pconstraint c, unsigned int val);
+unsigned int get_constraint_number2(Pconstraint c, char* variable1);
 
 /**
- * This function begins the constraints list iterations.
- * @param c The constraints struct.
+ * This function returns the content of all constraint.
+ * @param  c The constraint struct.
+ * @return   THe domain of all constraint
  */
-void begin_constraints_iteration(Pconstraint c);
-
-/**
- * This function iterates over the constraints struct until it's empty.
- * @param  c The constraints struct.
- * @return 1 if we can iterate, 0 otherwise.
- */
-int constraints_can_iterate(Pconstraint c);
-
-/**
- * This function returns the current value pointed by the iterator.
- * @param  c The constraints struct.
- * @return   The tuples of the current constraints.
- */
-PAVLTree get_constraints_current_tuples(Pconstraint c);
+PAVLTree get_constraint(Pconstraint c);
 
 /**
  * This function returns the value of the iterator.
- * @param  c The constraints struct.
+ * @param  c The constraint struct.
  * @return   The value of the iterator.
  */
-unsigned int get_constraints_iterator(Pconstraint c);
+unsigned int get_constraint_iterator1(Pconstraint c);
 
 /**
- * This function prints the constraints struct.
- * @param c The constraints struct.
+ * This function returns the value of the iterator.
+ * @param  c The constraint struct.
+ * @return   The value of the iterator.
  */
-void print_constraints(Pconstraint c);
+unsigned int get_constraint_iterator2(Pconstraint c);
+
+/**
+ * This function set the constraint struc iterator.
+ * @param c   The constraint struct.
+ * @param val The value of the iterator.
+ */
+void set_constraint_iterator1(Pconstraint c, unsigned int val);
+
+/**
+ * This function set the constraint struc iterator.
+ * @param c   The constraint struct.
+ * @param val The value of the iterator.
+ */
+void set_constraint_iterator2(Pconstraint c, unsigned int val);
+
+/**
+ * This function begins the constraint list iterations.
+ * @param c The constraint struct.
+ */
+void begin_constraint_iteration1(Pconstraint c);
+
+/**
+ * This function begins the constraint list iterations.
+ * @param c The constraint struct.
+ */
+void begin_constraint_iteration2(Pconstraint c);
+
+/**
+ * This function iterates over the constraint struct until it's empty.
+ * @param  c The constraint struct.
+ * @return 1 if we can iterate, 0 otherwise.
+ */
+int constraint_can_iterate1(Pconstraint c);
+
+/**
+ * This function iterates over the constraint struct until it's empty.
+ * @param  c The constraint struct.
+ * @return 1 if we can iterate, 0 otherwise.
+ */
+int constraint_can_iterate2(Pconstraint c);
+
+/**
+ * This function returns the current value pointed by the iterator.
+ * @param  c The constraint struct.
+ * @return   The tuples of the current constraint.
+ */
+char* get_constraint_current_key1(Pconstraint c);
+
+/**
+ * This function returns the current value pointed by the iterator.
+ * @param  c The constraint struct.
+ * @return   The tuples of the current constraint.
+ */
+char* get_constraint_current_key2(Pconstraint c);
+
+/**
+ * This function returns the current value pointed by the iterator.
+ * @param  c The constraint struct.
+ * @return   The tuples of the current constraint.
+ */
+PAVLTree get_constraint_current_value1(Pconstraint c);
+
+/**
+ * This function returns the current value pointed by the iterator.
+ * @param  c The constraint struct.
+ * @return   The tuples of the current constraint.
+ */
+Ptuple get_constraint_current_value2(Pconstraint c);
+
+/**
+ * This function iterates one more step.
+ * @param c The constraint structure.
+ */
+void get_next_constraint1(Pconstraint c);
+
+/**
+ * This function iterates one more step.
+ * @param c The constraint structure.
+ */
+void get_next_constraint2(Pconstraint c);
+
+/**
+ * This function prints the constraint struct.
+ * @param c The constraint struct.
+ */
+void print_constraint(Pconstraint c);
 
 /**
  * This function prints a constraint tuple.
- * @param c The constraints struct.
+ * @param vt The constraint struct.
  */
-void print_constraints_tuple(Pconstraint c, char* variable1, char* variable2);
+void print_constraint_tuple(void *vt);
 
 /**
- * This function inserts a constraints.
- * @param  c         The constraints struct.
+ * This function inserts a constraint.
+ * @param  c         The constraint struct.
+ * @param  variable1 The first variables of the constraint.
+ * @return           1 if success, 0 the constraint already exists.
+ */
+int insert_all_constraint(Pconstraint c, char* variable1);
+
+/**
+ * This function inserts a constraint.
+ * @param  c         The constraint struct.
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
  * @return           1 if success, 0 the constraint already exists.
  */
-int insert_constraints(Pconstraint c, char* variable1, char* variable2);
+int insert_constraint(Pconstraint c, char* variable1, char* variable2);
 
+/**
+ * This function inserts the domain associated to a value of a variable in a
+ * constraint.
+ * @param  c         The constraint struct.
+ * @param  variable1 The first variables of the constraint.
+ * @param  variable2 The second variable of the constraint.
+ * @param  content   The value of the first variable.
+ * @return           1 if success, 0 if the variable1 has already
+ *                   assiociated domain.
+ */
+int insert_constraint_tuples(Pconstraint c, char* variable1, char* variable2, int* content);
 
 /**
  * This function inserts a value of variable2 associated to a value of
  * variable1 in a constraint.
- * @param  c         The constraints struct.
+ * @param  c         The constraint struct.
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
  * @param  content1  The value of the first variable.
@@ -145,37 +244,30 @@ int insert_constraints(Pconstraint c, char* variable1, char* variable2);
  * @return           1 if success, 0 if the content1 is already associated to
  *                   content2.
  */
-int insert_constraints_tuple(Pconstraint c, char* variable1, char* variable2, int content1, int content2);
+int insert_constraint_tuple(Pconstraint c, char* variable1, char* variable2, int* content1, int* content2);
 
 /**
- * This function inserts the domain associated to a value of a variable in a
- * constraint.
- * @param  c         The constraints struct.
+ * This function removes all constraint assiociated to a variable.
+ * @param  c         The constraint struct.
  * @param  variable1 The first variables of the constraint.
- * @param  variable2 The second variable of the constraint.
- * @param  content   The value of the first variable.
- * @param  d         The domain of the value of the second variable associated
- *                   to the first variable.
- * @return           1 if success, 0 if the variable1 has already
- *                   assiociated domain.
+ * @return           1 if success, 0 the constraint do not aready exists.
  */
-int insert_constraints_tuples(Pconstraint c, char* variable1, char* variable2, int content, Pdomain d);
-
+int remove_all_constraint(Pconstraint c, char* variable1);
 
 /**
- * This function removes a constraints.
- * @param  c         The constraints struct.
+ * This function removes a constraint associated to a variable .
+ * @param  c         The constraint struct.
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
  * @return           1 if success, 0 the constraint do not aready exists.
  */
-int remove_constraints(Pconstraint c, char* variable1, char* variable2);
+int remove_constraint(Pconstraint c, char* variable1, char* variable2);
 
 
 /**
  * This function removes a value of variable2 associated to a value of
  * variable1 in a constraint.
- * @param  c         The constraints struct.
+ * @param  c         The constraint struct.
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
  * @param  content1  The value of the first variable.
@@ -183,36 +275,54 @@ int remove_constraints(Pconstraint c, char* variable1, char* variable2);
  * @return           1 if success, 0 if the content1 is already associated to
  *                   content2.
  */
-int remove_constraints_tuple(Pconstraint c, char* variable1, char* variable2, int content1, int content2);
+int remove_constraint_tuple(Pconstraint c, char* variable1, char* variable2, int* content1, int* content2);
 
 /**
  * This function removes the domain associated to a value of a variable in a constraint.
- * @param  c         The constraints struct.
+ * @param  c         The constraint struct.
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
  * @param  content   The value of the first variable.
- * @param  d         The domain of the value of the second variable associated
- *                   to the first variable.
  * @return           1 if success, 0 if the variable1 has already
  *                   assiociated domain.
  */
-int remove_constraints_tuples(Pconstraint c, char* variable1, char* variable2, int content, Pdomain d);
-
+int remove_constraint_tuples(Pconstraint c, char* variable1, char* variable2, int* content);
 
 /**
- * This function queries the constraints struct.
- * @param  c     	 The constraints struct we want to query.
+ * This function queries the constraint struct.
+ * @param  c     	 The constraint struct we want to query.
+ * @param  variable1 The first variables of the constraint.
+ * @return           Zero if the variable is not in the struct, non-zero if the
+ *                   variable is in the struct.
+ */
+PAVLTree query_all_constraint(Pconstraint c, char* variable1);
+
+/**
+ * This function queries the constraint struct.
+ * @param  c     	 The constraint struct we want to query.
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
  * @return           Zero if the variable is not in the struct, non-zero if the
  *                   variable is in the struct.
  */
-Pdomain query_constraints(Pconstraint c, char* variable1, char* variable2);
+Ptuple query_constraint(Pconstraint c, char* variable1, char* variable2);
 
 
 /**
- * This function queries the constraints struct.
- * @param  c     	 The constraints struct we want to query.
+ * This function queries the constraint struct.
+ * @param  c     	 The constraint struct we want to query.
+ * @param  variable1 The first variables of the constraint.
+ * @param  variable2 The second variable of the constraint.
+ * @param  content   The value of the first variable.
+ * @return           Zero if the variable is not in the struct, non-zero if the
+ *                   variable is in the struct.
+ */
+Pdomain query_constraint_tuples(Pconstraint c, char* variable1, char* variable2, int* content);
+
+
+/**
+ * This function queries the constraint struct.
+ * @param  c     	 The constraint struct we want to query.
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
  * @param  content1  The value of the first variable.
@@ -220,18 +330,8 @@ Pdomain query_constraints(Pconstraint c, char* variable1, char* variable2);
  * @return           Zero if the variable is not in the struct, non-zero if the
  *                   variable is in the struct.
  */
-Pdomain query_constraints_tuple(Pconstraint c, char* variable1, char* variable2, int content1, int content2);
+int query_constraint_tuple(Pconstraint c, char* variable1, char* variable2, int* content1, int* content2);
 
-/**
- * This function queries the constraints struct.
- * @param  c     	 The constraints struct we want to query.
- * @param  variable1 The first variables of the constraint.
- * @param  variable2 The second variable of the constraint.
- * @param  content   The value of the first variable.
- * @return           Zero if the variable is not in the struct, non-zero if the
- *                   variable is in the struct.
- */
-Pdomain query_constraints_tuples(Pconstraint c, char* variable1, char* variable2, int content);
 
 
 #endif

@@ -718,8 +718,9 @@ void print_avl_tree(AVLTree *tree, void (*f1)(AVLTreeValue),  void (*f2)(AVLTree
 	AVLTreeValue *key_array = avl_tree_to_array_2(tree);
 
 	for(i = 0; i < avl_length; i++){
-		f1(key_array[i]);
-		f2(array[i]);
+		f2(key_array[i]);
+		f1(array[i]);
 	}
 	free(array);
+	free(key_array);
 }

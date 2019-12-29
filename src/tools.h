@@ -29,6 +29,11 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "include.h"
 
+/**
+ * This function print a string.
+ * @param vs    The string we want to print.
+ */
+void print_string(void *vs);
 
 /**
  * This function print the content of a matrix.

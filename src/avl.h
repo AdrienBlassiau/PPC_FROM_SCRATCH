@@ -279,6 +279,20 @@ int avl_tree_subtree_height(AVLTreeNode *node);
  *                        (see @ref avl_tree_num_entries).
  */
 
+AVLTreeValue *avl_tree_to_array_2(AVLTree *tree);
+
+
+/**
+ * Convert the keys in an AVL tree into a C array.  This allows
+ * the tree to be used as an ordered set.
+ *
+ * @param tree            The tree.
+ * @return                A newly allocated C array containing all the keys
+ *                        in the tree, in order.  The length of the array
+ *                        is equal to the number of entries in the tree
+ *                        (see @ref avl_tree_num_entries).
+ */
+
 AVLTreeValue *avl_tree_to_array(AVLTree *tree);
 
 /**
