@@ -21,6 +21,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "include.h"
 #include "tools.h"
 #include "constraint.h"
+#include "variable.h"
 #include "tuple.h"
 #include "domain.h"
 #include "avl.h"
@@ -75,25 +76,23 @@ int get_constraint_total_number(Pconstraint c){
 	return c->number_of_constraints;
 }
 
-void print_constraint(Pconstraint c){
+void print_constraint(Pconstraint c, Pvariable v){
 	int i,j;
 	int size = c->size;
 	Ptuple** constraints = get_constraint(c);
 
-	printf("---\n");
 	for (i = 0; i < size; i++){
 		for (j = 0; j < size; j++){
-			printf("C(%d,%d) : \n",i,j);
+			printf("C(%s,%s) : \n",get_variable_name(v,i),get_variable_name(v, j));
 			print_tuple(constraints[i][j]);
 		}
 	}
-	printf("---\n");
 }
 
 int insert_constraint_tuples(Pconstraint c, int variable1, int variable2, int* content){
 
 	Ptuple t2 = query_constraint(c,variable1,variable2);
-	printf("okoko\n");
+
 	if (query_constraint_tuples(c,variable1,variable2,content) == NULL){
 		Pdomain d = new_domain();
 		int res = insert_tuple(t2,content,d);
@@ -128,7 +127,6 @@ Ptuple* query_all_constraint(Pconstraint c, int variable1){
 }
 
 Ptuple query_constraint(Pconstraint c, int variable1, int variable2){
-	int size = c->size;
 	Ptuple** constraints = get_constraint(c);
 
 	return constraints[variable1][variable2];

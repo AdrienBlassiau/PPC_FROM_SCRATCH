@@ -23,10 +23,30 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "variable.h"
 #include "constraint.h"
 
-Pcsv new_csv(Pvariable v, Pconstraint cons){
+Pcsv new_csv(Pvariable v, Pconstraint cons, int* tab_int){
 	Pcsv c = (csv*) calloc(1,sizeof(csv));
+
 	c->variable_list = v;
 	c->constraint_list = cons;
+	c->tab_int = tab_int;
 
 	return c;
+}
+
+Pcsv free_csv(Pcsv c){
+
+	free_variable(c->variable_list);
+	free_constraint(c->constraint_list);
+	free(c->tab_int);
+	free(c);
+
+	return c;
+}
+
+void print_csv(void * pcsv){
+	Pcsv c = (Pcsv) pcsv;
+	printf("VARIABLES + DOMAINES:\n");
+	print_variable(c->variable_list);
+	printf("CONTRAINTES:\n");
+	print_constraint(c->constraint_list,c->variable_list);
 }

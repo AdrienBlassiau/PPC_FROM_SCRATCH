@@ -26,7 +26,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "tools.h"
 #include "csv.h"
 
-char** get_line_tab(int* pos, int* line_size, const char* file, unsigned long size){
+char** get_line_tab(int* pos, int* line_size, const char* file){
 	int i,k;
     int element_number = 0;
     int max_var_size;
@@ -65,7 +65,7 @@ char** get_line_tab(int* pos, int* line_size, const char* file, unsigned long si
     return line_tab;
 }
 
-Pvariable make_var_dom(int* pos, const char* file, unsigned long size, char** var_tab, int variable_number, Pvariable v){
+Pvariable make_var_dom(int* pos, const char* file, char** var_tab, int variable_number, Pvariable v){
 	int i,j;
 	int line_size=0;
 	char** line_tab;
@@ -74,7 +74,7 @@ Pvariable make_var_dom(int* pos, const char* file, unsigned long size, char** va
 
     for (i = 0; i < variable_number; i++){
     	d = new_domain();
-    	line_tab = get_line_tab(pos,&line_size,file,size);
+    	line_tab = get_line_tab(pos,&line_size,file);
     	for (j = 0; j < line_size; j++){
     		str_to_int_res = (int) strtol(line_tab[j], (char **)NULL, 10);
     		insert_in_domain(d, &str_to_int_res);
@@ -86,12 +86,12 @@ Pvariable make_var_dom(int* pos, const char* file, unsigned long size, char** va
 	return v;
 }
 
-int get_constraint_number(int* pos, const char* file, unsigned long size){
+int get_constraint_number(int* pos, const char* file){
 	int line_size=0;
     char** line_tab;
     int str_to_int_res = 0;
 
-    line_tab = get_line_tab(pos,&line_size,file,size);
+    line_tab = get_line_tab(pos,&line_size,file);
 
     if (line_size != 1){
     	return -1;
@@ -103,7 +103,7 @@ int get_constraint_number(int* pos, const char* file, unsigned long size){
     return str_to_int_res;
 }
 
-Pconstraint make_constraint(int* pos, const char* file, unsigned long size, int constraint_number, Pconstraint c, Pvariable v){
+Pconstraint make_constraint(int* pos, const char* file, int constraint_number, Pconstraint c, Pvariable v, int* tab_int){
 	int i,j,k;
 	int line_size = 0;
 	char ** first_constraint_line;
@@ -116,13 +116,12 @@ Pconstraint make_constraint(int* pos, const char* file, unsigned long size, int 
 	int constraint1_int;
 	int constraint2_int;
 	int number_of_tuples_int;
-	int tab_int[size];
 
 	i = 0;
 	k = 0;
 
 	while(i < constraint_number) {
-		first_constraint_line = get_line_tab(pos,&line_size,file,size);
+		first_constraint_line = get_line_tab(pos,&line_size,file);
 		constraint1 = first_constraint_line[0];
 		constraint1_int = get_variable_index(v,constraint1);
 		constraint2 = first_constraint_line[1];
@@ -133,7 +132,7 @@ Pconstraint make_constraint(int* pos, const char* file, unsigned long size, int 
 
 		for (j = 0; j < number_of_tuples_int; j++){
 
-			current_constraint_line = get_line_tab(pos,&line_size,file,size);
+			current_constraint_line = get_line_tab(pos,&line_size,file);
 			tuple1 = current_constraint_line[0];
 			tuple2 = current_constraint_line[1];
 			tab_int[k] = (int) strtol(tuple1, (char **)NULL, 10);
@@ -156,7 +155,6 @@ Pcsv read_file(char* filename){
   int line_size = 0;
   int variable_number = 0;
   int constraint_number = 0;
-  double key[2];
   char* buf;
   Pcsv csv;
   FILE* fd = fopen(filename,"r");
@@ -177,19 +175,23 @@ Pcsv read_file(char* filename){
   }
   fclose(fd);
 
-  var_tab = get_line_tab(&pos,&line_size,buf,info.st_size);
+  int size = (int)(info.st_size);
+
+  int* tab_int = calloc(size,sizeof(int));
+
+  var_tab = get_line_tab(&pos,&line_size,buf);
   variable_number = line_size;
   Pvariable v = new_variable(variable_number);
-  make_var_dom(&pos, buf, info.st_size, var_tab, variable_number, v);
+  make_var_dom(&pos, buf, var_tab, variable_number, v);
 
-  constraint_number = get_constraint_number(&pos,buf,info.st_size);
+  constraint_number = get_constraint_number(&pos,buf);
 
   Pconstraint c = new_constraint(variable_number);
-  make_constraint(&pos, buf, info.st_size, constraint_number, c, v);
+  make_constraint(&pos, buf, constraint_number, c, v, tab_int);
+
+  csv = new_csv(v,c,tab_int);
 
   xfree(buf);
-  print_variable(v);
-  free_variable(v);
-  free_constraint(c);
-  return NULL;
+
+  return csv;
 }

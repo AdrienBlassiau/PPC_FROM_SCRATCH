@@ -28,6 +28,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define CONSTRAINT__H
 
 #include "tuple.h"
+#include "variable.h"
 #include "domain.h"
 #include "avl.h"
 
@@ -69,8 +70,9 @@ int get_constraint_total_number(Pconstraint c);
 /**
  * This function prints the constraint struct.
  * @param c The constraint struct.
+ * @param v The variable struct.
  */
-void print_constraint(Pconstraint c);
+void print_constraint(Pconstraint c, Pvariable v);
 
 /**
  * This function inserts the domain associated to a value of a variable in a

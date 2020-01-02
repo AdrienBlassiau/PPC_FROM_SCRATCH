@@ -31,6 +31,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "csv.h"
 
 
-int read_file(char* filename);
+Pcsv read_file(char* filename);
 
 #endif

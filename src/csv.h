@@ -41,8 +41,13 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 typedef struct csv {
   Pvariable variable_list;
   Pconstraint constraint_list;
+  int* tab_int;
 } csv, *Pcsv;
 
-Pcsv new_csv(Pvariable v, Pconstraint c);
+Pcsv new_csv(Pvariable v, Pconstraint c, int* tab_int);
+
+Pcsv free_csv(Pcsv c);
+
+void print_csv(void * pcsv);
 
 #endif

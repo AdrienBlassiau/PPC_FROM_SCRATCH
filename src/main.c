@@ -24,6 +24,10 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 int main(){
 	char* filename = "inst/test.cspi";
-	read_file(filename);
+
+	Pcsv csv = read_file(filename);
+	print_csv(csv);
+	free_csv(csv);
+
 	return 0;
 }

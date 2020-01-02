@@ -103,7 +103,7 @@ void print_variable(Pvariable v){
 	char** variables_name = v->variables_name;
 
 	for (i = 0; i < size; i++){
-		printf("%s\n",variables_name[i]);
+		printf("%s : ",variables_name[i]);
 		print_domain(variables[i]);
 	}
 }
