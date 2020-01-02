@@ -752,15 +752,24 @@ void test_insert_constraint_2(void){
 	dtest = query_constraint_tuples(c,var_name1,var_name3,&content[3]);
 	CU_ASSERT_EQUAL(get_domain_size(dtest),1);
 
+	res = test_contraint_value_exists(c,var_name1,var_name3,content[3]);
+	CU_ASSERT_EQUAL(res,1);
+
 	dtest = query_constraint_tuples(c,var_name1,var_name2,&content[1]);
 	CU_ASSERT_EQUAL(dtest,NULL);
+
+	res = test_contraint_value_exists(c,var_name1,var_name2,content[1]);
+	CU_ASSERT_EQUAL(res,0);
 
 	test = query_constraint_tuple(c,var_name1,var_name2,&content[0],&content[0]);
 	CU_ASSERT_EQUAL(test,1);
 	test = query_constraint_tuple(c,var_name1,var_name2,&content[0],&content[4]);
 	CU_ASSERT_EQUAL(test,0);
 
-	// print_constraint(c);
+	CU_ASSERT_NOT_EQUAL(test_contraint_exists(c,1,2),0);
+	CU_ASSERT_EQUAL(test_contraint_exists(c,3,2),0);
+
+	print_constraint_light(c);
 	free_constraint(c);
 }
 
@@ -805,6 +814,7 @@ void test_add_instance(void){
 	res = add_free_variable(inst,&val);
 	CU_ASSERT_EQUAL(res,1);
 	CU_ASSERT_EQUAL(get_number_of_free(inst),2);
+	CU_ASSERT_EQUAL(get_linked_val(inst,5),12);
 	// print_instance(inst);
 	free_instance(inst);
 }

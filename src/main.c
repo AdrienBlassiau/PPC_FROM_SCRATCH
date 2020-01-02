@@ -20,14 +20,16 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "include.h"
 #include "tools.h"
+#include "csp.h"
 #include "read_file.h"
 
 int main(){
 	char* filename = "inst/test.cspi";
 
-	Pcsv csv = read_file(filename);
-	print_csv(csv);
-	free_csv(csv);
+	Pcsp csp = read_file(filename);
+
+	backtrack(csp);
+	free_csp(csp);
 
 	return 0;
 }

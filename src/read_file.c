@@ -24,7 +24,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "constraint.h"
 #include "tuple.h"
 #include "tools.h"
-#include "csv.h"
+#include "csp.h"
 
 char** get_line_tab(int* pos, int* line_size, const char* file){
 	int i,k;
@@ -149,14 +149,14 @@ Pconstraint make_constraint(int* pos, const char* file, int constraint_number, P
 	return c;
 }
 
-Pcsv read_file(char* filename){
+Pcsp read_file(char* filename){
   struct stat info;
   int pos = 0;
   int line_size = 0;
   int variable_number = 0;
   int constraint_number = 0;
   char* buf;
-  Pcsv csv;
+  Pcsp csp;
   FILE* fd = fopen(filename,"r");
   char** var_tab;
 
@@ -189,9 +189,9 @@ Pcsv read_file(char* filename){
   Pconstraint c = new_constraint(variable_number);
   make_constraint(&pos, buf, constraint_number, c, v, tab_int);
 
-  csv = new_csv(v,c,tab_int);
+  csp = new_csp(v,c,tab_int,variable_number);
 
   xfree(buf);
 
-  return csv;
+  return csp;
 }

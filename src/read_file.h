@@ -28,9 +28,14 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #define READ__FILE__H
 
 #include "include.h"
-#include "csv.h"
+#include "csp.h"
 
 
-Pcsv read_file(char* filename);
+/**
+ * This function reads a file and create a csp struct
+ * @param  filename The name of the file.
+ * @return          A csp struct associated to the file.
+ */
+Pcsp read_file(char* filename);
 
 #endif

@@ -75,6 +75,13 @@ int get_constraint_total_number(Pconstraint c);
 void print_constraint(Pconstraint c, Pvariable v);
 
 /**
+ * This function prints the constraint struct.
+ * @param c The constraint struct.
+ * @param v The variable struct.
+ */
+void print_constraint_light(Pconstraint c);
+
+/**
  * This function inserts the domain associated to a value of a variable in a
  * constraint.
  * @param  c         The constraint struct.
@@ -143,7 +150,24 @@ Pdomain query_constraint_tuples(Pconstraint c, int variable1, int variable2, int
  */
 int query_constraint_tuple(Pconstraint c, int variable1, int variable2, int* content1, int* content2);
 
+/**
+ * This function tests if a constraint exists.
+ * @param  c         The constraint struct.
+ * @param  variable1 The first variable.
+ * @param  variable2 The second variable.
+ * @return           1 if success, 0 otherwise.
+ */
+int test_contraint_exists(Pconstraint c, int variable1, int variable2);
 
+/**
+ * This function tests if a constraint with a value exists.
+ * @param  c         The constraint struct.
+ * @param  variable1 The first variable.
+ * @param  variable2 The second variable.
+ * @param  val  The value of the first variable.
+ * @return           1 if success, 0 otherwise.
+ */
+int test_contraint_value_exists(Pconstraint c, int variable1, int variable2, int val);
 
 #endif
 

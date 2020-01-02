@@ -101,6 +101,45 @@ void print_instance(void *vinst){
 	}
 }
 
+int** generate_instance_constraint(Pinstance inst, int* size_g){
+	int i,j,k,first_element,second_element;
+	int size = inst->size;
+
+	int number_of_linked = get_number_of_linked(inst);
+	int number_of_tuples = (number_of_linked*(number_of_linked-1))/2;
+
+	int reduce_linked_list[number_of_linked];
+
+	int** generated_list = calloc(number_of_tuples,sizeof(int*));
+	for (i = 0; i < number_of_tuples; i++){
+		generated_list[i] = calloc(2,sizeof(int));
+	}
+
+	k = 0;
+	for (i = 0; i < size; i++){
+		if (is_linked(inst,i)){
+			reduce_linked_list[k] = i;
+			k++;
+		}
+	}
+
+	k=0;
+	for (i = 0; i < number_of_linked; i++){
+		first_element = reduce_linked_list[i];
+		for (j = first_element; j < number_of_linked; j++){
+			second_element = reduce_linked_list[j];
+			if (first_element!=second_element){
+				generated_list[k][0] = first_element;
+				generated_list[k][1] = second_element;
+				k++;
+			}
+		}
+	}
+
+	*size_g = number_of_tuples;
+	return generated_list;
+}
+
 int add_free_variable(Pinstance inst, int* v){
 	PQueue free_list = get_free_list(inst);
 	if (is_linked(inst,*v)){
@@ -133,14 +172,19 @@ int add_linked_variable(Pinstance inst, int v, int val){
 	return 1;
 }
 
-int is_free(Pinstance inst, int value){
+int is_free(Pinstance inst, int var){
 	int** linked_list = get_linked_list(inst);
-	return !linked_list[value][0];
+	return !linked_list[var][0];
 }
 
-int is_linked(Pinstance inst, int value){
+int is_linked(Pinstance inst, int var){
 	int** linked_list = get_linked_list(inst);
-	return linked_list[value][0];
+	return linked_list[var][0];
+}
+
+int get_linked_val(Pinstance inst, int var){
+	int** linked_list = get_linked_list(inst);
+	return linked_list[var][1];
 }
 
 int* pop_free_list(Pinstance inst){

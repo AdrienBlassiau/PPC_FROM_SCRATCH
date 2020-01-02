@@ -18,35 +18,42 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
 
+/** @file csp.h
+ *
+ * @brief This file manages the csp structure (high level vision).
+ */
+
+
+#ifndef CSV__H
+#define CSV__H
+
 #include "include.h"
-#include "csv.h"
 #include "variable.h"
+#include "instance.h"
 #include "constraint.h"
 
-Pcsv new_csv(Pvariable v, Pconstraint cons, int* tab_int){
-	Pcsv c = (csv*) calloc(1,sizeof(csv));
+/**
+ * \struct instance
+ * \brief instance structure
+ *
+ * \a An instance structure is a
+ *
+ */
+typedef struct csp {
+  Pvariable variable_list;
+  Pconstraint constraint_list;
+  Pinstance instance_list;
+  int* tab_int;
+  int size;
+} csp, *Pcsp;
 
-	c->variable_list = v;
-	c->constraint_list = cons;
-	c->tab_int = tab_int;
 
-	return c;
-}
+Pcsp new_csp(Pvariable v, Pconstraint c, int* tab_int, int size);
 
-Pcsv free_csv(Pcsv c){
+Pcsp free_csp(Pcsp c);
 
-	free_variable(c->variable_list);
-	free_constraint(c->constraint_list);
-	free(c->tab_int);
-	free(c);
+void print_csp(void * pcsp);
 
-	return c;
-}
+int backtrack(Pcsp c);
 
-void print_csv(void * pcsv){
-	Pcsv c = (Pcsv) pcsv;
-	printf("VARIABLES + DOMAINES:\n");
-	print_variable(c->variable_list);
-	printf("CONTRAINTES:\n");
-	print_constraint(c->constraint_list,c->variable_list);
-}
+#endif

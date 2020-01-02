@@ -89,6 +89,19 @@ void print_constraint(Pconstraint c, Pvariable v){
 	}
 }
 
+void print_constraint_light(Pconstraint c){
+	int i,j;
+	int size = c->size;
+	Ptuple** constraints = get_constraint(c);
+
+	for (i = 0; i < size; i++){
+		for (j = 0; j < size; j++){
+			printf("C(%d,%d) : \n",i,j);
+			print_tuple(constraints[i][j]);
+		}
+	}
+}
+
 int insert_constraint_tuples(Pconstraint c, int variable1, int variable2, int* content){
 
 	Ptuple t2 = query_constraint(c,variable1,variable2);
@@ -148,4 +161,16 @@ int query_constraint_tuple(Pconstraint c, int variable1, int variable2, int* con
 		return res;
 	}
 	return 0;
+}
+
+int test_contraint_exists(Pconstraint c, int variable1, int variable2){
+	Ptuple t = query_constraint(c,variable1,variable2);
+
+	return get_tuple_number(t);
+}
+
+int test_contraint_value_exists(Pconstraint c, int variable1, int variable2, int val){
+	Pdomain d = query_constraint_tuples(c,variable1,variable2,&val);
+
+	return d!=NULL;
 }
