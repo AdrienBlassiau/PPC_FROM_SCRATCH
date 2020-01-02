@@ -18,6 +18,12 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
 
+/** @file stack.h
+ *
+ * @brief This file is a stack implementation
+ */
+
+
 #ifndef __STACK__H__
 #define __STACK__H__
 

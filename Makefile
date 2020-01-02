@@ -29,7 +29,7 @@ all : main
 test : main_test.o test_unit.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm -lcunit
 
-main : main.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o csp.o
+main : main.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o csp.o problem.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
 
 main.o : src/main.c
@@ -66,6 +66,9 @@ instance.o : src/instance.c src/instance.h
 	$(CC) -c $< -o obj/$@
 
 csp.o : src/csp.c src/csp.h
+	$(CC) -c $< -o obj/$@
+
+problem.o : src/problem.c src/problem.h
 	$(CC) -c $< -o obj/$@
 
 compare_int.o : src/compare_int.c src/compare_int.h

@@ -18,27 +18,23 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
 
+/** @file problem.h
+ *
+ * @brief This file regroups common CSP problems.
+ */
+
+#ifndef PROBLEM__H
+#define PROBLEM__H
+
 #include "include.h"
+#include "variable.h"
+#include "domain.h"
+#include "constraint.h"
+#include "tuple.h"
 #include "tools.h"
 #include "csp.h"
-#include "read_file.h"
-#include "problem.h"
 
-int main(){
-	Pcsp csp;
-	int mode = 0;
 
-	if (mode == 1){
-		char* filename = "inst/test.cspi";
-		csp = generate_from_file(filename);
-	}
-	else{
-		csp = generate_8_queens_puzzle(4);
-	}
+Pcsp generate_8_queens_puzzle(int n);
 
-	backtrack(csp);
-	print_csp(csp);
-	free_csp(csp);
-
-	return 0;
-}
+#endif

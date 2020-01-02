@@ -45,6 +45,7 @@ typedef struct csp {
   Pinstance instance_list;
   int* tab_int;
   int size;
+  int solution;
 } csp, *Pcsp;
 
 

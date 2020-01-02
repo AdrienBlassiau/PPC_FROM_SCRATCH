@@ -34,6 +34,7 @@ Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size){
 	c->tab_int = tab_int;
 	c->instance_list = instance_list;
 	c->size = size;
+	c->solution = 0;
 
 	return c;
 }
@@ -60,6 +61,10 @@ void print_csp(void * pcsp){
 	printf("\n");
 	printf("INSTANCIATION:\n");
 	print_instance(c->instance_list);
+	printf("SOLUTION:\n");
+	if (c->solution) printf("OUI\n");
+	else printf("NON\n");
+
 }
 
 int test_unary_constraint(Pcsp csp){
@@ -94,6 +99,11 @@ int test_binary_constraint(Pcsp csp){
 	Pconstraint cons = csp->constraint_list;
 
 	int** test_tab = generate_instance_constraint(inst,&size_g);
+
+	// printf("TUPLES À tester %d: \n",size_g);
+	// for (i = 0; i < size_g; i++){
+	// 	printf("(%d,%d)",test_tab[i][0],test_tab[i][1]);
+	// }
 
 	for (i = 0; i < size_g; i++){
 		var1 = test_tab[i][0];
@@ -175,6 +185,7 @@ int backtrack(Pcsp csp){
 		printf("ON CHOISIT : %d DE VALEUR : %d\n",x,v);
 		complete_partial_instance(csp,x,v);
 		if (backtrack(csp)){
+			csp->solution=1;
 			return 1;
 		}
 		remove_from_partial_instance(csp,x);

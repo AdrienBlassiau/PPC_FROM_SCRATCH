@@ -129,7 +129,7 @@ int** generate_instance_constraint(Pinstance inst, int* size_g){
 	k=0;
 	for (i = 0; i < number_of_linked; i++){
 		first_element = reduce_linked_list[i];
-		for (j = first_element; j < number_of_linked; j++){
+		for (j = i; j < number_of_linked; j++){
 			second_element = reduce_linked_list[j];
 			if (first_element!=second_element){
 				generated_list[k][0] = first_element;
