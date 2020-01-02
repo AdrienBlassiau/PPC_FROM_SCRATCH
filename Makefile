@@ -26,10 +26,10 @@ CC=gcc -Wall -Wextra -std=c11 -O2 -pthread -lm
 
 all : main
 
-test : main_test.o test_unit.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o queue.o instance.o
+test : main_test.o test_unit.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm -lcunit
 
-main : main.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o queue.o instance.o read_file.o csp.o
+main : main.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o csp.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
 
 main.o : src/main.c
@@ -53,7 +53,7 @@ tools.o : src/tools.c src/tools.h
 avl.o : src/avl.c src/avl.h
 	$(CC) -c $< -o obj/$@
 
-queue.o : src/queue.c src/queue.h
+stack.o : src/stack.c src/stack.h
 	$(CC) -c $< -o obj/$@
 
 set.o : src/set.c src/set.h

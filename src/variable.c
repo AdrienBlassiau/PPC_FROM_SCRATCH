@@ -131,3 +131,7 @@ int query_value_of_variable_domain(Pvariable v, int i, int* value){
 
 	return res;
 }
+
+Pdomain get_variable_domain(Pvariable v, int i){
+	return v->variables[i];
+}

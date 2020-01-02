@@ -27,7 +27,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef INSTANCE__H
 #define INSTANCE__H
 
-#include "queue.h"
+#include "stack.h"
 
 /**
  * \struct instance
@@ -38,7 +38,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 typedef struct instance {
   int** linked_list;
-  PQueue free_list;
+  Pstack free_list;
   int number_of_linked;
   int size;
 } instance, *Pinstance;
@@ -69,7 +69,7 @@ int** get_linked_list(Pinstance inst);
  * @param  inst The instance struct.
  * @return      The list of all free variables.
  */
-PQueue get_free_list(Pinstance inst);
+Pstack get_free_list(Pinstance inst);
 
 /**
  * This function returns the number of linked variables.
@@ -106,7 +106,7 @@ int** generate_instance_constraint(Pinstance inst, int* size_g);
  * @param  v    The variable we want to make free.
  * @return      1 if success, 0 otherwise.
  */
-int add_free_variable(Pinstance inst, int *v);
+int add_free_variable(Pinstance inst, int v);
 
 /**
  * This function removes a linked variable.
@@ -153,7 +153,7 @@ int get_linked_val(Pinstance inst, int var);
  * @param  inst The instance struct.
  * @return      The free variable.
  */
-int* pop_free_list(Pinstance inst);
+int pop_free_list(Pinstance inst);
 
 #endif
 

@@ -149,7 +149,7 @@ Pconstraint make_constraint(int* pos, const char* file, int constraint_number, P
 	return c;
 }
 
-Pcsp read_file(char* filename){
+Pcsp generate_from_file(char* filename){
   struct stat info;
   int pos = 0;
   int line_size = 0;

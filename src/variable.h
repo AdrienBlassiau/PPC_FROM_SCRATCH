@@ -132,5 +132,13 @@ int remove_value_of_variable_domain(Pvariable v, int i, int* value);
  */
 int query_value_of_variable_domain(Pvariable v, int i, int* value);
 
+/**
+ * This function return the domain of a variable.
+ * @param  v        The variable struct.
+ * @param  i 		The variable we want to get its domain.
+ * @return          The domain.
+ */
+Pdomain get_variable_domain(Pvariable v, int i);
+
 
 #endif

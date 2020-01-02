@@ -19,7 +19,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "include.h"
-#include "queue.h"
+#include "stack.h"
 #include "instance.h"
 #include "tools.h"
 
@@ -28,16 +28,23 @@ Pinstance new_instance(int size){
 	Pinstance inst = (instance*)malloc(sizeof(instance));
 	int** linked_list;
 
+	Pstack stack = new_stack();
+
 	linked_list = calloc(size,sizeof(int*));
+
 	for (i = 0; i < size; i++){
 		linked_list[i] = calloc(2,sizeof(int));
 	}
-	PQueue q = queue_new();
+
 
 	inst->linked_list = linked_list;
-	inst->free_list = q;
+	inst->free_list = stack;
 	inst->number_of_linked = 0;
 	inst->size = size;
+
+	for (i = 0; i < size; i++){
+		add_free_variable(inst,i);
+	}
 
 	return inst;
 }
@@ -52,7 +59,7 @@ Pinstance free_instance(Pinstance inst){
 		free(linked_list[i]);
 	}
 	free(inst->linked_list);
-	queue_free_bis(inst->free_list);
+	free_stack(inst->free_list);
 
 	free(inst);
 
@@ -63,7 +70,7 @@ int** get_linked_list(Pinstance inst){
 	return inst->linked_list;
 }
 
-PQueue get_free_list(Pinstance inst){
+Pstack get_free_list(Pinstance inst){
 	return inst->free_list;
 }
 
@@ -72,14 +79,9 @@ int get_number_of_linked(Pinstance inst){
 }
 
 int get_number_of_free(Pinstance inst){
-	PQueue queue = get_free_list(inst);
-	QueueEntry *current_queue = queue->head;
-	int number = 0;
-	while (current_queue != NULL) {
-		number++;
-		current_queue = current_queue->next;
-	}
-	return number;
+	Pstack stack = get_free_list(inst);
+
+	return stack_length(stack);
 }
 
 void print_instance(void *vinst){
@@ -99,6 +101,7 @@ void print_instance(void *vinst){
 			printf("-\n");
 		}
 	}
+	print_stack(inst->free_list);
 }
 
 int** generate_instance_constraint(Pinstance inst, int* size_g){
@@ -140,13 +143,14 @@ int** generate_instance_constraint(Pinstance inst, int* size_g){
 	return generated_list;
 }
 
-int add_free_variable(Pinstance inst, int* v){
-	PQueue free_list = get_free_list(inst);
-	if (is_linked(inst,*v)){
+int add_free_variable(Pinstance inst, int v){
+	Pstack free_list = get_free_list(inst);
+	if (is_linked(inst,v)){
 		return 0;
 	}
 
-	queue_push_head(free_list,v);
+	Pstack stack = push_stack(free_list,v);
+	inst->free_list = stack;
 	return 1;
 }
 
@@ -187,7 +191,13 @@ int get_linked_val(Pinstance inst, int var){
 	return linked_list[var][1];
 }
 
-int* pop_free_list(Pinstance inst){
-	PQueue free_list = get_free_list(inst);
-	return queue_pop_head(free_list);
+int pop_free_list(Pinstance inst){
+	Pstack free_list = get_free_list(inst);
+
+	int res = top_stack(free_list);
+
+	Pstack stack = pop_stack(free_list);
+	inst->free_list = stack;
+
+	return res;
 }

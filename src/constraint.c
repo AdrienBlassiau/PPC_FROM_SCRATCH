@@ -174,3 +174,9 @@ int test_contraint_value_exists(Pconstraint c, int variable1, int variable2, int
 
 	return d!=NULL;
 }
+
+int test_contraint_tuple_exists(Pconstraint c, int variable1, int variable2, int val1, int val2){
+	int res = query_constraint_tuple(c,variable1,variable2,&val1,&val2);
+
+	return res;
+}

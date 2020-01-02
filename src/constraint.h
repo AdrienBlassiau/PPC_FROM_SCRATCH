@@ -169,5 +169,17 @@ int test_contraint_exists(Pconstraint c, int variable1, int variable2);
  */
 int test_contraint_value_exists(Pconstraint c, int variable1, int variable2, int val);
 
+/**
+ * This function tests if a constraint with a tuple exists.
+ * @param  c     	 The constraint struct we want to query.
+ * @param  variable1 The first variables of the constraint.
+ * @param  variable2 The second variable of the constraint.
+ * @param  val1  	 The value of the first variable.
+ * @param  val2      The value of the seconde variable.
+ * @return           Zero if the variable is not in the struct, non-zero if the
+ *                   variable is in the struct.
+ */
+int test_contraint_tuple_exists(Pconstraint c, int variable1, int variable2, int val1, int val2);
+
 #endif
 

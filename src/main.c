@@ -26,7 +26,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 int main(){
 	char* filename = "inst/test.cspi";
 
-	Pcsp csp = read_file(filename);
+	Pcsp csp = generate_from_file(filename);
 
 	backtrack(csp);
 	free_csp(csp);

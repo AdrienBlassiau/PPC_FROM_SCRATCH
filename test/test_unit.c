@@ -769,7 +769,7 @@ void test_insert_constraint_2(void){
 	CU_ASSERT_NOT_EQUAL(test_contraint_exists(c,1,2),0);
 	CU_ASSERT_EQUAL(test_contraint_exists(c,3,2),0);
 
-	print_constraint_light(c);
+	// print_constraint_light(c);
 	free_constraint(c);
 }
 
@@ -799,45 +799,40 @@ void test_add_instance(void){
 	CU_ASSERT_EQUAL(is_linked(inst,5),1);
 	CU_ASSERT_EQUAL(is_linked(inst,4),1);
 	CU_ASSERT_EQUAL(is_linked(inst,2),0);
+
 	CU_ASSERT_EQUAL(get_number_of_linked(inst),3);
-	CU_ASSERT_EQUAL(get_number_of_free(inst),0);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),10);
 	int val = 2;
-	add_free_variable(inst,&val);
-	CU_ASSERT_EQUAL(get_number_of_free(inst),1);
+	add_free_variable(inst,val);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),11);
 	res = add_linked_variable(inst,4,-4);
 	CU_ASSERT_EQUAL(res,0);
 	val = 4;
-	res = add_free_variable(inst,&val);
+	res = add_free_variable(inst,val);
 	CU_ASSERT_EQUAL(res,0);
 	res = remove_linked_variable(inst,4);
 	CU_ASSERT_EQUAL(res,1);
-	res = add_free_variable(inst,&val);
+	res = add_free_variable(inst,val);
 	CU_ASSERT_EQUAL(res,1);
-	CU_ASSERT_EQUAL(get_number_of_free(inst),2);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),12);
 	CU_ASSERT_EQUAL(get_linked_val(inst,5),12);
-	// print_instance(inst);
+
 	free_instance(inst);
 }
 
 void test_remove_instance(void){
 	int size = 10;
-	int i;
+
 	Pinstance inst =  new_instance(size);
-	int tabint[10] = {0,1,2,3,4,5,6,7,8,9};
 
-	for (i = 0; i < size; i++){
-
-		add_free_variable(inst,&tabint[i]);
-	}
-
-	print_queue(get_free_list(inst),print_int);
 	CU_ASSERT_EQUAL(get_number_of_linked(inst),0);
 	CU_ASSERT_EQUAL(get_number_of_free(inst),10);
-	int* res = (int *)pop_free_list(inst);
-	CU_ASSERT_EQUAL(get_number_of_free(inst),9);
-	CU_ASSERT_EQUAL(*res,9)
-	int* res1 = (int *)pop_free_list(inst);
-	CU_ASSERT_EQUAL(*res1,8)
+	int res = pop_free_list(inst);
 	print_instance(inst);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),9);
+	CU_ASSERT_EQUAL(res,9)
+	int res1 = pop_free_list(inst);
+	CU_ASSERT_EQUAL(res1,8)
+	// print_instance(inst);
 	free_instance(inst);
 }

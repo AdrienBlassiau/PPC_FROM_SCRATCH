@@ -36,6 +36,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * @param  filename The name of the file.
  * @return          A csp struct associated to the file.
  */
-Pcsp read_file(char* filename);
+Pcsp generate_from_file(char* filename);
 
 #endif
