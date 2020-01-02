@@ -23,6 +23,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "read_file.h"
 
 int main(){
-
+	char* filename = "inst/test.cspi";
+	read_file(filename);
 	return 0;
 }

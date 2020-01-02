@@ -26,6 +26,11 @@ void print_string(void *vs){
 	printf("%s -> \n",s);
 }
 
+void print_int(void *vi){
+	int *i = (int*) vi;
+	printf("%d \n",*i);
+}
+
 void print_matrix(int** m, int size){
 	int i,j;
 
@@ -78,4 +83,32 @@ int free_matrix(int** m, int size){
 	free(m);
 
 	return 1;
+}
+
+int free_matrix_string(char** m, int size){
+	int i;
+
+	for(i = 0; i < size; i++){
+		free(m[i]);
+	}
+
+	free(m);
+
+	return 1;
+}
+
+void* xmalloc(size_t n)
+{
+  void* ptr = malloc(n);
+  if (ptr == NULL)
+    fprintf(stderr, "Error not enough memory\n");
+  return ptr;
+}
+
+void* xcalloc(size_t nmemb,size_t size)
+{
+  void* ptr = calloc(nmemb,size);
+  if (ptr == NULL)
+    fprintf(stderr, "Error not enough memory\n");
+  return ptr;
 }

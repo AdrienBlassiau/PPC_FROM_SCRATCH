@@ -18,19 +18,15 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
 
-/** @file read_file.h
- *
- * @brief This file manages the reading of the entry file.
- */
-
-
-#ifndef READ__FILE__H
-#define READ__FILE__H
-
 #include "include.h"
 #include "csv.h"
+#include "variable.h"
+#include "constraint.h"
 
+Pcsv new_csv(Pvariable v, Pconstraint cons){
+	Pcsv c = (csv*) calloc(1,sizeof(csv));
+	c->variable_list = v;
+	c->constraint_list = cons;
 
-int read_file(char* filename);
-
-#endif
+	return c;
+}

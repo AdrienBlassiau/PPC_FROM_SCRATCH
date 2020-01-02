@@ -23,11 +23,13 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "test_unit.h"
 
 #include "../src/include.h"
+#include "../src/tools.h"
 #include "../src/domain.h"
 #include "../src/variable.h"
 #include "../src/tuple.h"
 #include "../src/compare_tuple.h"
 #include "../src/constraint.h"
+#include "../src/instance.h"
 
 int setup(void)  { return 0; }
 int teardown(void) { return 0; }
@@ -51,12 +53,10 @@ int init_test(void){
 
 	CU_pSuite suite2 = CU_add_suite("variable_test",setup,teardown);
 
-	if((NULL==CU_add_test(suite2, "Test new variable", test_new_variable)||
+	if((NULL==CU_add_test(suite2, "Test new variable", test_new_variable))||
 		(NULL==CU_add_test(suite2, "Test var size", test_variable_size))||
-		(NULL==CU_add_test(suite2, "Test var it", test_variable_iteration))||
 		(NULL==CU_add_test(suite2, "Test insert", test_insert_in_variable))||
-		(NULL==CU_add_test(suite2, "Test rm", test_remove_from_variable))||
-		(NULL==CU_add_test(suite2, "Test rm value", test_remove_value))))
+		(NULL==CU_add_test(suite2, "Test rm", test_remove_from_variable)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -64,12 +64,12 @@ int init_test(void){
 
 	CU_pSuite suite3 = CU_add_suite("tuple_test",setup,teardown);
 
-	if((NULL==CU_add_test(suite3, "Test new tuple", test_new_tuple)||
+	if((NULL==CU_add_test(suite3, "Test new tuple", test_new_tuple))||
 		(NULL==CU_add_test(suite3, "Test tup size", test_tuple_size))||
 		(NULL==CU_add_test(suite3, "Test tup it", test_tuple_iteration))||
 		(NULL==CU_add_test(suite3, "Test insert", test_insert_in_tuple))||
 		(NULL==CU_add_test(suite3, "Test rm", test_remove_from_tuple))||
-		(NULL==CU_add_test(suite3, "Test rm content", test_remove_content))))
+		(NULL==CU_add_test(suite3, "Test rm content", test_remove_content)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -87,11 +87,17 @@ int init_test(void){
 
 	if((NULL==CU_add_test(suite5, "Test new cons", test_new_constraint))||
 		(NULL==CU_add_test(suite5, "Test ins 1", test_insert_constraint_1))||
-		(NULL==CU_add_test(suite5, "Test ins 2", test_insert_constraint_2))||
-		(NULL==CU_add_test(suite5, "Test ins 3", test_insert_constraint_3))||
-		(NULL==CU_add_test(suite5, "Test ins 4", test_insert_constraint_4))||
-		(NULL==CU_add_test(suite5, "Test iter", test_constraint_iteration))||
-		(NULL==CU_add_test(suite5, "Test rm", test_constraint_remove)))
+		(NULL==CU_add_test(suite5, "Test ins 2", test_insert_constraint_2)))
+	{
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
+	CU_pSuite suite6 = CU_add_suite("tuple_test",setup,teardown);
+
+	if((NULL==CU_add_test(suite6, "Test new inst", test_new_instance))||
+		(NULL==CU_add_test(suite6, "Test add inst", test_add_instance))||
+		(NULL==CU_add_test(suite6, "Test rm inst", test_remove_instance)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -249,8 +255,8 @@ void test_remove_from_domain(void){
 /* ########################################################## */
 
 void test_new_variable(void){
-
-	Pvariable v = new_variable();
+	int size = 10;
+	Pvariable v = new_variable(size);
 
 	CU_ASSERT_NOT_EQUAL(v,NULL);
 
@@ -259,10 +265,11 @@ void test_new_variable(void){
 
 void test_variable_size(void){
 	int i;
-	Pvariable v = new_variable();
-	int size = get_variable_number(v);
+	int size = 2;
+	Pvariable v = new_variable(size);
+	int size_result = get_variable_number(v);
 
-	CU_ASSERT_EQUAL(size,0);
+	CU_ASSERT_EQUAL(size_result,size);
 
 	Pdomain d1 = new_domain();
 	int tab1[6] = {1,2,5,6,12,23};
@@ -274,115 +281,25 @@ void test_variable_size(void){
 	for (i = 0; i < 6; ++i)
 		insert_in_domain(d2,&tab2[i]);
 
-	char var_name1[256] = "test1";
-	insert_variable(v,var_name1,d1);
+	char var_name1[100] = "test1";
+	insert_variable(v,0,var_name1,d1);
 
-	char var_name2[256] = "test2";
-	insert_variable(v,var_name2,d2);
+	char var_name2[100] = "test2";
+	insert_variable(v,1,var_name2,d2);
 
-	size = get_variable_number(v);
-	CU_ASSERT_EQUAL(size,2);
-
-	free_variable(v);
-}
-
-void test_variable_iteration(void){
-	int i;
-	Pdomain value;
-	char * key;
-	Pvariable v = new_variable();
-	int data_size[3] = {4,2,6};
-
-	Pdomain d1 = new_domain();
-	int tab1[4] = {1,2,5,6};
-	for (i = 0; i < 4; ++i)
-		insert_in_domain(d1,&tab1[i]);
-
-	Pdomain d2 = new_domain();
-	int tab2[2] = {3,8};
-	for (i = 0; i < 2; ++i)
-		insert_in_domain(d2,&tab2[i]);
-
-	Pdomain d3 = new_domain();
-	int tab3[6] = {6,7,8,9,10,11};
-	for (i = 0; i < 6; ++i)
-		insert_in_domain(d3,&tab3[i]);
-
-	char var_name1[256] = "test1";
-	insert_variable(v,var_name1,d1);
-
-	char var_name2[256] = "test2";
-	insert_variable(v,var_name2,d2);
-
-	char var_name3[256] = "test3";
-	insert_variable(v,var_name3,d3);
-
-	CU_ASSERT_EQUAL(get_var_iterator(v),0);
-	begin_variable_iteration(v);
-	CU_ASSERT_EQUAL(get_var_iterator(v),0);
-
-	int size = get_variable_number(v);
-	CU_ASSERT_EQUAL(size,3);
-
-	i = 0;
-	while(variable_can_iterate(v)){
-		value = get_var_current_value(v);
-		key = get_var_current_key(v);
-		if (i==0)
-		{
-			CU_ASSERT_EQUAL(get_domain_size(value),data_size[i]);
-			CU_ASSERT_STRING_EQUAL(key,var_name1);
-		}
-		else if(i==1){
-			CU_ASSERT_EQUAL(get_domain_size(value),data_size[i]);
-			CU_ASSERT_EQUAL(key,var_name2);
-		}
-		else{
-			CU_ASSERT_EQUAL(get_domain_size(value),data_size[i]);
-			CU_ASSERT_EQUAL(key,var_name3);
-		}
-		get_next_var(v);
-		i++;
-	};
-	CU_ASSERT_EQUAL(get_var_iterator(v),0);
-
-
-	CU_ASSERT_EQUAL(get_var_iterator(v),0);
-	begin_variable_iteration(v);
-	CU_ASSERT_EQUAL(get_var_iterator(v),0);
-
-	size = get_variable_number(v);
-	CU_ASSERT_EQUAL(size,3);
-
-	i = 0;
-	while(variable_can_iterate(v)){
-		value = get_var_current_value(v);
-		key = get_var_current_key(v);
-		if (i==0)
-		{
-			CU_ASSERT_EQUAL(get_domain_size(value),data_size[i]);
-			CU_ASSERT_STRING_EQUAL(key,var_name1);
-		}
-		else if(i==1){
-			CU_ASSERT_EQUAL(get_domain_size(value),data_size[i]);
-			CU_ASSERT_EQUAL(key,var_name2);
-		}
-		else{
-			CU_ASSERT_EQUAL(get_domain_size(value),data_size[i]);
-			CU_ASSERT_EQUAL(key,var_name3);
-		}
-		get_next_var(v);
-		i++;
-	};
-	CU_ASSERT_EQUAL(get_var_iterator(v),0);
+	CU_ASSERT_STRING_EQUAL(get_variable_name(v,0),var_name1);
+	CU_ASSERT_STRING_EQUAL(get_variable_name(v,1),var_name2);
+	// print_variable(v);
 
 	free_variable(v);
 }
+
 
 void test_insert_in_variable(void){
 	int i;
-	Pvariable v = new_variable();
-	int data_size[3] = {4,2,6};
+	int size = 3;
+
+	Pvariable v = new_variable(size);
 
 	Pdomain d1 = new_domain();
 	int tab1[4] = {1,2,5,6};
@@ -399,29 +316,36 @@ void test_insert_in_variable(void){
 	for (i = 0; i < 6; ++i)
 		insert_in_domain(d3,&tab3[i]);
 
-	char var_name1[256] = "test1";
-	insert_variable(v,var_name1,d1);
+	char var_name1[100] = "test1";
+	insert_variable(v,0,var_name1,d1);
 
-	char var_name2[256] = "test2";
-	insert_variable(v,var_name2,d2);
+	char var_name2[100] = "test2";
+	insert_variable(v,1,var_name2,d2);
 
-	char var_name3[256] = "test3";
-	insert_variable(v,var_name3,d3);
+	char var_name3[100] = "test3";
+	insert_variable(v,2,var_name3,d3);
 
-	Pdomain d11 = query_variable(v,var_name1);
-	CU_ASSERT_EQUAL(get_domain_size(d11),data_size[0]);
-	Pdomain d12 = query_variable(v,var_name2);
-	CU_ASSERT_EQUAL(get_domain_size(d12),data_size[1]);
-	Pdomain d13 = query_variable(v,var_name3);
-	CU_ASSERT_EQUAL(get_domain_size(d13),data_size[2]);
 
+	CU_ASSERT_EQUAL(get_variable_index(v,var_name1),0);
+	CU_ASSERT_EQUAL(get_variable_index(v,var_name2),1);
+	CU_ASSERT_EQUAL(get_variable_index(v,var_name3),2);
+
+	int val = 1;
+	int res = query_value_of_variable_domain(v,0,&val);
+	CU_ASSERT_EQUAL(res,1);
+
+	val = 7;
+	res = query_value_of_variable_domain(v,0,&val);
+	CU_ASSERT_EQUAL(res,0);
+
+	// print_variable(v);
 	free_variable(v);
 }
 
 void test_remove_from_variable(void){
-	int i,size;
-	Pvariable v = new_variable();
-	int data_size[3] = {4,2,6};
+	int i;
+	int size = 3;
+	Pvariable v = new_variable(size);
 
 	Pdomain d1 = new_domain();
 	int tab1[4] = {1,2,5,6};
@@ -439,85 +363,27 @@ void test_remove_from_variable(void){
 		insert_in_domain(d3,&tab3[i]);
 
 	char var_name1[256] = "test1";
-	insert_variable(v,var_name1,d1);
+	insert_variable(v,0,var_name1,d1);
 
 	char var_name2[256] = "test2";
-	insert_variable(v,var_name2,d2);
+	insert_variable(v,1,var_name2,d2);
 
 	char var_name3[256] = "test3";
-	insert_variable(v,var_name3,d3);
-
-	Pdomain d11 = query_variable(v,var_name1);
-	CU_ASSERT_EQUAL(get_domain_size(d11),data_size[0]);
-	Pdomain d12 = query_variable(v,var_name2);
-	CU_ASSERT_EQUAL(get_domain_size(d12),data_size[1]);
-	Pdomain d13 = query_variable(v,var_name3);
-	CU_ASSERT_EQUAL(get_domain_size(d13),data_size[2]);
+	insert_variable(v,2,var_name3,d3);
 
 	size = get_variable_number(v);
 	CU_ASSERT_EQUAL(size,3);
 
-	remove_variable(v,var_name3);
-	CU_ASSERT_EQUAL(query_variable(v,var_name3),NULL);
+	int val = 1;
+	int re1 = remove_value_of_variable_domain(v,0,&val);
+	CU_ASSERT_EQUAL(re1,1);
 
-	size = get_variable_number(v);
-	CU_ASSERT_EQUAL(size,2);
+	val = 1;
+	re1 = remove_value_of_variable_domain(v,0,&val);
+	CU_ASSERT_EQUAL(re1,0);
 
-	remove_variable(v,var_name1);
-	CU_ASSERT_EQUAL(query_variable(v,var_name1),NULL);
-
-	size = get_variable_number(v);
-	CU_ASSERT_EQUAL(size,1);
-
-	remove_variable(v,var_name2);
-	CU_ASSERT_EQUAL(query_variable(v,var_name2),NULL);
-
-	size = get_variable_number(v);
-	CU_ASSERT_EQUAL(size,0);
-
+	// print_variable(v);
 	free_variable(v);
-}
-
-void test_remove_value(void){
-	int i,size;
-	Pvariable v = new_variable();
-
-	Pdomain d1 = new_domain();
-	int tab1[4] = {1,2,5,6};
-	for (i = 0; i < 4; ++i)
-		insert_in_domain(d1,&tab1[i]);
-
-	Pdomain d2 = new_domain();
-	int tab2[2] = {3,8};
-	for (i = 0; i < 2; ++i)
-		insert_in_domain(d2,&tab2[i]);
-
-	Pdomain d3 = new_domain();
-	int tab3[6] = {6,7,8,9,10,11};
-	for (i = 0; i < 6; ++i)
-		insert_in_domain(d3,&tab3[i]);
-
-	char var_name1[256] = "test1";
-	insert_variable(v,var_name1,d1);
-
-	char var_name2[256] = "test2";
-	insert_variable(v,var_name2,d2);
-
-	char var_name3[256] = "test3";
-	insert_variable(v,var_name3,d3);
-
-	size = get_variable_number(v);
-	CU_ASSERT_EQUAL(size,3);
-
-	int val_test = 8;
-	remove_value_of_variable_domain(v,var_name3,&val_test);
-
-	Pdomain d13 = query_variable(v,var_name3);
-	size = get_domain_size(d13);
-
-	CU_ASSERT_EQUAL(size,5);
-
-	free_variable_bis(v);
 }
 
 /* ########################################################## */
@@ -800,7 +666,8 @@ void test_compare_tuple(void){
 /* ########################################################## */
 
 void test_new_constraint(void){
-	Pconstraint c = new_constraint();
+	int size = 10;
+	Pconstraint c = new_constraint(size);
 
 	CU_ASSERT_NOT_EQUAL(c,NULL);
 	// print_constraint(c);
@@ -808,86 +675,18 @@ void test_new_constraint(void){
 }
 
 void test_insert_constraint_1(void){
-	Pconstraint c = new_constraint();
-
-	char var_name1[256] = "A";
-	int res = insert_all_constraint(c,var_name1);
-	CU_ASSERT_EQUAL(res,1);
-	res = insert_all_constraint(c,var_name1);
-	CU_ASSERT_EQUAL(res,0);
-
-	PAVLTree a = query_all_constraint(c,var_name1);
-	CU_ASSERT_EQUAL(avl_tree_num_entries(a),0);
-	CU_ASSERT_EQUAL(get_constraint_number1(c),1);
-
-	char var_name2[256] = "B";
-
-	res = insert_all_constraint(c,var_name2);
-	CU_ASSERT_EQUAL(res,1);
-
-	CU_ASSERT_EQUAL(get_constraint_number1(c),2);
-	// print_constraint(c);
-	free_constraint(c);
-}
-
-void test_insert_constraint_2(void){
-	Pconstraint c = new_constraint();
-
-	char var_name1[256] = "A";
-	char var_name2[256] = "B";
-	char var_name3[256] = "C";
-	char var_name4[256] = "D";
-	char var_name5[256] = "E";
-	char var_name6[256] = "F";
-
-	int res = insert_constraint(c,var_name1,var_name2);
-	CU_ASSERT_EQUAL(res,1);
-	res = insert_constraint(c,var_name1,var_name3);
-	CU_ASSERT_EQUAL(res,1);
-	res = insert_constraint(c,var_name1,var_name4);
-	CU_ASSERT_EQUAL(res,1);
-	res = insert_constraint(c,var_name1,var_name5);
-	CU_ASSERT_EQUAL(res,1);
-	res = insert_constraint(c,var_name1,var_name6);
-	CU_ASSERT_EQUAL(res,1);
-	res = insert_all_constraint(c,var_name1);
-	CU_ASSERT_EQUAL(res,0);
-	res = insert_constraint(c,var_name1,var_name2);
-	CU_ASSERT_EQUAL(res,0);
-	res = insert_constraint(c,var_name2,var_name1);
-	CU_ASSERT_EQUAL(res,1);
-	res = insert_constraint(c,var_name2,var_name3);
-	CU_ASSERT_EQUAL(res,1);
-	res = insert_constraint(c,var_name2,var_name6);
-	CU_ASSERT_EQUAL(res,1);
-
-	PAVLTree a = query_all_constraint(c,var_name1);
-	CU_ASSERT_EQUAL(avl_tree_num_entries(a),5);
-	CU_ASSERT_EQUAL(get_constraint_number1(c),2);
-
-	Ptuple t = query_constraint(c,var_name1,var_name3);
-	CU_ASSERT_NOT_EQUAL(t,NULL);
-	t = query_constraint(c,var_name3,var_name1);
-	CU_ASSERT_EQUAL(t,NULL);
-
-	// print_constraint(c);
-	free_constraint(c);
-}
-
-void test_insert_constraint_3(void){
-	Pconstraint c = new_constraint();
+	int size = 4;
+	Pconstraint c = new_constraint(size);
 	int i;
-	char var_name1[256] = "A";
-	char var_name2[256] = "B";
-	char var_name3[256] = "C";
-	char var_name4[256] = "D";
+	int var_name1 = 0;
+	int var_name2 = 1;
+	int var_name3 = 2;
+	int var_name4 = 3;
 
 	int content[10] = {0,1,2,3,4,5,6,7,8,9};
 
-	PAVLTree a = query_all_constraint(c,var_name1);
-	CU_ASSERT_EQUAL(a,NULL);
 	Ptuple t = query_constraint(c,var_name1,var_name2);
-	CU_ASSERT_EQUAL(t,NULL);
+	CU_ASSERT_EQUAL(get_tuple_number(t),0);
 	Pdomain d = query_constraint_tuples(c,var_name1,var_name2,&content[0]);
 	CU_ASSERT_EQUAL(d,NULL);
 
@@ -900,16 +699,13 @@ void test_insert_constraint_3(void){
 	{
 		res = insert_constraint_tuples(c,var_name1,var_name2,&content[i]);
 		CU_ASSERT_EQUAL(res,1);
+
 		res = insert_constraint_tuples(c,var_name1,var_name3,&content[i]);
 		CU_ASSERT_EQUAL(res,1);
+
 		res = insert_constraint_tuples(c,var_name1,var_name4,&content[i]);
 		CU_ASSERT_EQUAL(res,1);
 	}
-
-	a = query_all_constraint(c,var_name1);
-	CU_ASSERT_EQUAL(avl_tree_num_entries(a),3);
-	a = query_all_constraint(c,var_name2);
-	CU_ASSERT_EQUAL(a,NULL);
 
 	Ptuple ttest = query_constraint(c,var_name1,var_name2);
 
@@ -919,12 +715,13 @@ void test_insert_constraint_3(void){
 	free_constraint(c);
 }
 
-void test_insert_constraint_4(void){
-	Pconstraint c = new_constraint();
+void test_insert_constraint_2(void){
+	int size = 4;
+	Pconstraint c = new_constraint(size);
 	int test;
-	char var_name1[256] = "A";
-	char var_name2[256] = "B";
-	char var_name3[256] = "C";
+	int var_name1 = 1;
+	int var_name2 = 2;
+	int var_name3 = 3;
 
 	int content[10] = {0,1,2,3,4,5,6,7,8,9};
 
@@ -967,211 +764,70 @@ void test_insert_constraint_4(void){
 	free_constraint(c);
 }
 
-void test_constraint_iteration(void){
-	Pconstraint c = new_constraint();
-	char* key;
-	int i,j;
-	PAVLTree value;
-	Ptuple value2;
-	char var_name1[256] = "A";
-	char var_name2[256] = "B";
-	char var_name3[256] = "C";
+/* ########################################################## */
+/* ################### INSTANCE.C TESTS ##################### */
+/* ########################################################## */
 
-	int tab[2][2] = {{2,0},{3,3}};
-
-	int content[10] = {0,1,2,3,4,5,6,7,8,9};
-
-	insert_constraint_tuple(c,var_name1,var_name2,&content[0],&content[1]);
-	insert_constraint_tuple(c,var_name1,var_name2,&content[0],&content[2]);
-	insert_constraint_tuple(c,var_name1,var_name2,&content[1],&content[3]);
-	insert_constraint_tuple(c,var_name2,var_name1,&content[1],&content[2]);
-	insert_constraint_tuple(c,var_name2,var_name1,&content[1],&content[3]);
-	insert_constraint_tuple(c,var_name2,var_name1,&content[2],&content[1]);
-	insert_constraint_tuple(c,var_name2,var_name1,&content[4],&content[1]);
-	insert_constraint_tuple(c,var_name2,var_name3,&content[0],&content[1]);
-	insert_constraint_tuple(c,var_name2,var_name3,&content[0],&content[2]);
-	insert_constraint_tuple(c,var_name2,var_name3,&content[0],&content[0]);
-	insert_constraint_tuple(c,var_name2,var_name3,&content[2],&content[1]);
-	insert_constraint_tuple(c,var_name2,var_name3,&content[3],&content[0]);
-
-	begin_constraint_iteration1(c);
-	i = 0;
-	j = 0;
-	while(constraint_can_iterate1(c)){
-		key = get_constraint_current_key1(c);
-		value = get_constraint_current_value1(c);
-
-		if (i==0){
-			CU_ASSERT_STRING_EQUAL(key,var_name1);
-			CU_ASSERT_EQUAL(avl_tree_num_entries(value),1);
-		}
-		else if(i==1){
-			CU_ASSERT_STRING_EQUAL(key,var_name2);
-			CU_ASSERT_EQUAL(avl_tree_num_entries(value),2);
-		}
-
-		begin_constraint_iteration2(c);
-		j=0;
-		while(constraint_can_iterate2(c)){
-			key = get_constraint_current_key2(c);
-			value2 = get_constraint_current_value2(c);
-			CU_ASSERT_EQUAL(get_tuple_number(value2),tab[i][j]);
-			get_next_constraint2(c);
-			j++;
-		}
-
-		get_next_constraint1(c);
-		i++;
-	}
-
-	begin_constraint_iteration1(c);
-	i = 0;
-	j = 0;
-	while(constraint_can_iterate1(c)){
-		key = get_constraint_current_key1(c);
-		value = get_constraint_current_value1(c);
-
-		if (i==0){
-			CU_ASSERT_STRING_EQUAL(key,var_name1);
-			CU_ASSERT_EQUAL(avl_tree_num_entries(value),1);
-		}
-		else if(i==1){
-			CU_ASSERT_STRING_EQUAL(key,var_name2);
-			CU_ASSERT_EQUAL(avl_tree_num_entries(value),2);
-		}
-
-		begin_constraint_iteration2(c);
-		j=0;
-		while(constraint_can_iterate2(c)){
-			key = get_constraint_current_key2(c);
-			value2 = get_constraint_current_value2(c);
-			CU_ASSERT_EQUAL(get_tuple_number(value2),tab[i][j]);
-			get_next_constraint2(c);
-			j++;
-		}
-
-		get_next_constraint1(c);
-		i++;
-	}
-
-	CU_ASSERT_EQUAL(get_constraint_number1(c),2);
-	CU_ASSERT_EQUAL(get_constraint_number2(c,var_name1),1);
-	CU_ASSERT_EQUAL(get_constraint_number2(c,var_name2),2);
-	CU_ASSERT_EQUAL(get_constraint_total_number(c),3);
-	CU_ASSERT_EQUAL(get_constraint_total_number(c),3);
-	// print_constraint(c);
-	free_constraint(c);
+void test_new_instance(void){
+	int size = 10;
+	Pinstance inst =  new_instance(size);
+	CU_ASSERT_NOT_EQUAL(inst,NULL);
+	free_instance(inst);
 }
 
-void test_constraint_remove(void){
-	Pconstraint c = new_constraint();
+void test_add_instance(void){
+	int size = 10;
+	Pinstance inst =  new_instance(size);
 
-	char var_name1[256] = "A";
-	char var_name2[256] = "B";
-	char var_name3[256] = "C";
-
-	int content[10] = {0,1,2,3,4,5,6,7,8,9};
-
-	insert_constraint_tuple(c,var_name1,var_name2,&content[0],&content[1]);
-	insert_constraint_tuple(c,var_name1,var_name2,&content[0],&content[2]);
-	insert_constraint_tuple(c,var_name1,var_name2,&content[1],&content[3]);
-	insert_constraint_tuple(c,var_name2,var_name1,&content[1],&content[2]);
-	insert_constraint_tuple(c,var_name2,var_name1,&content[1],&content[3]);
-	insert_constraint_tuple(c,var_name2,var_name1,&content[2],&content[1]);
-	insert_constraint_tuple(c,var_name2,var_name1,&content[4],&content[1]);
-	insert_constraint_tuple(c,var_name2,var_name3,&content[0],&content[1]);
-	insert_constraint_tuple(c,var_name2,var_name3,&content[0],&content[2]);
-	insert_constraint_tuple(c,var_name2,var_name3,&content[0],&content[0]);
-	insert_constraint_tuple(c,var_name2,var_name3,&content[2],&content[1]);
-	insert_constraint_tuple(c,var_name2,var_name3,&content[3],&content[0]);
-
-	CU_ASSERT_EQUAL(get_constraint_number1(c),2);
-	int res = remove_all_constraint(c,var_name1);
+	CU_ASSERT_EQUAL(get_number_of_linked(inst),0);
+	int res = add_linked_variable(inst,0,3);
 	CU_ASSERT_EQUAL(res,1);
-	CU_ASSERT_EQUAL(get_constraint_number1(c),1);
-
-	res = remove_all_constraint(c,var_name1);
+	CU_ASSERT_EQUAL(get_number_of_linked(inst),1);
+	CU_ASSERT_EQUAL(is_linked(inst,0),1);
+	CU_ASSERT_EQUAL(is_free(inst,0),0);
+	add_linked_variable(inst,5,12);
+	add_linked_variable(inst,4,-4);
+	CU_ASSERT_EQUAL(is_linked(inst,5),1);
+	CU_ASSERT_EQUAL(is_linked(inst,4),1);
+	CU_ASSERT_EQUAL(is_linked(inst,2),0);
+	CU_ASSERT_EQUAL(get_number_of_linked(inst),3);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),0);
+	int val = 2;
+	add_free_variable(inst,&val);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),1);
+	res = add_linked_variable(inst,4,-4);
 	CU_ASSERT_EQUAL(res,0);
-
-
-	CU_ASSERT_EQUAL(get_constraint_total_number(c),2);
-	res = remove_constraint(c,var_name2,var_name1);
+	val = 4;
+	res = add_free_variable(inst,&val);
+	CU_ASSERT_EQUAL(res,0);
+	res = remove_linked_variable(inst,4);
 	CU_ASSERT_EQUAL(res,1);
-	CU_ASSERT_EQUAL(get_constraint_total_number(c),1);
-
-	res = remove_constraint(c,var_name2,var_name1);
-	CU_ASSERT_EQUAL(res,0);
-
-
-
-
-	Ptuple ttest = query_constraint(c,var_name2,var_name3);
-
-	CU_ASSERT_EQUAL(get_tuple_number(ttest),3);
-	res = remove_constraint_tuples(c,var_name2,var_name3,&content[2]);
+	res = add_free_variable(inst,&val);
 	CU_ASSERT_EQUAL(res,1);
-	ttest = query_constraint(c,var_name2,var_name3);
-	CU_ASSERT_EQUAL(get_tuple_number(ttest),2);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),2);
+	// print_instance(inst);
+	free_instance(inst);
+}
 
-	res = remove_constraint_tuples(c,var_name2,var_name3,&content[2]);
-	CU_ASSERT_EQUAL(res,0);
+void test_remove_instance(void){
+	int size = 10;
+	int i;
+	Pinstance inst =  new_instance(size);
+	int tabint[10] = {0,1,2,3,4,5,6,7,8,9};
 
+	for (i = 0; i < size; i++){
 
+		add_free_variable(inst,&tabint[i]);
+	}
 
-	Pdomain dtest = query_constraint_tuples(c,var_name2,var_name3,&content[0]);
-
-	CU_ASSERT_EQUAL(get_domain_size(dtest),3);
-	res = remove_constraint_tuple(c,var_name2,var_name3,&content[0],&content[0]);
-	CU_ASSERT_EQUAL(res,1);
-	dtest = query_constraint_tuples(c,var_name2,var_name3,&content[0]);
-	CU_ASSERT_EQUAL(get_domain_size(dtest),2);
-
-	res = remove_constraint_tuple(c,var_name2,var_name3,&content[0],&content[0]);
-	CU_ASSERT_EQUAL(res,0);
-
-
-
-
-	CU_ASSERT_EQUAL(get_constraint_number1(c),1);
-	res = remove_all_constraint(c,var_name1);
-	CU_ASSERT_EQUAL(res,0);
-	CU_ASSERT_EQUAL(get_constraint_number1(c),1);
-
-	res = remove_all_constraint(c,var_name1);
-	CU_ASSERT_EQUAL(res,0);
-
-
-	CU_ASSERT_EQUAL(get_constraint_total_number(c),1);
-	res = remove_constraint(c,var_name2,var_name1);
-	CU_ASSERT_EQUAL(res,0);
-	CU_ASSERT_EQUAL(get_constraint_total_number(c),1);
-
-	res = remove_constraint(c,var_name2,var_name1);
-	CU_ASSERT_EQUAL(res,0);
-
-
-	ttest = query_constraint(c,var_name2,var_name3);
-
-	CU_ASSERT_EQUAL(get_tuple_number(ttest),2);
-	res = remove_constraint_tuples(c,var_name2,var_name3,&content[2]);
-	CU_ASSERT_EQUAL(res,0);
-	ttest = query_constraint(c,var_name2,var_name3);
-	CU_ASSERT_EQUAL(get_tuple_number(ttest),2);
-
-	res = remove_constraint_tuples(c,var_name2,var_name3,&content[2]);
-	CU_ASSERT_EQUAL(res,0);
-
-	dtest = query_constraint_tuples(c,var_name2,var_name3,&content[0]);
-
-	CU_ASSERT_EQUAL(get_domain_size(dtest),2);
-	res = remove_constraint_tuple(c,var_name2,var_name3,&content[0],&content[0]);
-	CU_ASSERT_EQUAL(res,0);
-	dtest = query_constraint_tuples(c,var_name2,var_name3,&content[0]);
-	CU_ASSERT_EQUAL(get_domain_size(dtest),2);
-
-	res = remove_constraint_tuple(c,var_name2,var_name3,&content[0],&content[0]);
-	CU_ASSERT_EQUAL(res,0);
-
-	// print_constraint(c);
-	free_constraint(c);
+	print_queue(get_free_list(inst),print_int);
+	CU_ASSERT_EQUAL(get_number_of_linked(inst),0);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),10);
+	int* res = (int *)pop_free_list(inst);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),9);
+	CU_ASSERT_EQUAL(*res,9)
+	int* res1 = (int *)pop_free_list(inst);
+	CU_ASSERT_EQUAL(*res1,8)
+	print_instance(inst);
+	free_instance(inst);
 }

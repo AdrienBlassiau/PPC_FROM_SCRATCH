@@ -34,16 +34,21 @@ Pdomain new_domain(){
 }
 
 Pdomain free_domain(Pdomain d){
-	set_free(get_domain_values(d));
-	free(d);
+	if (d != NULL){
+		set_free(get_domain_values(d));
+		free(d);
+	}
+
 
 	return d;
 }
 
 void free_domain_bis(void *vd){
 	Pdomain d = (Pdomain)vd;
-	set_free(get_domain_values(d));
-	free(d);
+	if (d != NULL){
+		set_free(get_domain_values(d));
+		free(d);
+	}
 }
 
 unsigned int get_domain_size(Pdomain d){

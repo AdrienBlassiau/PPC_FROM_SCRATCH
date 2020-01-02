@@ -61,13 +61,9 @@ void test_new_variable(void);
 
 void test_variable_size(void);
 
-void test_variable_iteration(void);
-
 void test_insert_in_variable(void);
 
 void test_remove_from_variable(void);
-
-void test_remove_value(void);
 
 /* ########################################################## */
 /* ##################### TUPLE.C TESTS ###################### */
@@ -91,9 +87,9 @@ void test_remove_content(void);
 
 void test_compare_tuple(void);
 
-/* ########################################################## */
-/* ################### CONSTRAINT.C TESTS ################### */
-/* ########################################################## */
+// /* ########################################################## */
+// /* ################### CONSTRAINT.C TESTS ################### */
+// /* ########################################################## */
 
 void test_new_constraint(void);
 
@@ -101,12 +97,14 @@ void test_insert_constraint_1(void);
 
 void test_insert_constraint_2(void);
 
-void test_insert_constraint_3(void);
+/* ########################################################## */
+/* ################### INSTANCE.C TESTS ##################### */
+/* ########################################################## */
 
-void test_insert_constraint_4(void);
+void test_new_instance(void);
 
-void test_constraint_iteration(void);
+void test_add_instance(void);
 
-void test_constraint_remove(void);
+void test_remove_instance(void);
 
 #endif

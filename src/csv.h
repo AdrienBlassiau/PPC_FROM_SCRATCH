@@ -18,19 +18,31 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
 
-/** @file read_file.h
+/** @file csv.h
  *
- * @brief This file manages the reading of the entry file.
+ * @brief This file manages the csv structure (high level vision).
  */
 
 
-#ifndef READ__FILE__H
-#define READ__FILE__H
+#ifndef CSV__H
+#define CSV__H
 
 #include "include.h"
-#include "csv.h"
+#include "variable.h"
+#include "constraint.h"
 
+/**
+ * \struct instance
+ * \brief instance structure
+ *
+ * \a An instance structure is a
+ *
+ */
+typedef struct csv {
+  Pvariable variable_list;
+  Pconstraint constraint_list;
+} csv, *Pcsv;
 
-int read_file(char* filename);
+Pcsv new_csv(Pvariable v, Pconstraint c);
 
 #endif

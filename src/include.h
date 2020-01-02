@@ -25,8 +25,12 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/stat.h>
+#include <pthread.h>
 #include <time.h>
 #include <math.h>
 #include <limits.h>
+
+const char* nameProcessus;
 
 #endif

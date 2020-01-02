@@ -51,6 +51,8 @@ extern "C" {
 
 typedef struct _Queue Queue;
 
+typedef struct _Queue *PQueue;
+
 typedef struct _QueueEntry QueueEntry;
 
 /**
