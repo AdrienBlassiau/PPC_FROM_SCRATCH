@@ -26,10 +26,10 @@ CC=gcc -Wall -Wextra -std=c11 -O2 -pthread -lm
 
 all : main
 
-test : main_test.o test_unit.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o duo.o Sstruct.o
+test : main_test.o test_unit.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm -lcunit
 
-main : main.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o csp.o problem.o duo.o Sstruct.o
+main : main.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o csp.o problem.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
 
 main.o : src/main.c
@@ -75,6 +75,12 @@ duo.o : src/duo.c src/duo.h
 	$(CC) -c $< -o obj/$@
 
 Sstruct.o : src/Sstruct.c src/Sstruct.h
+	$(CC) -c $< -o obj/$@
+
+counter.o : src/counter.c src/counter.h
+	$(CC) -c $< -o obj/$@
+
+count.o : src/count.c src/count.h
 	$(CC) -c $< -o obj/$@
 
 compare_int.o : src/compare_int.c src/compare_int.h

@@ -118,14 +118,13 @@ int insert_variable(Pvariable v, int i, char* name, Pdomain d){
 }
 
 
-int remove_value_of_variable_domain(Pvariable v, int i, int* value){
+int remove_value_of_variable_domain(Pvariable v, int i, int value){
 	Pdomain d = v->variables[i];
 	int res = remove_from_domain(d,value);
-
 	return res;
 }
 
-int query_value_of_variable_domain(Pvariable v, int i, int* value){
+int query_value_of_variable_domain(Pvariable v, int i, int value){
 	Pdomain d = v->variables[i];
 	int res = query_domain(d,value);
 

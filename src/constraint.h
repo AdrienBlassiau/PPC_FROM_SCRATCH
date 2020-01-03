@@ -88,10 +88,11 @@ void print_constraint_light(Pconstraint c);
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
  * @param  content   The value of the first variable.
+ * @param  size   	 The size of the domain.
  * @return           1 if success, 0 if the variable1 has already
  *                   assiociated domain.
  */
-int insert_constraint_tuples(Pconstraint c, int variable1, int variable2, int* content);
+int insert_constraint_tuples(Pconstraint c, int variable1, int variable2, int* content, int size);
 
 /**
  * This function inserts a value of variable2 associated to a value of
@@ -104,7 +105,7 @@ int insert_constraint_tuples(Pconstraint c, int variable1, int variable2, int* c
  * @return           1 if success, 0 if the content1 is already associated to
  *                   content2.
  */
-int insert_constraint_tuple(Pconstraint c, int variable1, int variable2, int* content1, int* content2);
+int insert_constraint_tuple(Pconstraint c, int variable1, int variable2, int* content1, int content2, int size);
 
 /**
  * This function queries the constraint struct.
@@ -148,7 +149,7 @@ Pdomain query_constraint_tuples(Pconstraint c, int variable1, int variable2, int
  * @return           Zero if the variable is not in the struct, non-zero if the
  *                   variable is in the struct.
  */
-int query_constraint_tuple(Pconstraint c, int variable1, int variable2, int* content1, int* content2);
+int query_constraint_tuple(Pconstraint c, int variable1, int variable2, int* content1, int content2);
 
 /**
  * This function tests if a constraint exists.

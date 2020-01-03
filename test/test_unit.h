@@ -87,9 +87,9 @@ void test_remove_content(void);
 
 void test_compare_tuple(void);
 
-// /* ########################################################## */
-// /* ################### CONSTRAINT.C TESTS ################### */
-// /* ########################################################## */
+/* ########################################################## */
+/* ################### CONSTRAINT.C TESTS ################### */
+/* ########################################################## */
 
 void test_new_constraint(void);
 
@@ -120,5 +120,29 @@ void test_new_duo(void);
 void test_new_SStruct(void);
 
 void test_add_and_query_SStruct(void);
+
+/* ########################################################## */
+/* ##################### COUNTER.C TESTS #################### */
+/* ########################################################## */
+
+void test_new_counter(void);
+
+void test_counter_size(void);
+
+void test_counter_iteration(void);
+
+void test_insert_in_counter(void);
+
+void test_remove_from_counter(void);
+
+void test_change_counter(void);
+
+/* ########################################################## */
+/* ###################### COUNT.C TESTS ##################### */
+/* ########################################################## */
+
+void test_new_count(void);
+
+void test_insert_count(void);
 
 #endif

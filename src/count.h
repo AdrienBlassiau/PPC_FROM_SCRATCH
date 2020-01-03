@@ -27,7 +27,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef COUNT__H
 #define COUNT__H
 
-#include "tuple.h"
+#include "counter.h"
 #include "variable.h"
 #include "domain.h"
 #include "avl.h"
@@ -40,7 +40,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  */
 typedef struct count {
-  Ptuple** tuples_tab;
+  Pcounter** counters_tab;
   int size;
   int number_of_counts;
 } count, *Pcount;
@@ -82,18 +82,6 @@ void print_count(Pcount c, Pvariable v);
 void print_count_light(Pcount c);
 
 /**
- * This function inserts the domain associated to a value of a variable in a
- * count.
- * @param  c         The count struct.
- * @param  variable1 The first variables of the count.
- * @param  variable2 The second variable of the count.
- * @param  content   The value of the first variable.
- * @return           1 if success, 0 if the variable1 has already
- *                   assiociated domain.
- */
-int insert_count_tuples(Pcount c, int variable1, int variable2, int* content);
-
-/**
  * This function inserts a value of variable2 associated to a value of
  * variable1 in a count.
  * @param  c         The count struct.
@@ -104,7 +92,7 @@ int insert_count_tuples(Pcount c, int variable1, int variable2, int* content);
  * @return           1 if success, 0 if the content1 is already associated to
  *                   content2.
  */
-int insert_count_tuple(Pcount c, int variable1, int variable2, int* content1, int* content2);
+int insert_count_counter(Pcount c, int variable1, int variable2, int* content1, int* content2);
 
 /**
  * This function queries the count struct.
@@ -113,7 +101,7 @@ int insert_count_tuple(Pcount c, int variable1, int variable2, int* content1, in
  * @return           Zero if the variable is not in the struct, non-zero if the
  *                   variable is in the struct.
  */
-Ptuple* query_all_count(Pcount c, int variable1);
+Pcounter* query_all_count(Pcount c, int variable1);
 
 /**
  * This function queries the count struct.
@@ -123,7 +111,7 @@ Ptuple* query_all_count(Pcount c, int variable1);
  * @return           Zero if the variable is not in the struct, non-zero if the
  *                   variable is in the struct.
  */
-Ptuple query_count(Pcount c, int variable1, int variable2);
+Pcounter query_count(Pcount c, int variable1, int variable2);
 
 
 /**
@@ -135,51 +123,19 @@ Ptuple query_count(Pcount c, int variable1, int variable2);
  * @return           Zero if the variable is not in the struct, non-zero if the
  *                   variable is in the struct.
  */
-Pdomain query_count_tuples(Pcount c, int variable1, int variable2, int* content);
+int* query_count_counter(Pcount c, int variable1, int variable2, int* content);
 
-
-/**
- * This function queries the count struct.
- * @param  c     	 The count struct we want to query.
- * @param  variable1 The first variables of the count.
- * @param  variable2 The second variable of the count.
- * @param  content1  The value of the first variable.
- * @param  content2  The value of the seconde variable.
- * @return           Zero if the variable is not in the struct, non-zero if the
- *                   variable is in the struct.
- */
-int query_count_tuple(Pcount c, int variable1, int variable2, int* content1, int* content2);
-
-/**
- * This function tests if a count exists.
- * @param  c         The count struct.
- * @param  variable1 The first variable.
- * @param  variable2 The second variable.
- * @return           1 if success, 0 otherwise.
- */
-int test_contraint_exists(Pcount c, int variable1, int variable2);
 
 /**
  * This function tests if a count with a value exists.
  * @param  c         The count struct.
  * @param  variable1 The first variable.
  * @param  variable2 The second variable.
- * @param  val  The value of the first variable.
+ * @param  content   The value of the first variable.
  * @return           1 if success, 0 otherwise.
  */
-int test_contraint_value_exists(Pcount c, int variable1, int variable2, int val);
+int test_count_counter_is_empty(Pcount c, int variable1, int variable2, int* content);
 
-/**
- * This function tests if a count with a tuple exists.
- * @param  c     	 The count struct we want to query.
- * @param  variable1 The first variables of the count.
- * @param  variable2 The second variable of the count.
- * @param  val1  	 The value of the first variable.
- * @param  val2      The value of the seconde variable.
- * @return           Zero if the variable is not in the struct, non-zero if the
- *                   variable is in the struct.
- */
-int test_contraint_tuple_exists(Pcount c, int variable1, int variable2, int val1, int val2);
 
 #endif
 

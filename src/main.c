@@ -26,7 +26,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 int main(){
 	Pcsp csp;
-	int mode = 0;
+	int mode = 1;
 
 	if (mode == 1){
 		char* filename = "inst/test.cspi";
@@ -37,6 +37,7 @@ int main(){
 	}
 
 	// backtrack(csp);
+	initAC4(csp);
 	print_csp(csp);
 	free_csp(csp);
 

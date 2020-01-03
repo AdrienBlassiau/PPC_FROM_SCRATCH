@@ -26,11 +26,13 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "constraint.h"
 #include "Sstruct.h"
 #include "duo.h"
+#include "count.h"
 
 Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size){
 	Pcsp c = (csp*) calloc(1,sizeof(csp));
 	Pinstance instance_list = new_instance(size);
 	PSstruct Sstruct_list = new_Sstruct(size);
+	Pcount count_list = new_count(size);
 
 	c->variable_list = v;
 	c->constraint_list = cons;
@@ -40,6 +42,7 @@ Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size){
 	c->solution = 0;
 	c->Sstruct_list = Sstruct_list;
 	c->duo_list = new_duostack();
+	c->count_list = count_list;
 
 	return c;
 }
@@ -50,6 +53,8 @@ Pcsp free_csp(Pcsp c){
 	free_constraint(c->constraint_list);
 	free_instance(c->instance_list);
 	free_Sstruct(c->Sstruct_list);
+	free_duostack(c->duo_list);
+	free_count(c->count_list);
 	free(c->tab_int);
 	free(c);
 
@@ -166,6 +171,49 @@ int remove_from_partial_instance(Pcsp csp, int v){
 	return remove_linked_variable(inst,v);
 }
 
+void change_count(Pcsp csp, int x, int y, int* a, int* value){
+	Pcount count = csp->count_list;
+	insert_count_counter(count,x,y,a,value);
+}
+
+int empty_count(Pcsp csp, int x, int y, int* a){
+	Pcount count = csp->count_list;
+	return test_count_counter_is_empty(count,x,y,a);
+}
+
+int remove_of_domain(Pcsp csp, int x, int* a){
+	Pvariable var = csp->variable_list;
+	return remove_value_of_variable_domain(var,x,a);
+}
+
+void add_S(Pcsp csp, int x, int y, int a, int* b){
+	PSstruct Ss = csp->Sstruct_list;
+	insert_SStruct_duo(Ss,y,b,x,a);
+}
+
+
+void add_Q(Pcsp csp, int x, int a){
+	Pduostack ds = csp->duo_list;
+	Pduo duo = new_duo(x,a);
+	ds = push_duostack(ds,duo);
+	csp->duo_list = ds;
+}
+
+int test_constraint(Pcsp csp, int x, int y){
+	Pconstraint cons = csp->constraint_list;
+	return test_contraint_exists(cons,x,y);
+}
+
+int test_tuple(Pcsp csp, int x, int y, int a, int b){
+	Pconstraint cons = csp->constraint_list;
+
+	return test_contraint_tuple_exists(cons,x,y,a,b);
+}
+
+int get_csp_size(Pcsp csp){
+	return csp->size;
+}
+
 int backtrack(Pcsp csp){
 	printf("ENTREE\n");
 	printf("#######\n");
@@ -204,40 +252,75 @@ int backtrack(Pcsp csp){
 
 int initAC4(Pcsp csp){
 	int x,y,a,b,i,j,total;
-	int size = csp->size;
-	Pconstraint cons = csp->constraint_list;
-	PSstruct Sstruct = csp->Sstruct_list;
+	int size = get_csp_size(csp);
 	Pdomain dx,dy;
-	int a,b;
+	int cc=0;
+	int* tab_alloc = calloc(100000000,sizeof(int));
+	int copy_a;
 
 	for (x = 0; x < size; x++){
 		for (y = 0; y < size; y++){
-			if(test_contraint_exists(cons,i,j)){
+			if(test_constraint(csp,x,y)){
+				printf("###\n");
+				printf("CONSTRAINT (%d,%d) EXISTS\n",x,y);
+
 				dx = get_current_variable_domain(csp,x);
+
+				printf("DOMAIN x:%d\n",x);
+				print_domain(dx);
 
 				begin_domain_iteration(dx);
 				i = 0;
 				while(domain_can_iterate(dx)){
-					a = get_current_value(dx);
 					total = 0;
+
+					a = get_current_value(dx);
+					printf("CURRENT VALUE a:%d\n",a);
 
 					dy = get_current_variable_domain(csp,y);
 
+					printf("DOMAIN y:%d\n",y);
+					print_domain(dy);
+
 					begin_domain_iteration(dy);
+
 					j = 0;
 					while(domain_can_iterate(dy)){
 						b = get_current_value(dy);
-						if(test_contraint_tuple_exists(cons,x,y,a,b)){
+						printf("CURRENT VALUE b:%d\n",b);
+
+						if(test_tuple(csp,x,y,a,b)){
+							printf("%d->%d in C(%d,%d)\n",a,b,x,y);
 							total++;
-							insert_SStruct_duo(Sstruct,x,&y,a,b);
+							tab_alloc[cc] = b;
+							add_S(csp,x,y,a,&tab_alloc[cc]);
+							printf("Sstruct :\n");
+							print_Sstruct(csp->Sstruct_list);
+							printf("--\n");
+							cc++;
 						}
 						j++;
 					}
-					i++.
+					tab_alloc[cc] = a;
+					tab_alloc[cc+1] = total;
+					change_count(csp,x,y,&tab_alloc[cc],&tab_alloc[cc+1]);
+
+					printf("Count :\n");
+					print_count_light(csp->count_list);
+
+					if (empty_count(csp,x,y,&tab_alloc[cc])){
+						printf("IT'S EMPTY !\n");
+						copy_a = a;
+						remove_of_domain(csp,x,&tab_alloc[cc]);
+						add_Q(csp,x,tab_alloc[cc]);
+					}
+					cc=cc+2;
+					i++;
 				}
 			}
 		}
 	}
+	return 1;
 }
 
 int AC4(Pcsp csp){

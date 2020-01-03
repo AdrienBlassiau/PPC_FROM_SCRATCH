@@ -121,7 +121,7 @@ int insert_variable(Pvariable v, int i, char* name, Pdomain d);
  * @param  value    The value of the variable we want to remove.
  * @return          The new domain.
  */
-int remove_value_of_variable_domain(Pvariable v, int i, int* value);
+int remove_value_of_variable_domain(Pvariable v, int i, int value);
 
 /**
  * This function queries a value of a variable domain.
@@ -130,7 +130,7 @@ int remove_value_of_variable_domain(Pvariable v, int i, int* value);
  * @param  value    The value of the variable we want to remove.
  * @return          The new domain.
  */
-int query_value_of_variable_domain(Pvariable v, int i, int* value);
+int query_value_of_variable_domain(Pvariable v, int i, int value);
 
 /**
  * This function return the domain of a variable.

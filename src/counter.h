@@ -24,8 +24,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * @brief This file manages the association list of a the value and a number.
  */
 
-#ifndef TUPLE__H
-#define TUPLE__H
+#ifndef COUNTER__H
+#define COUNTER__H
 
 #include "avl.h"
 
@@ -152,7 +152,7 @@ int remove_counter(Pcounter c, int* content);
  * @param  t        The counter struct.
  * @param  content  The content we want to remove a value from its domain.
  * @param  value    The value of the content we want to remove.
- * @return          The new domain.
+ * @return          The new value.
  */
 int* change_value_of_counter(Pcounter c, int* content, int* value);
 

@@ -18,6 +18,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
  */
 
+#include "include.h"
 #include "compare_int.h"
 
 /* Comparison functions for a pointer to an integer */

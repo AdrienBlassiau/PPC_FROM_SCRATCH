@@ -36,17 +36,17 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * variable.
  */
 typedef struct domain {
-  PSet values;
-  SetIterator iterator;
+  Pset values;
 } domain, *Pdomain;
 
 
 
 /**
  * This function create a new domain d.
+ * @param  d The size if the domain d.
  * @return A new domain.
  */
-Pdomain new_domain();
+Pdomain new_domain(int size);
 
 
 /**
@@ -74,7 +74,7 @@ unsigned int get_domain_size(Pdomain d);
  * @param d 	 The domain d.
  * @param return The set of values of the domain.
  */
-PSet get_domain_values(Pdomain d);
+Pset get_domain_values(Pdomain d);
 
 /**
  * This function begins the set of values iteration.
@@ -97,14 +97,6 @@ int domain_can_iterate(Pdomain d);
 int get_current_value(Pdomain d);
 
 /**
- * This function returns the iterator of the set of values.
- * @param d 	 The domain d.
- * @param return The iterator.
- */
-SetIterator get_dom_iterator(Pdomain d);
-
-
-/**
  * This function prints the domain d.
  * @param vd The domain d.
  */
@@ -119,7 +111,7 @@ void print_domain(void *vd);
  *              if it was not possible to allocate memory for the
  *              new entry.
  */
-int insert_in_domain(Pdomain d, int* value);
+int insert_in_domain(Pdomain d, int value);
 
 /**
  * This function removes a value in the domain d.
@@ -129,7 +121,7 @@ int insert_in_domain(Pdomain d, int* value);
  *              from the set, zero (false) if the value was not
  *              found in the set.
  */
-int remove_from_domain(Pdomain d, int* value);
+int remove_from_domain(Pdomain d, int value);
 
 /**
  * This function queries the domain
@@ -138,6 +130,6 @@ int remove_from_domain(Pdomain d, int* value);
  * @return       Zero if the value is not in the set, non-zero if the
  *               value is in the set.
  */
-int query_domain(Pdomain d, int* value);
+int query_domain(Pdomain d, int value);
 
 #endif

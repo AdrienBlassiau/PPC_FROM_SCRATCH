@@ -157,7 +157,7 @@ int remove_tuple(Ptuple t, int* content);
  * @param  value    The value of the content we want to remove.
  * @return          The new domain.
  */
-Pdomain remove_value_of_content_domain(Ptuple t, int* content, int* value);
+Pdomain remove_value_of_content_domain(Ptuple t, int* content, int value);
 
 /**
  * This function queries the tuple struct.

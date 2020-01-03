@@ -32,7 +32,7 @@ Pcounter new_counter(){
 	c->counters_key = NULL;
 	c->iterator = 0;
 
-	return t;
+	return c;
 }
 
 Pcounter free_counter(Pcounter c){
@@ -41,7 +41,7 @@ Pcounter free_counter(Pcounter c){
 	free(c->counters_key);
 	free(c);
 
-	return t;
+	return c;
 }
 
 void free_counter_bis(void *vc){
@@ -73,7 +73,7 @@ void begin_counter_iteration(Pcounter c){
 	free(c->counters_key);
 
 	PAVLTree counters = get_counters(c);
-	set_counter_iterator(t,0);
+	set_counter_iterator(c,0);
 	AVLTreeValue * array1 = avl_tree_to_array(counters);
 	AVLTreeValue * array2 = avl_tree_to_array_2(counters);
 	c->counters_tab = array1;
@@ -87,7 +87,7 @@ int counter_can_iterate(Pcounter c){
 		return 1;
 	}
 	else{
-		set_counter_iterator(t,0);
+		set_counter_iterator(c,0);
 		return 0;
 	}
 }
@@ -113,12 +113,17 @@ int get_counter_current_value(Pcounter c){
 void get_next_counter(Pcounter c){
 	int iterator = get_counter_iterator(c);
 
-	set_counter_iterator(t,iterator+1);
+	set_counter_iterator(c,iterator+1);
+}
+
+void print_key(void *vc){
+	int *c = (int*) vc;
+	printf("%d -> ",*c);
 }
 
 void print_counter(void *vc){
 	Pcounter c = (Pcounter) vc;
-	print_avl_tree(get_counters(c),print_int,print_content);
+	print_avl_tree(get_counters(c),print_int,print_key);
 }
 
 int insert_counter(Pcounter c, int* content, int* count){
@@ -138,14 +143,14 @@ int remove_counter(Pcounter c, int* content){
 	return res;
 }
 
-int change_value_of_counter(Pcounter c, int* content, int* value){
+int* change_value_of_counter(Pcounter c, int* content, int* value){
 	PAVLTree counters = get_counters(c);
 	int* res = avl_tree_change_value(counters,content,value);
 
 	return res;
 }
 
-int query_counter(Pcounter c, int* content){
+int* query_counter(Pcounter c, int* content){
 	PAVLTree counters = get_counters(c);
 	int* d =  avl_tree_lookup(counters,content);
 

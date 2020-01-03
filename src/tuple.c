@@ -149,7 +149,7 @@ int remove_tuple(Ptuple t, int* content){
 	return res;
 }
 
-Pdomain remove_value_of_content_domain(Ptuple t, int* content, int* value){
+Pdomain remove_value_of_content_domain(Ptuple t, int* content, int value){
 	PAVLTree tuples = get_tuples(t);
 	Pdomain d = query_tuple(t,content);
 	remove_from_domain(d,value);

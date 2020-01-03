@@ -33,6 +33,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "constraint.h"
 #include "Sstruct.h"
 #include "duo.h"
+#include "count.h"
 
 /**
  * \struct csp
@@ -47,6 +48,7 @@ typedef struct csp {
   Pinstance instance_list;
   PSstruct Sstruct_list;
   Pduostack duo_list;
+  Pcount count_list;
   int* tab_int;
   int size;
   int solution;
