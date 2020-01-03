@@ -36,7 +36,7 @@ int main(){
 		csp = generate_8_queens_puzzle(4);
 	}
 
-	backtrack(csp);
+	// backtrack(csp);
 	print_csp(csp);
 	free_csp(csp);
 

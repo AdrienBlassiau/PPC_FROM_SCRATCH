@@ -31,18 +31,22 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "variable.h"
 #include "instance.h"
 #include "constraint.h"
+#include "Sstruct.h"
+#include "duo.h"
 
 /**
- * \struct instance
- * \brief instance structure
+ * \struct csp
+ * \brief csp structure
  *
- * \a An instance structure is a
+ * \a An csp structure is the reprensetation of a csp
  *
  */
 typedef struct csp {
   Pvariable variable_list;
   Pconstraint constraint_list;
   Pinstance instance_list;
+  PSstruct Sstruct_list;
+  Pduostack duo_list;
   int* tab_int;
   int size;
   int solution;
@@ -56,5 +60,9 @@ Pcsp free_csp(Pcsp c);
 void print_csp(void * pcsp);
 
 int backtrack(Pcsp c);
+
+int initAC4(Pcsp csp);
+
+int AC4(Pcsp csp);
 
 #endif

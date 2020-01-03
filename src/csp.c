@@ -19,15 +19,18 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "include.h"
+#include "tools.h"
 #include "csp.h"
 #include "variable.h"
 #include "instance.h"
 #include "constraint.h"
-#include "tools.h"
+#include "Sstruct.h"
+#include "duo.h"
 
 Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size){
 	Pcsp c = (csp*) calloc(1,sizeof(csp));
 	Pinstance instance_list = new_instance(size);
+	PSstruct Sstruct_list = new_Sstruct(size);
 
 	c->variable_list = v;
 	c->constraint_list = cons;
@@ -35,6 +38,8 @@ Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size){
 	c->instance_list = instance_list;
 	c->size = size;
 	c->solution = 0;
+	c->Sstruct_list = Sstruct_list;
+	c->duo_list = new_duostack();
 
 	return c;
 }
@@ -44,6 +49,7 @@ Pcsp free_csp(Pcsp c){
 	free_variable(c->variable_list);
 	free_constraint(c->constraint_list);
 	free_instance(c->instance_list);
+	free_Sstruct(c->Sstruct_list);
 	free(c->tab_int);
 	free(c);
 
@@ -194,4 +200,47 @@ int backtrack(Pcsp csp){
 	reverse_non_instanciated(csp,x);
 
 	return 0;
+}
+
+int initAC4(Pcsp csp){
+	int x,y,a,b,i,j,total;
+	int size = csp->size;
+	Pconstraint cons = csp->constraint_list;
+	PSstruct Sstruct = csp->Sstruct_list;
+	Pdomain dx,dy;
+	int a,b;
+
+	for (x = 0; x < size; x++){
+		for (y = 0; y < size; y++){
+			if(test_contraint_exists(cons,i,j)){
+				dx = get_current_variable_domain(csp,x);
+
+				begin_domain_iteration(dx);
+				i = 0;
+				while(domain_can_iterate(dx)){
+					a = get_current_value(dx);
+					total = 0;
+
+					dy = get_current_variable_domain(csp,y);
+
+					begin_domain_iteration(dy);
+					j = 0;
+					while(domain_can_iterate(dy)){
+						b = get_current_value(dy);
+						if(test_contraint_tuple_exists(cons,x,y,a,b)){
+							total++;
+							insert_SStruct_duo(Sstruct,x,&y,a,b);
+						}
+						j++;
+					}
+					i++.
+				}
+			}
+		}
+	}
+}
+
+int AC4(Pcsp csp){
+	initAC4(csp);
+	return 1;
 }

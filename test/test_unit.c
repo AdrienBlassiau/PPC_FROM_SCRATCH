@@ -30,6 +30,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "../src/compare_tuple.h"
 #include "../src/constraint.h"
 #include "../src/instance.h"
+#include "../src/duo.h"
+#include "../src/Sstruct.h"
 
 int setup(void)  { return 0; }
 int teardown(void) { return 0; }
@@ -83,7 +85,7 @@ int init_test(void){
 		return CU_get_error();
 	}
 
-	CU_pSuite suite5 = CU_add_suite("tuple_test",setup,teardown);
+	CU_pSuite suite5 = CU_add_suite("constraint_test",setup,teardown);
 
 	if((NULL==CU_add_test(suite5, "Test new cons", test_new_constraint))||
 		(NULL==CU_add_test(suite5, "Test ins 1", test_insert_constraint_1))||
@@ -93,11 +95,28 @@ int init_test(void){
 		return CU_get_error();
 	}
 
-	CU_pSuite suite6 = CU_add_suite("tuple_test",setup,teardown);
+	CU_pSuite suite6 = CU_add_suite("instance_test",setup,teardown);
 
 	if((NULL==CU_add_test(suite6, "Test new inst", test_new_instance))||
 		(NULL==CU_add_test(suite6, "Test add inst", test_add_instance))||
 		(NULL==CU_add_test(suite6, "Test rm inst", test_remove_instance)))
+	{
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
+	CU_pSuite suite7 = CU_add_suite("duo_test",setup,teardown);
+
+	if((NULL==CU_add_test(suite7, "Test new duo", test_new_duo)))
+	{
+		CU_cleanup_registry();
+		return CU_get_error();
+	}
+
+	CU_pSuite suite8 = CU_add_suite("Sstruct_test",setup,teardown);
+
+	if((NULL==CU_add_test(suite8, "Test new Sstruct", test_new_SStruct))||
+		(NULL==CU_add_test(suite8, "Test a+q Ss", test_add_and_query_SStruct)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -828,11 +847,69 @@ void test_remove_instance(void){
 	CU_ASSERT_EQUAL(get_number_of_linked(inst),0);
 	CU_ASSERT_EQUAL(get_number_of_free(inst),10);
 	int res = pop_free_list(inst);
-	print_instance(inst);
+	// print_instance(inst);
 	CU_ASSERT_EQUAL(get_number_of_free(inst),9);
 	CU_ASSERT_EQUAL(res,9)
 	int res1 = pop_free_list(inst);
 	CU_ASSERT_EQUAL(res1,8)
 	// print_instance(inst);
 	free_instance(inst);
+}
+
+/* ########################################################## */
+/* ####################### DUO.C TESTS ###################### */
+/* ########################################################## */
+
+void test_new_duo(void){
+	Pduo d1 = new_duo(1,2);
+	Pduo d2 = new_duo(3,3);
+	Pduo d3 = new_duo(1,4);
+
+	Pduostack ds = new_duostack();
+
+	ds = push_duostack(ds,d1);
+	ds = push_duostack(ds,d2);
+	ds = push_duostack(ds,d3);
+
+	// print_duostack(ds);
+	CU_ASSERT_EQUAL(is_empty_duostack(ds),0);
+	CU_ASSERT_EQUAL(duostack_length(ds),3);
+	free_duostack(ds);
+}
+
+/* ########################################################## */
+/* ##################### SSTRUCT.C TESTS #################### */
+/* ########################################################## */
+
+void test_new_SStruct(void){
+	int size = 10;
+	int i;
+	PSstruct Ss = new_Sstruct(size);
+	for (i = 0; i < size; i++){
+		CU_ASSERT_NOT_EQUAL(Ss->duo_tree[i],NULL);
+	}
+	// print_Sstruct(Ss);
+	free_Sstruct(Ss);
+}
+
+void test_add_and_query_SStruct(void){
+	int size = 10;
+	int i;
+	PSstruct Ss = new_Sstruct(size);
+	int content[10] = {0,1,2,3,4,5,6,7,8,9};
+	for (i = 0; i < size; i++){
+		CU_ASSERT_NOT_EQUAL(Ss->duo_tree[i],NULL);
+	}
+
+	insert_SStruct_duo(Ss,5,&content[9],3,4);
+	insert_SStruct_duo(Ss,5,&content[9],3,5);
+	insert_SStruct_duo(Ss,5,&content[8],1,3);
+	insert_SStruct_duo(Ss,2,&content[0],8,2);
+
+	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,5,&content[9])),2);
+	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,5,&content[8])),1);
+	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,2,&content[0])),1);
+	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,0,&content[0])),0);
+
+	free_Sstruct(Ss);
 }
