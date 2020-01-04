@@ -133,6 +133,7 @@ Pcounter query_count(Pcount c, int variable1, int variable2){
 
 int* query_count_counter(Pcount c, int variable1, int variable2, int* content){
 	Pcounter t = query_count(c,variable1,variable2);
+
 	if (t != NULL){
 		int* d = query_counter(t,content);
 		return d;
@@ -144,7 +145,7 @@ int* query_count_counter(Pcount c, int variable1, int variable2, int* content){
 int test_count_counter_is_empty(Pcount c, int variable1, int variable2, int* content){
 	int* t = query_count_counter(c,variable1,variable2,content);
 	if (t==NULL){
-		return 0;
+		return 1;
 	}
 	return *t == 0;
 }

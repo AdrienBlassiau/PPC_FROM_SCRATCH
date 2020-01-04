@@ -49,7 +49,7 @@ void free_domain_bis(void *vd){
 	}
 }
 
-unsigned int get_domain_size(Pdomain d){
+int get_domain_size(Pdomain d){
 	return get_current_size(get_domain_values(d));
 }
 
@@ -63,32 +63,38 @@ void begin_domain_iteration(Pdomain d){
 	set_iterate(values);
 }
 
-int domain_can_iterate(Pdomain d){
-	Pset values = get_domain_values(d);
-	int more =  set_iter_has_more(values);
-
-	return more;
+int domain_can_iterate(Pdomain d, int i){
+	return i < get_domain_size(d);
 }
 
 int get_current_value(Pdomain d){
 	Pset values = get_domain_values(d);
 	int value = get_set_value(values);
 
-	printf("TEST : %d\n",value);
-
 	return value;
 }
 
 void print_domain(void* vd){
+	int i;
 	Pdomain d = (Pdomain) vd;
 	int value;
+	int iterator = d->values->iterator;
+
+	if (get_domain_size(d)==0){
+		printf("Empty domain\n");
+		return;
+	}
+
 	begin_domain_iteration(d);
 
-	while(domain_can_iterate(d)){
+	i=0;
+	while(domain_can_iterate(d,i)){
 		value = get_current_value(d);
 		printf("%d ",value);
+		i++;
 	}
 	printf("\n");
+	d->values->iterator = iterator;
 }
 
 int insert_in_domain(Pdomain d, int value){

@@ -67,25 +67,25 @@ void set_iterate(Pset set){
 
 int set_iter_has_more(Pset set){
 	int iterator = set->iterator;
-	int current_size = get_current_size(set);
-	if (iterator+1 >=current_size){
-		return 0;
+	int size = get_total_size(set);
+	if (iterator < size){
+		return 1;
 	}
-	return 1;
+	return 0;
 }
 
 int get_set_value(Pset set){
 	int i;
 	int iterator = set->iterator;
 	int** values = set->values;
-	int current_size = get_current_size(set);
-	set->iterator = iterator+1;
-
-	for (i = iterator; i < current_size; ++i){
+	int size = get_total_size(set);
+	for (i = iterator; i < size; i++){
 		if (values[i][0]){
+			set->iterator = i+1;
 			return values[i][1];
 		}
 	}
+	set->iterator = i+1;
 
 	return -1;
 }
@@ -141,4 +141,14 @@ int set_query(Pset set, int val){
 	}
 
 	return 0;
+}
+
+void print_set(Pset set){
+	int i;
+	int size = set->total_size;
+	int** values = set->values;
+
+	for (i = 0; i < size; i++){
+		printf("[%d]: open:%d et value:%d \n",i,values[i][0],values[i][1]);
+	}
 }

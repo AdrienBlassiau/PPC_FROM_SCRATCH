@@ -26,18 +26,21 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 int main(){
 	Pcsp csp;
-	int mode = 1;
+	int mode = 0;
 
 	if (mode == 1){
-		char* filename = "inst/test.cspi";
+		char* filename = "inst/inst1.cspi";
 		csp = generate_from_file(filename);
 	}
 	else{
-		csp = generate_8_queens_puzzle(4);
+		csp = generate_8_queens_puzzle(10);
 	}
 
-	// backtrack(csp);
-	initAC4(csp);
+	// print_csp(csp);
+	// forward_checking(csp);
+	// AC4(csp);
+	// print_csp(csp);
+	backtrack(csp);
 	print_csp(csp);
 	free_csp(csp);
 

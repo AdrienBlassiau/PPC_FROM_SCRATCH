@@ -51,11 +51,12 @@ typedef struct csp {
   Pcount count_list;
   int* tab_int;
   int size;
+  int max_dom_size;
   int solution;
 } csp, *Pcsp;
 
 
-Pcsp new_csp(Pvariable v, Pconstraint c, int* tab_int, int size);
+Pcsp new_csp(Pvariable v, Pconstraint c, int* tab_int, int size, int max_dom_size);
 
 Pcsp free_csp(Pcsp c);
 
@@ -63,8 +64,10 @@ void print_csp(void * pcsp);
 
 int backtrack(Pcsp c);
 
-int initAC4(Pcsp csp);
+int initAC4(Pcsp csp, int* tab_alloc);
 
 int AC4(Pcsp csp);
+
+int forward_checking(Pcsp csp);
 
 #endif

@@ -181,7 +181,6 @@ void test_get_domain_size(void){
 	insert_in_domain(d,val2);
 
 	size = get_domain_size(d);
-	print_domain(d);
 	CU_ASSERT_EQUAL(size,2);
 
 	free_domain(d);
@@ -194,8 +193,7 @@ void test_domain_iteration(void){
 	int tab[4] = {1,2,5,6};
 	int i = 0;
 
-	for (i = 0; i < 4; ++i)
-	{
+	for (i = 0; i < 4; ++i){
 		insert_in_domain(d,tab[i]);
 	}
 
@@ -210,7 +208,7 @@ void test_domain_iteration(void){
 	begin_domain_iteration(d);
 
 	i = 0;
-	while(domain_can_iterate(d)){
+	while(domain_can_iterate(d,i)){
 		value = get_current_value(d);
 		CU_ASSERT_EQUAL(value,tab[i]);
 		i++;
@@ -219,7 +217,7 @@ void test_domain_iteration(void){
 	begin_domain_iteration(d);
 
 	i = 0;
-	while(domain_can_iterate(d)){
+	while(domain_can_iterate(d,i)){
 		value = get_current_value(d);
 		CU_ASSERT_EQUAL(value,tab[i]);
 		i++;
@@ -264,6 +262,7 @@ void test_remove_from_domain(void){
 		insert_in_domain(d,tab[i]);
 	}
 
+	// print_domain(d);
 	int val1 = 6;
 	size = get_domain_size(d);
 	CU_ASSERT_EQUAL(size,val1);
@@ -272,7 +271,7 @@ void test_remove_from_domain(void){
 	remove_from_domain(d,val2);
 	size = get_domain_size(d);
 	CU_ASSERT_EQUAL(size,5);
-
+	// print_domain(d);
 	int val3 = 1;
 	remove_from_domain(d,val3);
 	size = get_domain_size(d);
@@ -282,7 +281,7 @@ void test_remove_from_domain(void){
 	remove_from_domain(d,val4);
 	size = get_domain_size(d);
 	CU_ASSERT_EQUAL(size,4);
-
+	// print_domain(d);
 	int val5 = 5;
 	remove_from_domain(d,val5);
 	int val6 = 6;
@@ -293,6 +292,11 @@ void test_remove_from_domain(void){
 	remove_from_domain(d,val8);
 	size = get_domain_size(d);
 	CU_ASSERT_EQUAL(size,0);
+	// print_domain(d);
+	for (i = 0; i < size; ++i)
+	{
+		CU_ASSERT_EQUAL(query_domain(d,tab[i]),0);
+	}
 	free_domain_bis(d);
 }
 

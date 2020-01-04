@@ -28,82 +28,85 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 char** get_line_tab(int* pos, int* line_size, const char* file){
 	int i,k;
-    int element_number = 0;
-    int max_var_size;
-    int line_pos = *pos;
+  int element_number = 0;
+  int max_var_size;
+  int line_pos = *pos;
 
-    /* FIRST : We count the number of elementes of the line */
-    i=0;
-    while(file[*pos] != '\n') {
-    	if (file[*pos] == ' '){
-    		element_number+=1;
-    	}
-        i++;
-        (*pos)++;
-    }
+  /* FIRST : We count the number of elementes of the line */
+  i=0;
+  while(file[*pos] != '\n') {
+  	if (file[*pos] == ' '){
+  		element_number+=1;
+  	}
+    i++;
     (*pos)++;
+  }
+  (*pos)++;
 
-    if (i != 0) element_number +=1;
-    max_var_size = i-2*(element_number-1);
+  if (i != 0) element_number +=1;
+  max_var_size = i-2*(element_number-1);
 
-    /* SECOND : We store each variable */
-    char** line_tab = xcalloc(element_number,sizeof(char*));
+  /* SECOND : We store each variable */
+  char** line_tab = xcalloc(element_number,sizeof(char*));
 
-    k = 0;
-    for (i = 0; i < element_number; i++){
-    	line_tab[i] = xcalloc(max_var_size+1,sizeof(char));
-    	while(file[line_pos] != ' ' && file[line_pos] != '\n') {
-    	    line_tab[i][k] = file[line_pos];
-    	    line_pos++;
-    	    k++;
-    	}
-    	k = 0;
-    	line_pos++;
-    }
+  k = 0;
+  for (i = 0; i < element_number; i++){
+  	line_tab[i] = xcalloc(max_var_size+1,sizeof(char));
+  	while(file[line_pos] != ' ' && file[line_pos] != '\n') {
+     line_tab[i][k] = file[line_pos];
+     line_pos++;
+     k++;
+   }
+   k = 0;
+   line_pos++;
+ }
 
-    *line_size = element_number;
-    return line_tab;
+ *line_size = element_number;
+ return line_tab;
 }
 
-Pvariable make_var_dom(int* pos, const char* file, char** var_tab, int variable_number, Pvariable v){
+Pvariable make_var_dom(int* pos, const char* file, char** var_tab, int variable_number, Pvariable v, int* max_dom_size){
 	int i,j;
 	int line_size=0;
 	char** line_tab;
 	Pdomain d;
 	int str_to_int_res = 0;
+  *max_dom_size = 0;
 
-    for (i = 0; i < variable_number; i++){
-    	d = new_domain();
-    	line_tab = get_line_tab(pos,&line_size,file);
-    	for (j = 0; j < line_size; j++){
-    		str_to_int_res = (int) strtol(line_tab[j], (char **)NULL, 10);
-    		insert_in_domain(d, &str_to_int_res);
-    	}
-    	insert_variable(v,i,var_tab[i],d);
-    	free_matrix_string(line_tab,line_size);
+  for (i = 0; i < variable_number; i++){
+  	line_tab = get_line_tab(pos,&line_size,file);
+    d = new_domain(line_size);
+    *max_dom_size = line_size > *max_dom_size ? line_size : *max_dom_size;
+    for (j = 0; j < line_size; j++){
+      str_to_int_res = (int) strtol(line_tab[j], (char **)NULL, 10);
+      insert_in_domain(d, str_to_int_res);
     }
-    free_matrix_string(var_tab,variable_number);
-	return v;
+    insert_variable(v,i,var_tab[i],d);
+    free_matrix_string(line_tab,line_size);
+  }
+  free_matrix_string(var_tab,variable_number);
+
+  return v;
 }
 
 int get_constraint_number(int* pos, const char* file){
-	int line_size=0;
-    char** line_tab;
-    int str_to_int_res = 0;
+  int line_size=0;
+  char** line_tab;
+  int str_to_int_res = 0;
 
-    line_tab = get_line_tab(pos,&line_size,file);
+  line_tab = get_line_tab(pos,&line_size,file);
 
-    if (line_size != 1){
-    	return -1;
-    }
+  if (line_size != 1){
+  	return -1;
+  }
 
-    str_to_int_res = (int) strtol(line_tab[0], (char **)NULL, 10);
+  str_to_int_res = (int) strtol(line_tab[0], (char **)NULL, 10);
 
-    free_matrix_string(line_tab,line_size);
-    return str_to_int_res;
+  free_matrix_string(line_tab,line_size);
+  return str_to_int_res;
 }
 
-Pconstraint make_constraint(int* pos, const char* file, int constraint_number, Pconstraint c, Pvariable v, int* tab_int){
+Pconstraint make_constraint(int* pos, const char* file, int constraint_number, Pconstraint c, Pvariable v, int* tab_int, int* max_dom_size){
 	int i,j,k;
 	int line_size = 0;
 	char ** first_constraint_line;
@@ -139,14 +142,14 @@ Pconstraint make_constraint(int* pos, const char* file, int constraint_number, P
 			k++;
 			tab_int[k] = (int) strtol(tuple2, (char **)NULL, 10);
 
-			insert_constraint_tuple(c,constraint1_int,constraint2_int,&tab_int[k-1],&tab_int[k]);
+			insert_constraint_tuple(c,constraint1_int,constraint2_int,&tab_int[k-1],tab_int[k],*max_dom_size);
 			k++;
 			free_matrix_string(current_constraint_line,line_size);
 		}
-	    i++;
-	}
+   i++;
+ }
 
-	return c;
+ return c;
 }
 
 Pcsp generate_from_file(char* filename){
@@ -176,20 +179,21 @@ Pcsp generate_from_file(char* filename){
   fclose(fd);
 
   int size = (int)(info.st_size);
-
   int* tab_int = calloc(size,sizeof(int));
+  int max_dom_size = 0;
 
   var_tab = get_line_tab(&pos,&line_size,buf);
   variable_number = line_size;
   Pvariable v = new_variable(variable_number);
-  make_var_dom(&pos, buf, var_tab, variable_number, v);
+
+  make_var_dom(&pos, buf, var_tab, variable_number, v, &max_dom_size);
 
   constraint_number = get_constraint_number(&pos,buf);
 
   Pconstraint c = new_constraint(variable_number);
-  make_constraint(&pos, buf, constraint_number, c, v, tab_int);
+  make_constraint(&pos, buf, constraint_number, c, v, tab_int, &max_dom_size);
 
-  csp = new_csp(v,c,tab_int,variable_number);
+  csp = new_csp(v,c,tab_int,variable_number,max_dom_size);
 
   xfree(buf);
 

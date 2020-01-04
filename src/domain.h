@@ -67,7 +67,7 @@ void free_domain_bis(void *d);
  * @param d      The domain d.
  * @param return The size of the domain.
  */
-unsigned int get_domain_size(Pdomain d);
+int get_domain_size(Pdomain d);
 
 /**
  * This function returns the set of value of the domain.
@@ -85,10 +85,11 @@ void begin_domain_iteration(Pdomain d);
 /**
  * This function iterates over the domain while it is possible.
  * @param d The domain d.
+ * @param d The current position d.
  * @return  The next value from the set, or @ref SET_NULL if no
  *          more values are available.
  */
-int domain_can_iterate(Pdomain d);
+int domain_can_iterate(Pdomain d, int i);
 
 /**
  * This function iterates and get the current value of the iteration.

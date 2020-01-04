@@ -112,5 +112,11 @@ int set_remove(Pset set, int val);
  */
 int set_query(Pset set, int val);
 
+/**
+ * This function print a set.
+ * @param set The set.
+ */
+void print_set(Pset set);
+
 #endif
 

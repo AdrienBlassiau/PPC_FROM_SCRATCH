@@ -40,9 +40,9 @@ Pcsp generate_8_queens_puzzle(int n){
 	/* FIRST : VARIABLES and DOMAINS*/
 	Pvariable v = new_variable(n);
 	for (i = 0; i < n; i++){
-		d = new_domain();
+		d = new_domain(n);
 		for (j = 0; j < n; j++){
-			insert_in_domain(d, &j);
+			insert_in_domain(d, j);
 		}
 		sprintf(var_name, "%d", i);
 		insert_variable(v,i,var_name,d);
@@ -61,7 +61,7 @@ Pcsp generate_8_queens_puzzle(int n){
 							tab_int[count] = k;
 							count++;
 							tab_int[count] = l;
-							insert_constraint_tuple(c,i,j,&tab_int[count-1],&tab_int[count]);
+							insert_constraint_tuple(c,i,j,&tab_int[count-1],tab_int[count],n);
 							count++;
 						}
 					}
@@ -70,7 +70,7 @@ Pcsp generate_8_queens_puzzle(int n){
 		}
 	}
 
-	csp = new_csp(v,c,tab_int,n);
+	csp = new_csp(v,c,tab_int,n,n);
 
 	return csp;
 }
