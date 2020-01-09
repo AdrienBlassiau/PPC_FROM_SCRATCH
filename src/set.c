@@ -28,7 +28,7 @@ Pset new_set(int size){
 	int** val = (int**)calloc(size,sizeof(int*));
 
 	for (i = 0; i < size; i++){
-		val[i] = (int*)calloc(2,sizeof(int));
+		val[i] = (int*)calloc(3,sizeof(int));
 	}
 
 	s->values = val;

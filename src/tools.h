@@ -30,6 +30,13 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "include.h"
 
 /**
+ * THis function genrates a random integer between 0 and limit included
+ * @param  limit The limit.
+ * @return       The random int.
+ */
+int rand_int(int limit);
+
+/**
  * This function print a string.
  * @param vs    The string we want to print.
  */

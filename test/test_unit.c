@@ -851,20 +851,21 @@ void test_add_instance(void){
 	CU_ASSERT_EQUAL(is_linked(inst,2),0);
 
 	CU_ASSERT_EQUAL(get_number_of_linked(inst),3);
-	CU_ASSERT_EQUAL(get_number_of_free(inst),10);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),7);
 	int val = 2;
-	add_free_variable(inst,val);
-	CU_ASSERT_EQUAL(get_number_of_free(inst),11);
+	res = add_free_variable(inst,val);
+	CU_ASSERT_EQUAL(res,0);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),7);
 	res = add_linked_variable(inst,4,-4);
 	CU_ASSERT_EQUAL(res,0);
 	val = 4;
 	res = add_free_variable(inst,val);
+	CU_ASSERT_EQUAL(res,1);
+	res = remove_linked_variable(inst,2);
 	CU_ASSERT_EQUAL(res,0);
-	res = remove_linked_variable(inst,4);
-	CU_ASSERT_EQUAL(res,1);
 	res = add_free_variable(inst,val);
-	CU_ASSERT_EQUAL(res,1);
-	CU_ASSERT_EQUAL(get_number_of_free(inst),12);
+	CU_ASSERT_EQUAL(res,0);
+	CU_ASSERT_EQUAL(get_number_of_free(inst),8);
 	CU_ASSERT_EQUAL(get_linked_val(inst,5),12);
 
 	free_instance(inst);
@@ -877,12 +878,13 @@ void test_remove_instance(void){
 
 	CU_ASSERT_EQUAL(get_number_of_linked(inst),0);
 	CU_ASSERT_EQUAL(get_number_of_free(inst),10);
-	int res = pop_free_list(inst);
+	int res = pop_var_list(inst);
 	// print_instance(inst);
-	CU_ASSERT_EQUAL(get_number_of_free(inst),9);
-	CU_ASSERT_EQUAL(res,9)
-	int res1 = pop_free_list(inst);
-	CU_ASSERT_EQUAL(res1,8)
+	CU_ASSERT_EQUAL(get_number_of_free(inst),10);
+	CU_ASSERT_EQUAL(res,0)
+	add_linked_variable(inst,res,22);
+	int res1 = pop_var_list(inst);
+	CU_ASSERT_EQUAL(res1,1)
 	// print_instance(inst);
 	free_instance(inst);
 }
@@ -1197,9 +1199,9 @@ void test_insert_count(void){
 	dtest = query_count_counter(c,var_name1,var_name3,&content[3]);
 	CU_ASSERT_EQUAL(*dtest,1);
 
-	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name1,var_name2,&content[0]),1);
-	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name3,var_name1,&content[1]),0);
-	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name1,var_name3,&content[1]),0);
+	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name1,var_name2,&content[0],0),1);
+	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name3,var_name1,&content[1],0),1);
+	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name1,var_name3,&content[1],0),0);
 
 	// print_count_light(c);
 	free_count(c);

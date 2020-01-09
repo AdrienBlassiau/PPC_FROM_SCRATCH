@@ -25,24 +25,25 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "problem.h"
 
 int main(){
+	srand(time(NULL));
 	Pcsp csp;
-	int mode = 0;
+	int mode = 1;
 
-	if (mode == 1){
-		char* filename = "inst/inst1.cspi";
+	if (mode == 0){
+		char* filename = "inst/test/queen5_5.cspi";
 		csp = generate_from_file(filename);
 	}
 	else{
-		csp = generate_8_queens_puzzle(10);
+		csp = generate_8_queens_puzzle(15);
 	}
 
 	// print_csp(csp);
-	// forward_checking(csp);
 	// AC4(csp);
+	forward_checking(csp);
 	// print_csp(csp);
-	backtrack(csp);
+	// backtrack(csp);
+
 	print_csp(csp);
 	free_csp(csp);
-
 	return 0;
 }

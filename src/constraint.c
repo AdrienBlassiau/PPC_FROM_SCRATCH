@@ -180,3 +180,17 @@ int test_contraint_tuple_exists(Pconstraint c, int variable1, int variable2, int
 
 	return res;
 }
+
+int get_variable_degree(Pconstraint c, int variable1){
+	int i;
+	int degree = 0;
+	int size = c->size;
+
+	for (i = 0; i < size; i++){
+		if(test_contraint_exists(c,variable1,i)){
+			degree++;
+		}
+	}
+
+	return degree;
+}

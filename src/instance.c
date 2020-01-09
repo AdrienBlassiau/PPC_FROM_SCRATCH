@@ -26,21 +26,20 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 Pinstance new_instance(int size){
 	int i;
 	Pinstance inst = (instance*)malloc(sizeof(instance));
-	int** linked_list;
+	int** var_list;
 
-	Pstack stack = new_stack();
-
-	linked_list = calloc(size,sizeof(int*));
+	var_list = calloc(size,sizeof(int*));
 
 	for (i = 0; i < size; i++){
-		linked_list[i] = calloc(2,sizeof(int));
+		var_list[i] = calloc(2,sizeof(int));
 	}
 
 
-	inst->linked_list = linked_list;
-	inst->free_list = stack;
+	inst->var_list = var_list;
 	inst->number_of_linked = 0;
 	inst->size = size;
+	inst->var_heuri = 1;
+	inst->val_heuri = 1;
 
 	for (i = 0; i < size; i++){
 		add_free_variable(inst,i);
@@ -53,25 +52,20 @@ Pinstance free_instance(Pinstance inst){
 	int i;
 	int size = inst->size;
 
-	int** linked_list = get_linked_list(inst);
+	int** var_list = get_var_list(inst);
 
 	for (i = 0; i < size; i++){
-		free(linked_list[i]);
+		free(var_list[i]);
 	}
-	free(inst->linked_list);
-	free_stack(inst->free_list);
+	free(inst->var_list);
 
 	free(inst);
 
 	return inst;
 }
 
-int** get_linked_list(Pinstance inst){
-	return inst->linked_list;
-}
-
-Pstack get_free_list(Pinstance inst){
-	return inst->free_list;
+int** get_var_list(Pinstance inst){
+	return inst->var_list;
 }
 
 int get_number_of_linked(Pinstance inst){
@@ -79,29 +73,26 @@ int get_number_of_linked(Pinstance inst){
 }
 
 int get_number_of_free(Pinstance inst){
-	Pstack stack = get_free_list(inst);
-
-	return stack_length(stack);
+	return inst->size - inst->number_of_linked;
 }
 
 void print_instance(void *vinst){
 	Pinstance inst = (Pinstance) vinst;
 	int i;
 	int size = inst->size;
-	int** linked_list = get_linked_list(inst);
+	int** var_list = get_var_list(inst);
 	char free_variable[10] = "free";
 	char linked_variable[10] = "linked";
 
 	for (i = 0; i < size; i++){
-		printf("%d(%s): ",i,linked_list[i][0]?linked_variable:free_variable);
-		if (linked_list[i][0]){
-			printf("%d\n",linked_list[i][1]);
+		printf("%d(%s): ",i,var_list[i][0]?linked_variable:free_variable);
+		if (var_list[i][0]){
+			printf("%d\n",var_list[i][1]);
 		}
 		else{
 			printf("-\n");
 		}
 	}
-	print_stack(inst->free_list);
 }
 
 int** generate_instance_constraint(Pinstance inst, int* size_g){
@@ -111,7 +102,7 @@ int** generate_instance_constraint(Pinstance inst, int* size_g){
 	int number_of_linked = get_number_of_linked(inst);
 	int number_of_tuples = (number_of_linked*(number_of_linked-1))/2;
 
-	int reduce_linked_list[number_of_linked];
+	int reduce_var_list[number_of_linked];
 
 	int** generated_list = calloc(number_of_tuples,sizeof(int*));
 	for (i = 0; i < number_of_tuples; i++){
@@ -121,16 +112,16 @@ int** generate_instance_constraint(Pinstance inst, int* size_g){
 	k = 0;
 	for (i = 0; i < size; i++){
 		if (is_linked(inst,i)){
-			reduce_linked_list[k] = i;
+			reduce_var_list[k] = i;
 			k++;
 		}
 	}
 
 	k=0;
 	for (i = 0; i < number_of_linked; i++){
-		first_element = reduce_linked_list[i];
+		first_element = reduce_var_list[i];
 		for (j = i; j < number_of_linked; j++){
-			second_element = reduce_linked_list[j];
+			second_element = reduce_var_list[j];
 			if (first_element!=second_element){
 				generated_list[k][0] = first_element;
 				generated_list[k][1] = second_element;
@@ -144,60 +135,61 @@ int** generate_instance_constraint(Pinstance inst, int* size_g){
 }
 
 int add_free_variable(Pinstance inst, int v){
-	Pstack free_list = get_free_list(inst);
-	if (is_linked(inst,v)){
+	int** var_list = get_var_list(inst);
+	if (is_free(inst,v)){
 		return 0;
 	}
-
-	Pstack stack = push_stack(free_list,v);
-	inst->free_list = stack;
+	var_list[v][0] = 0;
+	inst->number_of_linked --;
 	return 1;
 }
 
 int remove_linked_variable(Pinstance inst, int v){
-	int** linked_list = get_linked_list(inst);
-	if (!is_linked(inst,v)){
+	int** var_list = get_var_list(inst);
+	if (is_free(inst,v)){
 		return 0;
 	}
 
-	linked_list[v][0] = 0;
+	var_list[v][0] = 0;
 	inst->number_of_linked --;
 	return 1;
 }
 
 int add_linked_variable(Pinstance inst, int v, int val){
-	int** linked_list = get_linked_list(inst);
+	int** var_list = get_var_list(inst);
 	if (is_linked(inst,v)){
 		return 0;
 	}
-	linked_list[v][0] = 1;
-	linked_list[v][1] = val;
+	var_list[v][0] = 1;
+	var_list[v][1] = val;
 	inst->number_of_linked ++;
 	return 1;
 }
 
 int is_free(Pinstance inst, int var){
-	int** linked_list = get_linked_list(inst);
-	return !linked_list[var][0];
+	int** var_list = get_var_list(inst);
+	return !var_list[var][0];
 }
 
 int is_linked(Pinstance inst, int var){
-	int** linked_list = get_linked_list(inst);
-	return linked_list[var][0];
+	int** var_list = get_var_list(inst);
+	return var_list[var][0];
 }
 
 int get_linked_val(Pinstance inst, int var){
-	int** linked_list = get_linked_list(inst);
-	return linked_list[var][1];
+	int** var_list = get_var_list(inst);
+	return var_list[var][1];
 }
 
-int pop_free_list(Pinstance inst){
-	Pstack free_list = get_free_list(inst);
+int pop_var_list(Pinstance inst){
+	int i;
+	int size = inst->size;
 
-	int res = top_stack(free_list);
+	for (i = 0; i < size; i++){
+		if (is_free(inst,i)){
+			return i;
+		}
+	}
 
-	Pstack stack = pop_stack(free_list);
-	inst->free_list = stack;
-
-	return res;
+	return -1;
 }

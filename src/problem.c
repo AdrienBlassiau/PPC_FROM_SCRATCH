@@ -47,7 +47,6 @@ Pcsp generate_8_queens_puzzle(int n){
 		sprintf(var_name, "%d", i);
 		insert_variable(v,i,var_name,d);
 	}
-	print_variable(v);
 
 	/* SECOND : CONSTRAINTS*/
 	Pconstraint c = new_constraint(n);

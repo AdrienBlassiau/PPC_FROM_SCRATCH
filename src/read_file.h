@@ -31,6 +31,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "csp.h"
 
 
+char** get_line_tab(int* pos, int* line_size, const char* file);
+
 /**
  * This function reads a file and create a csp struct
  * @param  filename The name of the file.

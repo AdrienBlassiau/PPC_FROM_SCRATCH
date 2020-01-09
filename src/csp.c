@@ -23,10 +23,12 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "csp.h"
 #include "variable.h"
 #include "instance.h"
+#include "heuristic.h"
 #include "constraint.h"
 #include "Sstruct.h"
 #include "duo.h"
 #include "count.h"
+
 
 Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size, int max_dom_size){
 	Pcsp c = (csp*) calloc(1,sizeof(csp));
@@ -44,12 +46,20 @@ Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size, int max_dom_
 	c->duo_list = new_duostack();
 	c->count_list = count_list;
 	c->max_dom_size = max_dom_size;
+	c->domain_size = set_current_domain(c);
+	c->degree_tab = set_degree_tab(c);
+	c->failure_tab = set_failure_tab(c);
+
+	set_var_heuristic(instance_list,9);
+	set_val_heuristic(instance_list,5);
+	shuffle_all_domain(c);
 
 	return c;
 }
 
-Pcsp free_csp(Pcsp c){
 
+
+Pcsp free_csp(Pcsp c){
 	free_variable(c->variable_list);
 	free_constraint(c->constraint_list);
 	free_instance(c->instance_list);
@@ -57,9 +67,83 @@ Pcsp free_csp(Pcsp c){
 	free_duostack(c->duo_list);
 	free_count(c->count_list);
 	free(c->tab_int);
+	free(c->domain_size);
+	free(c->degree_tab);
+	free_matrix(c->failure_tab,c->size);
 	free(c);
 
 	return c;
+}
+
+void shuffle_all_domain(Pcsp csp){
+	int i;
+	int size = csp->size;
+	Pinstance inst = csp->instance_list;
+	Pconstraint cons = csp->constraint_list;
+	Pvariable v = csp->variable_list;
+
+	for (i = 0; i < size; ++i){
+		shuffle_domain(inst,get_variable_domain(v,i),cons,i);
+	}
+
+	return;
+}
+
+int* set_current_domain(Pcsp c){
+	int i;
+	int size = c->size;
+	int* domain_size = calloc(size,sizeof(int));
+	Pvariable v = c->variable_list;
+
+	Pdomain current_domain;
+
+	for (i = 0; i < size; ++i){
+		current_domain = get_variable_domain(v,i);
+		domain_size[i] = get_domain_size(current_domain);
+	}
+
+	return domain_size;
+}
+
+int* set_degree_tab(Pcsp c){
+	int i;
+	int size = c->size;
+	int* degree_tab = calloc(size,sizeof(int));
+	Pconstraint cons = c->constraint_list;
+
+	for (i = 0; i < size; ++i){
+		degree_tab[i] = get_variable_degree(cons,i);
+	}
+
+	// for (i = 0; i < size; ++i){
+	// 	printf("deg %d\n",degree_tab[i]);
+	// }
+
+	return degree_tab;
+}
+
+int** set_failure_tab(Pcsp c){
+	int i;
+	int size = c->size;
+	int** failure_tab = calloc(size,sizeof(int*));
+
+	for (i = 0; i < size; ++i){
+		failure_tab[i] = calloc(size,sizeof(int));
+	}
+
+	return failure_tab;
+}
+
+void stop_csp(Pcsp c){
+	c->solution = 1;
+}
+
+void start_time(Pcsp c){
+	c->t1 = clock();
+}
+
+void stop_time(Pcsp c){
+	c->t2 = clock();
 }
 
 void reset_csp_count(Pcsp c){
@@ -72,6 +156,11 @@ void reset_csp_count(Pcsp c){
 	c->count_list = count_list;
 }
 
+void add_failure(Pcsp csp, int i, int j){
+	csp->failure_tab[i][j]+=1;
+	csp->failure_tab[j][i]+=1;
+}
+
 void print_csp(void * pcsp){
 	Pcsp c = (Pcsp) pcsp;
 	printf("VARIABLES + DOMAINES:\n");
@@ -79,7 +168,7 @@ void print_csp(void * pcsp){
 	printf("\n");
 	printf("CONTRAINTES:\n");
 	// print_constraint(c->constraint_list,c->variable_list);
-	print_constraint_light(c->constraint_list);
+	print_constraint(c->constraint_list,c->variable_list);
 	printf("\n");
 	printf("INSTANCIATION:\n");
 	print_instance(c->instance_list);
@@ -89,6 +178,12 @@ void print_csp(void * pcsp){
 	printf("SIZE:\n");
 	printf("max dom : %d\n",c->max_dom_size);
 	printf("var : %d\n",c->size);
+	printf("VARIABLE HEURISTIC : %s\n",get_var_heuristic(c->instance_list));
+	printf("VALUE HEURISTIC : %s\n",get_val_heuristic(c->instance_list));
+	printf("BRANCH EXPLORED : %d\n",c->branch_explored);
+	printf("PROCESS DURATION : %f\n",(float)(c->t2-c->t1)/CLOCKS_PER_SEC);
+	// printf("FAILURE TAB :\n");
+	// print_matrix(c->failure_tab,c->size);
 }
 
 int test_unary_constraint(Pcsp csp){
@@ -105,6 +200,7 @@ int test_unary_constraint(Pcsp csp){
 				if(test_contraint_exists(cons,i,j)){
 					if (!test_contraint_value_exists(cons,i,j,val_linked)){
 						// printf("%d,%d with value %d doesn't exist\n",i,j,val_linked);
+						add_failure(csp,i,j);
 						return 0;
 					}
 				}
@@ -138,6 +234,7 @@ int test_binary_constraint(Pcsp csp){
 		if(test_contraint_exists(cons,var1,var2)){
 			if (!test_contraint_tuple_exists(cons,var1,var2,val1,val2)){
 				// printf("%d,%d with value %d,%d doesn't exist\n",var1,var2,val1,val2);
+				add_failure(csp,var1,var2);
 				free_matrix(test_tab,size_g);
 				return 0;
 			}
@@ -160,8 +257,13 @@ int complete(Pcsp csp){
 }
 
 int choose_non_instanciated(Pcsp csp){
+	Pconstraint cons = csp->constraint_list;
 	Pinstance inst = csp->instance_list;
-	return pop_free_list(inst);
+	int** failure_tab = csp->failure_tab;
+	int* dom_size = csp->domain_size;
+	int* degree_tab = csp->degree_tab;
+	int max_dom_size = csp->max_dom_size;
+	return select_variable(inst,dom_size,max_dom_size,degree_tab,cons,failure_tab);
 }
 
 int reverse_non_instanciated(Pcsp csp, int var){
@@ -170,7 +272,16 @@ int reverse_non_instanciated(Pcsp csp, int var){
 }
 
 Pdomain get_current_variable_domain(Pcsp csp, int var){
+	Pconstraint cons = csp->constraint_list;
 	Pvariable var_list = csp->variable_list;
+	Pinstance inst = csp->instance_list;
+
+	if (inst->val_heuri == DYNAMIC_SUPPPORTED){
+		printf("entree\n");
+		shuffle_domain(inst,get_variable_domain(var_list,var),cons,var);
+	}
+
+	print_domain(get_variable_domain(var_list,var));
 	return get_variable_domain(var_list,var);
 }
 
@@ -197,9 +308,9 @@ int decrement_count(Pcsp csp, int x, int y, int* a){
 	return *counter;
 }
 
-int empty_count(Pcsp csp, int x, int y, int* a){
+int empty_count(Pcsp csp, int x, int y, int* a, int comp){
 	Pcount count = csp->count_list;
-	return test_count_counter_is_empty(count,x,y,a);
+	return test_count_counter_is_empty(count,x,y,a,comp);
 }
 
 int test_count(Pcsp csp, int x, int y, int* a, int compare){
@@ -284,7 +395,7 @@ int in_domain(Pcsp csp, int x, int a){
 
 int get_N(Pcsp csp){
 	Pvariable v =  csp->variable_list;
-	return get_variable_number(v)-1;
+	return get_variable_number(v);
 }
 
 int get_instanciated_value(Pcsp csp, int var){
@@ -298,12 +409,14 @@ int is_free_variable(Pcsp csp, int var){
 	return is_free(inst,var);
 }
 
-int backtrack(Pcsp csp){
+int BT(Pcsp csp){
 	// printf("ENTREE\n");
 	// printf("#######\n");
 	// print_instance(csp->instance_list);
 	// printf("#######\n");
 	int x,v,i;
+
+	csp->branch_explored++;
 
 	if (break_constraint(csp)){
 		return 0;
@@ -322,8 +435,8 @@ int backtrack(Pcsp csp){
 		v = get_current_value(d);
 		// printf("ON CHOISIT : %d DE VALEUR : %d\n",x,v);
 		complete_partial_instance(csp,x,v);
-		if (backtrack(csp)){
-			csp->solution=1;
+		if (BT(csp)){
+			stop_csp(csp);
 			return 1;
 		}
 		remove_from_partial_instance(csp,x);
@@ -332,6 +445,13 @@ int backtrack(Pcsp csp){
 	reverse_non_instanciated(csp,x);
 
 	return 0;
+}
+
+int backtrack(Pcsp csp){
+	start_time(csp);
+	BT(csp);
+	stop_time(csp);
+	return 1;
 }
 
 int initAC4(Pcsp csp, int* tab_alloc){
@@ -387,7 +507,7 @@ int initAC4(Pcsp csp, int* tab_alloc){
 					// printf("Count :\n");
 					// print_count_light(csp->count_list);
 
-					if (empty_count(csp,x,y,&tab_alloc[cc])){
+					if (empty_count(csp,x,y,&tab_alloc[cc],0)){
 						// printf("IT'S EMPTY !\n");
 						remove_of_domain(csp,x,tab_alloc[cc]);
 						add_Q(csp,x,tab_alloc[cc]);
@@ -402,6 +522,7 @@ int initAC4(Pcsp csp, int* tab_alloc){
 }
 
 int AC4(Pcsp csp){
+	start_time(csp);
 	int x,y,a,b,count;
 	Pduostack S;
 	int* tab_alloc = calloc(100000000,sizeof(int));
@@ -430,7 +551,7 @@ int AC4(Pcsp csp){
 
 		}
 	}
-
+	stop_time(csp);
 	reset_csp_count(csp);
 	free(tab_alloc);
 	return 1;
@@ -456,9 +577,7 @@ int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 
 				printf("FORWARD : ON CHOISIT : %d DE VALEUR : %d\n",j,m);
 
-				tab_alloc[*cc] = m;
-				(*cc)++;
-				if (empty_count(csp,j,j,&tab_alloc[(*cc)-1])){
+				if (empty_count(csp,j,j,&m,-1)){
 					s = get_instanciated_value(csp,i);
 
 					if (test_tuple(csp,i,j,s,m) || !test_constraint(csp,i,j)){
@@ -466,6 +585,7 @@ int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 						dwo = 0;
 					}
 					else{
+						add_failure(csp,i,j);
 						printf("%d->%d NOT in C(%d,%d)\n",s,m,i,j);
 						tab_alloc[*cc] = m;
 						(*cc)++;
@@ -489,7 +609,7 @@ int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 	return 1;
 }
 
-void restore(Pcsp csp, int i, int* tab_alloc, int* cc){
+void restore(Pcsp csp, int i, int* tab_alloc, int* cc, int* zero){
 	printf("RESTORE\n");
 	int j,k,m;
 	int N = get_N(csp);
@@ -509,7 +629,7 @@ void restore(Pcsp csp, int i, int* tab_alloc, int* cc){
 					tab_alloc[(*cc)] = m;
 					(*cc)++;
 					tab_alloc[(*cc)+1] = 0;
-					change_count(csp,j,j,&tab_alloc[(*cc)-1],&tab_alloc[*cc]);
+					change_count(csp,j,j,&tab_alloc[(*cc)-1],zero);
 					(*cc)++;
 				}
 
@@ -519,14 +639,16 @@ void restore(Pcsp csp, int i, int* tab_alloc, int* cc){
 	}
 }
 
-int FC(Pcsp csp, int* tab_alloc, int* cc){
+int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
 	printf("ENTREE \n");
 	printf("#######\n");
 	print_instance(csp->instance_list);
 	printf("#######\n");
-
+	printf("C%d\n",*cc);
 	int i = choose_non_instanciated(csp);
-	int j,l;
+	int j,l,empty;
+
+	csp->branch_explored++;
 
 	Pdomain di;
 
@@ -541,34 +663,27 @@ int FC(Pcsp csp, int* tab_alloc, int* cc){
 		printf("ON CHOISIT : %d DE VALEUR : %d\n",i,l);
 
 		complete_partial_instance(csp,i,l);
-
-		printf("#######\n");
-		print_instance(csp->instance_list);
-		printf("#######\n");
-
-		tab_alloc[*cc] = l;
-		(*cc)++;
-
-
-		if (empty_count(csp,i,i,&tab_alloc[(*cc)-1])){
+		empty = empty_count(csp,i,i,&l,-1);
+		if (empty){
 			printf("%d DE VALEUR : %d VALIDE\n",i,l);
 
 			if (complete(csp)){
 				printf("FIN\n");
-				csp->solution=1;
+				stop_csp(csp);
 				return 1;
 			}
 			else{
 				printf("FORWARD CHECK\n");
 				if (check_forward(csp,i,tab_alloc,cc)){
-					if(FC(csp,tab_alloc,cc)){
+					if(FC(csp,tab_alloc,cc,zero)){
 						return 1;
 					}
 				}
-				restore(csp,i,tab_alloc,cc);
+				restore(csp,i,tab_alloc,cc,zero);
 			}
 		}
-		printf("%d DE VALEUR : %d INVALIDE\n",i,l);
+		printf("%d DE VALEUR : %d INVALIDE car C(%d,%d) n'existe pas\n",i,l,i,empty_count(csp,i,i,&l,-1));
+
 		remove_from_partial_instance(csp,i);
 		j--;
 	}
@@ -579,10 +694,14 @@ int FC(Pcsp csp, int* tab_alloc, int* cc){
 
 
 int forward_checking(Pcsp csp){
-	int* tab_alloc = calloc(100000000,sizeof(int));
+	int zero=-1;
+	int* tab_alloc = calloc(1000000000,sizeof(int));
 	int cc = 0;
-	FC(csp,tab_alloc,&cc);
+	start_time(csp);
+	FC(csp,tab_alloc,&cc,&zero);
+	stop_time(csp);
 	reset_csp_count(csp);
 	free(tab_alloc);
+
 	return 1;
 }

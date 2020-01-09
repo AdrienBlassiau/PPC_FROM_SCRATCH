@@ -29,10 +29,16 @@ all : main
 test : main_test.o test_unit.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm -lcunit
 
-main : main.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o csp.o problem.o duo.o Sstruct.o counter.o count.o
+main : main.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o problem.o duo.o Sstruct.o counter.o count.o
+	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
+
+convert : graph.o tools.o hash_int.o compare_int.o compare_string.o compare_tuple.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o problem.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
 
 main.o : src/main.c
+	$(CC) -c $< -o obj/$@
+
+graph.o : src/graph.c
 	$(CC) -c $< -o obj/$@
 
 domain.o : src/domain.c src/domain.h
@@ -81,6 +87,9 @@ counter.o : src/counter.c src/counter.h
 	$(CC) -c $< -o obj/$@
 
 count.o : src/count.c src/count.h
+	$(CC) -c $< -o obj/$@
+
+heuristic.o : src/heuristic.c src/heuristic.h
 	$(CC) -c $< -o obj/$@
 
 compare_int.o : src/compare_int.c src/compare_int.h

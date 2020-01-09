@@ -52,13 +52,28 @@ typedef struct csp {
   int* tab_int;
   int size;
   int max_dom_size;
+  int* domain_size;
+  int* degree_tab;
+  int** failure_tab;
   int solution;
+  int branch_explored;
+  clock_t t1;
+  clock_t t2;
+
 } csp, *Pcsp;
 
 
 Pcsp new_csp(Pvariable v, Pconstraint c, int* tab_int, int size, int max_dom_size);
 
 Pcsp free_csp(Pcsp c);
+
+void shuffle_all_domain(Pcsp c);
+
+int* set_current_domain(Pcsp c);
+
+int* set_degree_tab(Pcsp c);
+
+int** set_failure_tab(Pcsp c);
 
 void print_csp(void * pcsp);
 

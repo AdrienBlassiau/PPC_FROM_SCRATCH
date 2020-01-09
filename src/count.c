@@ -142,10 +142,10 @@ int* query_count_counter(Pcount c, int variable1, int variable2, int* content){
 }
 
 
-int test_count_counter_is_empty(Pcount c, int variable1, int variable2, int* content){
+int test_count_counter_is_empty(Pcount c, int variable1, int variable2, int* content, int comp){
 	int* t = query_count_counter(c,variable1,variable2,content);
 	if (t==NULL){
 		return 1;
 	}
-	return *t == 0;
+	return *t == comp;
 }

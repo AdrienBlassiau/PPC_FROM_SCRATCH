@@ -21,6 +21,17 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "include.h"
 #include "tools.h"
 
+int rand_int(int limit){
+	int divisor = RAND_MAX/(limit+1);
+	int retval;
+
+	do {
+		retval = rand() / divisor;
+	} while (retval > limit);
+
+	return retval;
+}
+
 void print_string(void *vs){
 	char *s = (char*) vs;
 	printf("%s -> \n",s);

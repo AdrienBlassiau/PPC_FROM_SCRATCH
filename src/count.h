@@ -132,9 +132,10 @@ int* query_count_counter(Pcount c, int variable1, int variable2, int* content);
  * @param  variable1 The first variable.
  * @param  variable2 The second variable.
  * @param  content   The value of the first variable.
+ * @param  comp   	 The comparison value.
  * @return           1 if success, 0 otherwise.
  */
-int test_count_counter_is_empty(Pcount c, int variable1, int variable2, int* content);
+int test_count_counter_is_empty(Pcount c, int variable1, int variable2, int* content, int comp);
 
 
 #endif

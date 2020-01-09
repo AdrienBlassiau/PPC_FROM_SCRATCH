@@ -19,6 +19,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #include "include.h"
+#include "tools.h"
 #include "set.h"
 #include "domain.h"
 #include "compare_int.h"

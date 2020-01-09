@@ -37,10 +37,11 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  */
 typedef struct instance {
-  int** linked_list;
-  Pstack free_list;
+  int** var_list;
   int number_of_linked;
   int size;
+  int var_heuri;
+  int val_heuri;
 } instance, *Pinstance;
 
 /**
@@ -62,14 +63,7 @@ Pinstance free_instance(Pinstance inst);
  * @param  inst The instance struct.
  * @return      The list of all linked variables.
  */
-int** get_linked_list(Pinstance inst);
-
-/**
- * This function returns the list of all free variables (=not instanciated).
- * @param  inst The instance struct.
- * @return      The list of all free variables.
- */
-Pstack get_free_list(Pinstance inst);
+int** get_var_list(Pinstance inst);
 
 /**
  * This function returns the number of linked variables.
@@ -149,11 +143,11 @@ int is_linked(Pinstance inst, int var);
 int get_linked_val(Pinstance inst, int var);
 
 /**
- * This function returns a free variable.
+ * This function returns the first free variable.
  * @param  inst The instance struct.
  * @return      The free variable.
  */
-int pop_free_list(Pinstance inst);
+int pop_var_list(Pinstance inst);
 
 #endif
 

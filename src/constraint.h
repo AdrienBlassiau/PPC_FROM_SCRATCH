@@ -182,5 +182,13 @@ int test_contraint_value_exists(Pconstraint c, int variable1, int variable2, int
  */
 int test_contraint_tuple_exists(Pconstraint c, int variable1, int variable2, int val1, int val2);
 
+/**
+ * This function returns the degree of a variable.
+ * @param  c         The constraint struct.
+ * @param  variable1 The varoable we want his degree.
+ * @return           The degree of v.
+ */
+int get_variable_degree(Pconstraint c, int variable1);
+
 #endif
 
