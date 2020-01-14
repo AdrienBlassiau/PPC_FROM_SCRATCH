@@ -18,35 +18,16 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
 
-#include "include.h"
-#include "tools.h"
+/** @file forward_checking.h
+ *
+ * @brief This file features the forward checking method.
+ */
+
+#ifndef FORWARD__CHECKING__H
+#define FORWARD__CHECKING__H
+
 #include "csp.h"
-#include "ac4.h"
-#include "backtrack.h"
-#include "forward_checking.h"
-#include "read_file.h"
-#include "problem.h"
 
-int main(){
-	srand(time(NULL));
-	Pcsp csp;
-	int mode = 0;
+int run_forward_checking(Pcsp csp);
 
-	if (mode == 1){
-		char* filename = "inst/test/queen5_5.cspi";
-		csp = generate_from_file(filename);
-	}
-	else{
-		csp = generate_8_queens_puzzle(5);
-	}
-
-	// print_csp(csp);
-	// run_AC4(csp);
-	run_forward_checking(csp);
-	// print_csp(csp);
-	// run_backtrack(csp);
-
-	print_csp(csp);
-	free_csp(csp);
-	return 0;
-}
+#endif

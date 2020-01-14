@@ -173,3 +173,7 @@ int query_domain(Pdomain d, int value){
 	Pset values = get_domain_values(d);
 	return set_query(values,value);
 }
+
+int empty_domain(Pdomain d){
+	return get_domain_size(d) == 0;
+}

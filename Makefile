@@ -29,10 +29,10 @@ all : main
 test : main_test.o test_unit.o tools.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm -lcunit
 
-main : main.o tools.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o problem.o duo.o Sstruct.o counter.o count.o
+main : main.o tools.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o ac4.o backtrack.o forward_checking.o problem.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
 
-convert : graph.o tools.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o problem.o duo.o Sstruct.o counter.o count.o
+convert : graph.o tools.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o ac4.o backtrack.o forward_checking.o problem.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
 
 main.o : src/main.c
@@ -69,6 +69,15 @@ instance.o : src/instance.c src/instance.h
 	$(CC) -c $< -o obj/$@
 
 csp.o : src/csp.c src/csp.h
+	$(CC) -c $< -o obj/$@
+
+ac4.o : src/ac4.c src/ac4.h
+	$(CC) -c $< -o obj/$@
+
+forward_checking.o : src/forward_checking.c src/forward_checking.h
+	$(CC) -c $< -o obj/$@
+
+backtrack.o : src/backtrack.c src/backtrack.h
 	$(CC) -c $< -o obj/$@
 
 problem.o : src/problem.c src/problem.h

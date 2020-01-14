@@ -171,4 +171,11 @@ Pdomain copy_domain(Pdomain d);
  */
 int query_domain(Pdomain d, int value);
 
+/**
+ * This function checks if the domain is empty.
+ * @param  d The domain we want to test.
+ * @return   1 if the domain is empty, 0 othewise.
+ */
+int empty_domain(Pdomain d);
+
 #endif

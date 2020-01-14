@@ -64,6 +64,7 @@ typedef struct csp {
 } csp, *Pcsp;
 
 
+
 Pcsp new_csp(Pvariable v, Pconstraint c, int* tab_int, int size, int max_dom_size);
 
 Pcsp free_csp(Pcsp c);
@@ -76,16 +77,76 @@ int* set_degree_tab(Pcsp c);
 
 int** set_failure_tab(Pcsp c);
 
+void stop_csp(Pcsp c);
+
+void start_time(Pcsp c);
+
+void stop_time(Pcsp c);
+
+void reset_csp_count(Pcsp c);
+
+void reset_csp_S(Pcsp c);
+
+void reset_csp_Q(Pcsp c);
+
+void add_failure(Pcsp csp, int i, int j);
+
 void print_csp(void * pcsp);
 
-int run_backtrack(Pcsp c);
+int test_unary_constraint(Pcsp csp);
 
-int initAC4(Pcsp csp, int* tab_alloc);
+int test_binary_constraint(Pcsp csp);
 
-int AC4(Pcsp csp);
+int break_constraint(Pcsp csp);
 
-int run_AC4(Pcsp csp);
+int complete(Pcsp csp);
 
-int forward_checking(Pcsp csp);
+int choose_non_instanciated(Pcsp csp);
+
+int reverse_non_instanciated(Pcsp csp, int var);
+
+Pdomain get_current_variable_domain(Pcsp csp, int var);
+
+int complete_partial_instance(Pcsp csp,  int v, int val);
+
+int remove_from_partial_instance(Pcsp csp, int v);
+
+void change_count(Pcsp csp, int x, int y, int* a, int* value);
+
+int decrement_count(Pcsp csp, int x, int y, int* a);
+
+int empty_count(Pcsp csp, int x, int y, int* a, int comp);
+
+int test_count(Pcsp csp, int x, int y, int* a, int compare);
+
+int remove_of_domain(Pcsp csp, int x, int a);
+
+void add_S(Pcsp csp, int x, int y, int a, int* b);
+
+Pduostack get_S(Pcsp csp, int y, int* b);
+
+int S_is_empty(Pduostack S);
+
+void get_S_tuple(Pduostack S, int* x, int* a);
+
+void add_Q(Pcsp csp, int x, int a);
+
+int Q_is_empty(Pcsp csp);
+
+void remove_Q(Pcsp csp, int* y,int* b);
+
+int test_constraint(Pcsp csp, int x, int y);
+
+int test_tuple(Pcsp csp, int x, int y, int a, int b);
+
+int get_csp_size(Pcsp csp);
+
+int in_domain(Pcsp csp, int x, int a);
+
+int get_N(Pcsp csp);
+
+int get_instanciated_value(Pcsp csp, int var);
+
+int is_free_variable(Pcsp csp, int var);
 
 #endif

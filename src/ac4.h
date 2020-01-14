@@ -18,35 +18,27 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
 
-#include "include.h"
-#include "tools.h"
+/** @file ac4.h
+ *
+ * @brief This file features the AC4 algorithm.
+ */
+
+#ifndef AC4__H
+#define AC4__H
+
 #include "csp.h"
-#include "ac4.h"
-#include "backtrack.h"
-#include "forward_checking.h"
-#include "read_file.h"
-#include "problem.h"
 
-int main(){
-	srand(time(NULL));
-	Pcsp csp;
-	int mode = 0;
 
-	if (mode == 1){
-		char* filename = "inst/test/queen5_5.cspi";
-		csp = generate_from_file(filename);
-	}
-	else{
-		csp = generate_8_queens_puzzle(5);
-	}
+Pvariable MAC(Pcsp csp, int var, int val);
 
-	// print_csp(csp);
-	// run_AC4(csp);
-	run_forward_checking(csp);
-	// print_csp(csp);
-	// run_backtrack(csp);
+void revert_MAC(Pcsp csp, Pvariable v_copy);
 
-	print_csp(csp);
-	free_csp(csp);
-	return 0;
-}
+int revert_MAC_light(Pcsp csp, Pvariable v_copy);
+
+int initAC4(Pcsp csp, int* tab_alloc);
+
+int AC4(Pcsp csp);
+
+int run_AC4(Pcsp csp);
+
+#endif
