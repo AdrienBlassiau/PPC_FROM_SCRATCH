@@ -106,8 +106,8 @@ int get_constraint_number(int* pos, const char* file){
   return str_to_int_res;
 }
 
-Pconstraint make_constraint(int* pos, const char* file, int constraint_number, Pconstraint c, Pvariable v, int* tab_int, int* max_dom_size){
-	int i,j,k;
+Pconstraint make_constraint(int* pos, const char* file, int constraint_number, Pconstraint c, Pvariable v, int* max_dom_size){
+	int i,j,a,b;
 	int line_size = 0;
 	char ** first_constraint_line;
 	char ** current_constraint_line;
@@ -121,7 +121,6 @@ Pconstraint make_constraint(int* pos, const char* file, int constraint_number, P
 	int number_of_tuples_int;
 
 	i = 0;
-	k = 0;
 
 	while(i < constraint_number) {
 		first_constraint_line = get_line_tab(pos,&line_size,file);
@@ -138,12 +137,10 @@ Pconstraint make_constraint(int* pos, const char* file, int constraint_number, P
 			current_constraint_line = get_line_tab(pos,&line_size,file);
 			tuple1 = current_constraint_line[0];
 			tuple2 = current_constraint_line[1];
-			tab_int[k] = (int) strtol(tuple1, (char **)NULL, 10);
-			k++;
-			tab_int[k] = (int) strtol(tuple2, (char **)NULL, 10);
+			a = (int) strtol(tuple1, (char **)NULL, 10);
+			b = (int) strtol(tuple2, (char **)NULL, 10);
 
-			insert_constraint_tuple(c,constraint1_int,constraint2_int,&tab_int[k-1],tab_int[k],*max_dom_size);
-			k++;
+			insert_constraint_tuple(c,constraint1_int,constraint2_int,a,b,*max_dom_size);
 			free_matrix_string(current_constraint_line,line_size);
 		}
    i++;
@@ -178,8 +175,6 @@ Pcsp generate_from_file(char* filename){
   }
   fclose(fd);
 
-  int size = (int)(info.st_size);
-  int* tab_int = calloc(size,sizeof(int));
   int max_dom_size = 0;
 
   var_tab = get_line_tab(&pos,&line_size,buf);
@@ -191,9 +186,9 @@ Pcsp generate_from_file(char* filename){
   constraint_number = get_constraint_number(&pos,buf);
 
   Pconstraint c = new_constraint(variable_number);
-  make_constraint(&pos, buf, constraint_number, c, v, tab_int, &max_dom_size);
+  make_constraint(&pos, buf, constraint_number, c, v, &max_dom_size);
 
-  csp = new_csp(v,c,tab_int,variable_number,max_dom_size);
+  csp = new_csp(v,c,variable_number,max_dom_size);
 
   xfree(buf);
 

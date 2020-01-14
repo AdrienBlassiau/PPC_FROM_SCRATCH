@@ -43,7 +43,7 @@ typedef struct tuple {
   PAVLTree tuples;
   unsigned int iterator;
   AVLTreeValue *tuples_tab;
-  AVLTreeValue *tuples_key;
+  int* tuples_key;
 } tuple, *Ptuple;
 
 /**
@@ -140,7 +140,7 @@ void print_tuple(void *t);
  * @param  d        The content domain.
  * @return          1 if success, 0 if the content already exists.
  */
-int insert_tuple(Ptuple t, int* content,  Pdomain d);
+int insert_tuple(Ptuple t, int content,  Pdomain d);
 
 /**
  * This function removes a content
@@ -148,7 +148,7 @@ int insert_tuple(Ptuple t, int* content,  Pdomain d);
  * @param  variable The content we want to remove.
  * @return          1 if success, 0 if the content do not exist.
  */
-int remove_tuple(Ptuple t, int* content);
+int remove_tuple(Ptuple t, int content);
 
 /**
  * This function removes a value of a content domain.
@@ -157,7 +157,7 @@ int remove_tuple(Ptuple t, int* content);
  * @param  value    The value of the content we want to remove.
  * @return          The new domain.
  */
-Pdomain remove_value_of_content_domain(Ptuple t, int* content, int value);
+Pdomain remove_value_of_content_domain(Ptuple t, int content, int value);
 
 /**
  * This function queries the tuple struct.
@@ -166,7 +166,7 @@ Pdomain remove_value_of_content_domain(Ptuple t, int* content, int value);
  * @return         Zero if the variable is not in the struct, non-zero if the
  *                 variable is in the dtruct.
  */
-Pdomain query_tuple(Ptuple t, int* content);
+Pdomain query_tuple(Ptuple t, int content);
 
 
 #endif

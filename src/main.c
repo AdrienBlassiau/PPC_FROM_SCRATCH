@@ -30,14 +30,14 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 int main(){
 	srand(time(NULL));
 	Pcsp csp;
-	int mode = 0;
+	int mode = 1;
 
 	if (mode == 1){
 		char* filename = "inst/test/queen5_5.cspi";
 		csp = generate_from_file(filename);
 	}
 	else{
-		csp = generate_8_queens_puzzle(5);
+		csp = generate_8_queens_puzzle(15);
 	}
 
 	// print_csp(csp);

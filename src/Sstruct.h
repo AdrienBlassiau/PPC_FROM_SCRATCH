@@ -73,7 +73,7 @@ void print_Sstruct(PSstruct Ss);
  * @param  val1 The value of the duo.
  * @return      1 if success, 0 otherwise.
  */
-int insert_SStruct_duo(PSstruct Ss, int var, int* key, int var1, int val1);
+int insert_SStruct_duo(PSstruct Ss, int var, int key, int var1, int val1);
 
 /**
  * This function queries a Ss according to a key (value) associated to a
@@ -83,7 +83,7 @@ int insert_SStruct_duo(PSstruct Ss, int var, int* key, int var1, int val1);
  * @param  key The key associated to the variable.
  * @return     NULL or the duostack asociated to (var,key).
  */
-Pduostack query_SStruct(PSstruct Ss, int var, int* key);
+Pduostack query_SStruct(PSstruct Ss, int var, int key);
 
 
 #endif

@@ -49,7 +49,6 @@ typedef struct csp {
   PSstruct Sstruct_list;
   Pduostack duo_list;
   Pcount count_list;
-  int* tab_int;
   int size;
   int mac;
   int max_dom_size;
@@ -65,7 +64,7 @@ typedef struct csp {
 
 
 
-Pcsp new_csp(Pvariable v, Pconstraint c, int* tab_int, int size, int max_dom_size);
+Pcsp new_csp(Pvariable v, Pconstraint c, int size, int max_dom_size);
 
 Pcsp free_csp(Pcsp c);
 
@@ -111,19 +110,19 @@ int complete_partial_instance(Pcsp csp,  int v, int val);
 
 int remove_from_partial_instance(Pcsp csp, int v);
 
-void change_count(Pcsp csp, int x, int y, int* a, int* value);
+void change_count(Pcsp csp, int x, int y, int a, int* value);
 
-int decrement_count(Pcsp csp, int x, int y, int* a);
+int decrement_count(Pcsp csp, int x, int y, int a);
 
-int empty_count(Pcsp csp, int x, int y, int* a, int comp);
+int empty_count(Pcsp csp, int x, int y, int a, int comp);
 
-int test_count(Pcsp csp, int x, int y, int* a, int compare);
+int test_count(Pcsp csp, int x, int y, int a, int compare);
 
 int remove_of_domain(Pcsp csp, int x, int a);
 
-void add_S(Pcsp csp, int x, int y, int a, int* b);
+void add_S(Pcsp csp, int x, int y, int a, int b);
 
-Pduostack get_S(Pcsp csp, int y, int* b);
+Pduostack get_S(Pcsp csp, int y, int b);
 
 int S_is_empty(Pduostack S);
 

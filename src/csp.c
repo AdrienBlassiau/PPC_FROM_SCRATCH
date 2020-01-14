@@ -30,7 +30,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "count.h"
 
 
-Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size, int max_dom_size){
+Pcsp new_csp(Pvariable v, Pconstraint cons, int size, int max_dom_size){
 	Pcsp c = (csp*) calloc(1,sizeof(csp));
 	Pinstance instance_list = new_instance(size);
 	PSstruct Sstruct_list = new_Sstruct(size);
@@ -38,10 +38,9 @@ Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size, int max_dom_
 
 	c->variable_list = v;
 	c->constraint_list = cons;
-	c->tab_int = tab_int;
 	c->instance_list = instance_list;
 	c->size = size;
-	c->mac = 1;
+	c->mac = 0;
 	c->solution = 0;
 	c->Sstruct_list = Sstruct_list;
 	c->duo_list = new_duostack();
@@ -66,7 +65,6 @@ Pcsp free_csp(Pcsp c){
 	free_Sstruct(c->Sstruct_list);
 	free_duostack(c->duo_list);
 	free_count(c->count_list);
-	free(c->tab_int);
 	free(c->domain_size);
 	free(c->degree_tab);
 	free_matrix(c->failure_tab,c->size);
@@ -313,12 +311,12 @@ int remove_from_partial_instance(Pcsp csp, int v){
 	return remove_linked_variable(inst,v);
 }
 
-void change_count(Pcsp csp, int x, int y, int* a, int* value){
+void change_count(Pcsp csp, int x, int y, int a, int* value){
 	Pcount count = csp->count_list;
 	insert_count_counter(count,x,y,a,value);
 }
 
-int decrement_count(Pcsp csp, int x, int y, int* a){
+int decrement_count(Pcsp csp, int x, int y, int a){
 	Pcount count = csp->count_list;
 	int* counter = query_count_counter(count,x,y,a);
 	*counter=*counter-1;
@@ -326,12 +324,12 @@ int decrement_count(Pcsp csp, int x, int y, int* a){
 	return *counter;
 }
 
-int empty_count(Pcsp csp, int x, int y, int* a, int comp){
+int empty_count(Pcsp csp, int x, int y, int a, int comp){
 	Pcount count = csp->count_list;
 	return test_count_counter_is_empty(count,x,y,a,comp);
 }
 
-int test_count(Pcsp csp, int x, int y, int* a, int compare){
+int test_count(Pcsp csp, int x, int y, int a, int compare){
 	Pcount count = csp->count_list;
 	int* t = query_count_counter(count,x,y,a);
 	if (t==NULL){
@@ -345,12 +343,12 @@ int remove_of_domain(Pcsp csp, int x, int a){
 	return remove_value_of_variable_domain(var,x,a);
 }
 
-void add_S(Pcsp csp, int x, int y, int a, int* b){
+void add_S(Pcsp csp, int x, int y, int a, int b){
 	PSstruct Ss = csp->Sstruct_list;
 	insert_SStruct_duo(Ss,y,b,x,a);
 }
 
-Pduostack get_S(Pcsp csp, int y, int* b){
+Pduostack get_S(Pcsp csp, int y, int b){
 	PSstruct Ss = csp->Sstruct_list;
 	Pduostack ds = query_SStruct(Ss,y,b);
 	// printf("STACK\n");

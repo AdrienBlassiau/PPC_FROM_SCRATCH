@@ -26,7 +26,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 struct _AVLTreeNode {
 	AVLTreeNode *children[2];
 	AVLTreeNode *parent;
-	AVLTreeKey key;
+	int key;
 	AVLTreeValue value;
 	int height;
 };
@@ -322,7 +322,7 @@ static void avl_tree_balance_to_root(AVLTree *tree, AVLTreeNode *node)
 	}
 }
 
-AVLTreeNode *avl_tree_insert(AVLTree *tree, AVLTreeKey key, AVLTreeValue value)
+AVLTreeNode *avl_tree_insert(AVLTree *tree, int key, AVLTreeValue value)
 {
 	AVLTreeNode **rover;
 	AVLTreeNode *new_node;
@@ -335,7 +335,7 @@ AVLTreeNode *avl_tree_insert(AVLTree *tree, AVLTreeKey key, AVLTreeValue value)
 
 	while (*rover != NULL) {
 		previous_node = *rover;
-		if (tree->compare_func(key, (*rover)->key) < 0) {
+		if (tree->compare_func(&key, &((*rover)->key)) < 0) {
 			rover = &((*rover)->children[AVL_TREE_NODE_LEFT]);
 		} else {
 			rover = &((*rover)->children[AVL_TREE_NODE_RIGHT]);
@@ -499,7 +499,7 @@ void avl_tree_remove_node(AVLTree *tree, AVLTreeNode *node)
 
 /* Remove a node by key */
 
-int avl_tree_remove(AVLTree *tree, AVLTreeKey key)
+int avl_tree_remove(AVLTree *tree, int key)
 {
 	AVLTreeNode *node;
 
@@ -520,7 +520,7 @@ int avl_tree_remove(AVLTree *tree, AVLTreeKey key)
 	return 1;
 }
 
-AVLTreeNode *avl_tree_lookup_node(AVLTree *tree, AVLTreeKey key)
+AVLTreeNode *avl_tree_lookup_node(AVLTree *tree, int key)
 {
 	AVLTreeNode *node;
 	int diff;
@@ -532,7 +532,7 @@ AVLTreeNode *avl_tree_lookup_node(AVLTree *tree, AVLTreeKey key)
 
 	while (node != NULL) {
 
-		diff = tree->compare_func(key, node->key);
+		diff = tree->compare_func(&key, &(node->key));
 
 		if (diff == 0) {
 
@@ -552,7 +552,7 @@ AVLTreeNode *avl_tree_lookup_node(AVLTree *tree, AVLTreeKey key)
 	return NULL;
 }
 
-AVLTreeValue avl_tree_lookup(AVLTree *tree, AVLTreeKey key)
+AVLTreeValue avl_tree_lookup(AVLTree *tree, int key)
 {
 	AVLTreeNode *node;
 
@@ -567,7 +567,7 @@ AVLTreeValue avl_tree_lookup(AVLTree *tree, AVLTreeKey key)
 	}
 }
 
-AVLTreeValue avl_tree_change_value(AVLTree *tree, AVLTreeKey key, AVLTreeValue new_value)
+AVLTreeValue avl_tree_change_value(AVLTree *tree, int key, AVLTreeValue new_value)
 {
 	AVLTreeNode *node;
 
@@ -588,7 +588,7 @@ AVLTreeNode *avl_tree_root_node(AVLTree *tree)
 	return tree->root_node;
 }
 
-AVLTreeKey avl_tree_node_key(AVLTreeNode *node)
+int avl_tree_node_key(AVLTreeNode *node)
 {
 	return node->key;
 }
@@ -642,7 +642,7 @@ static void avl_tree_to_array_add_subtree(AVLTreeNode *subtree,
 }
 
 static void avl_tree_to_array_add_subtree_2(AVLTreeNode *subtree,
-                                         AVLTreeValue *array,
+                                         int* array,
                                          int *index)
 {
 	if (subtree == NULL) {
@@ -687,14 +687,14 @@ AVLTreeValue *avl_tree_to_array(AVLTree *tree)
 	return array;
 }
 
-AVLTreeValue *avl_tree_to_array_2(AVLTree *tree)
+int* avl_tree_to_array_2(AVLTree *tree)
 {
-	AVLTreeValue *array;
+	int* array;
 	int index;
 
 	/* Allocate the array */
 
-	array = malloc(sizeof(AVLTreeValue) * tree->num_nodes);
+	array = malloc(sizeof(int) * tree->num_nodes);
 
 	if (array == NULL) {
 		return NULL;
@@ -709,13 +709,13 @@ AVLTreeValue *avl_tree_to_array_2(AVLTree *tree)
 	return array;
 }
 
-void print_avl_tree(AVLTree *tree, void (*f1)(AVLTreeValue),  void (*f2)(AVLTreeValue))
+void print_avl_tree(AVLTree *tree, void (*f1)(AVLTreeValue), void (*f2)(int))
 {
 	AVLTreeValue *array = avl_tree_to_array(tree);
 	int i;
 	int avl_length = avl_tree_num_entries(tree);
 
-	AVLTreeValue *key_array = avl_tree_to_array_2(tree);
+	int* key_array = avl_tree_to_array_2(tree);
 
 	for(i = 0; i < avl_length; i++){
 		f2(key_array[i]);

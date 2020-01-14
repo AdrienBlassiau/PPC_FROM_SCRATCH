@@ -110,7 +110,7 @@ int initAC4(Pcsp csp, int* tab_alloc){
 							// printf("%d->%d in C(%d,%d)\n",a,b,x,y);
 							total++;
 							tab_alloc[cc] = b;
-							add_S(csp,x,y,a,&tab_alloc[cc]);
+							add_S(csp,x,y,a,tab_alloc[cc]);
 							// printf("Sstruct :\n");
 							// print_Sstruct(csp->Sstruct_list);
 							// printf("--\n");
@@ -120,12 +120,12 @@ int initAC4(Pcsp csp, int* tab_alloc){
 					}
 					tab_alloc[cc] = a;
 					tab_alloc[cc+1] = total;
-					change_count(csp,x,y,&tab_alloc[cc],&tab_alloc[cc+1]);
+					change_count(csp,x,y,tab_alloc[cc],&tab_alloc[cc+1]);
 
 					// printf("Count :\n");
 					// print_count_light(csp->count_list);
 
-					if (empty_count(csp,x,y,&tab_alloc[cc],0)){
+					if (empty_count(csp,x,y,tab_alloc[cc],0)){
 						// printf("IT'S EMPTY !\n");
 						remove_of_domain(csp,x,tab_alloc[cc]);
 						add_Q(csp,x,tab_alloc[cc]);
@@ -150,14 +150,14 @@ int AC4(Pcsp csp){
 		remove_Q(csp,&y,&b);
 		// printf("y:%d et b:%d\n",y,b);
 
-		S = get_S(csp,y,&b);
+		S = get_S(csp,y,b);
 		while(!S_is_empty(S)){
 			get_S_tuple(S,&x,&a);
 			// printf("x:%d et a:%d\n",x,a);
 			S = S->next;
 			// printf("AVANT\n");
 			// print_count_light(csp->count_list);
-			count = decrement_count(csp,x,y,&a);
+			count = decrement_count(csp,x,y,a);
 			// print_count_light(csp->count_list);
 			// printf("APRES\n");
 			if (!count && in_domain(csp,x,a)){

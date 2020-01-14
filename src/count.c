@@ -102,7 +102,7 @@ void print_count_light(Pcount c){
 	}
 }
 
-int insert_count_counter(Pcount c, int variable1, int variable2, int* content1, int* content2){
+int insert_count_counter(Pcount c, int variable1, int variable2, int content1, int* content2){
 
 	Pcounter counter12 =  query_count(c,variable1,variable2);
 
@@ -131,7 +131,7 @@ Pcounter query_count(Pcount c, int variable1, int variable2){
 	return counts[variable1][variable2];
 }
 
-int* query_count_counter(Pcount c, int variable1, int variable2, int* content){
+int* query_count_counter(Pcount c, int variable1, int variable2, int content){
 	Pcounter t = query_count(c,variable1,variable2);
 
 	if (t != NULL){
@@ -142,7 +142,7 @@ int* query_count_counter(Pcount c, int variable1, int variable2, int* content){
 }
 
 
-int test_count_counter_is_empty(Pcount c, int variable1, int variable2, int* content, int comp){
+int test_count_counter_is_empty(Pcount c, int variable1, int variable2, int content, int comp){
 	int* t = query_count_counter(c,variable1,variable2,content);
 	if (t==NULL){
 		return 1;

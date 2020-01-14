@@ -40,7 +40,7 @@ typedef struct counter {
   PAVLTree counters;
   unsigned int iterator;
   AVLTreeValue *counters_tab;
-  AVLTreeValue *counters_key;
+  int* counters_key;
 } counter, *Pcounter;
 
 /**
@@ -137,7 +137,7 @@ void print_counter(void *t);
  * @param  count    The count.
  * @return          1 if success, 0 if the content already exists.
  */
-int insert_counter(Pcounter c, int* content,  int* count);
+int insert_counter(Pcounter c, int content,  int* count);
 
 /**
  * This function removes a content
@@ -145,7 +145,7 @@ int insert_counter(Pcounter c, int* content,  int* count);
  * @param  variable The content we want to remove.
  * @return          1 if success, 0 if the content do not exist.
  */
-int remove_counter(Pcounter c, int* content);
+int remove_counter(Pcounter c, int content);
 
 /**
  * This function removes a value of a content domain.
@@ -154,7 +154,7 @@ int remove_counter(Pcounter c, int* content);
  * @param  value    The value of the content we want to remove.
  * @return          The new value.
  */
-int* change_value_of_counter(Pcounter c, int* content, int* value);
+int* change_value_of_counter(Pcounter c, int content, int* value);
 
 /**
  * This function queries the counter struct.
@@ -163,7 +163,7 @@ int* change_value_of_counter(Pcounter c, int* content, int* value);
  * @return         Zero if the variable is not in the struct, non-zero if the
  *                 variable is in the dtruct.
  */
-int* query_counter(Pcounter c, int* content);
+int* query_counter(Pcounter c, int content);
 
 
 #endif

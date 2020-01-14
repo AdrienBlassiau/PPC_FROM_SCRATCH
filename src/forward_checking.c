@@ -50,7 +50,7 @@ int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 
 				// printf("FORWARD : ON CHOISIT : %d DE VALEUR : %d\n",j,m);
 
-				if (empty_count(csp,j,j,&m,-1)){
+				if (empty_count(csp,j,j,m,-1)){
 					s = get_instanciated_value(csp,i);
 
 					if (test_tuple(csp,i,j,s,m) || !test_constraint(csp,i,j)){
@@ -63,7 +63,7 @@ int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 						tab_alloc[*cc] = m;
 						(*cc)++;
 						tab_alloc[*cc] = i;
-						change_count(csp,j,j,&tab_alloc[(*cc)-1],&tab_alloc[*cc]);
+						change_count(csp,j,j,tab_alloc[(*cc)-1],&tab_alloc[*cc]);
 						(*cc)++;
 						// printf("Count :\n");
 						// print_count_light(csp->count_list);
@@ -98,11 +98,11 @@ void restore(Pcsp csp, int i, int* tab_alloc, int* cc, int* zero){
 			while(k>0){
 				m = get_current_value(dj);
 
-				if (test_count(csp,j,j,&m,i)){
+				if (test_count(csp,j,j,m,i)){
 					tab_alloc[(*cc)] = m;
 					(*cc)++;
 					tab_alloc[(*cc)+1] = 0;
-					change_count(csp,j,j,&tab_alloc[(*cc)-1],zero);
+					change_count(csp,j,j,tab_alloc[(*cc)-1],zero);
 					(*cc)++;
 				}
 
@@ -139,7 +139,7 @@ int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
 
 		complete_partial_instance(csp,i,l);
 
-		if (empty_count(csp,i,i,&l,-1)){
+		if (empty_count(csp,i,i,l,-1)){
 			// printf("%d DE VALEUR : %d VALIDE\n",i,l);
 
 			if (complete(csp)){

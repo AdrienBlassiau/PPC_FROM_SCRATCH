@@ -75,12 +75,6 @@ typedef struct _AVLTree AVLTree;
 typedef struct _AVLTree *PAVLTree;
 
 /**
- * A key for an @ref AVLTree.
- */
-
-typedef void *AVLTreeKey;
-
-/**
  * A value stored in an @ref AVLTree.
  */
 
@@ -158,7 +152,7 @@ void avl_tree_free_and_node(AVLTree *tree, void (*f)(void *));
  *                        to allocate the new memory.
  */
 
-AVLTreeNode *avl_tree_insert(AVLTree *tree, AVLTreeKey key,
+AVLTreeNode *avl_tree_insert(AVLTree *tree, int key,
                              AVLTreeValue value);
 
 /**
@@ -181,7 +175,7 @@ void avl_tree_remove_node(AVLTree *tree, AVLTreeNode *node);
  *                        the specified key was removed.
  */
 
-int avl_tree_remove(AVLTree *tree, AVLTreeKey key);
+int avl_tree_remove(AVLTree *tree, int key);
 
 /**
  * Search an AVL tree for a node with a particular key.  This uses
@@ -193,7 +187,7 @@ int avl_tree_remove(AVLTree *tree, AVLTreeKey key);
  *                        if no entry with the given key is found.
  */
 
-AVLTreeNode *avl_tree_lookup_node(AVLTree *tree, AVLTreeKey key);
+AVLTreeNode *avl_tree_lookup_node(AVLTree *tree, int key);
 
 /**
  * Search an AVL tree for a value corresponding to a particular key.
@@ -208,7 +202,7 @@ AVLTreeNode *avl_tree_lookup_node(AVLTree *tree, AVLTreeKey key);
  *                        found.
  */
 
-AVLTreeValue avl_tree_lookup(AVLTree *tree, AVLTreeKey key);
+AVLTreeValue avl_tree_lookup(AVLTree *tree, int key);
 
 /**
  * Find the root node of a tree.
@@ -227,7 +221,7 @@ AVLTreeNode *avl_tree_root_node(AVLTree *tree);
  * @return                The key to the given node.
  */
 
-AVLTreeKey avl_tree_node_key(AVLTreeNode *node);
+int avl_tree_node_key(AVLTreeNode *node);
 
 /**
  * Retrieve the value at a given tree node.
@@ -279,7 +273,7 @@ int avl_tree_subtree_height(AVLTreeNode *node);
  *                        (see @ref avl_tree_num_entries).
  */
 
-AVLTreeValue *avl_tree_to_array_2(AVLTree *tree);
+int* avl_tree_to_array_2(AVLTree *tree);
 
 
 /**
@@ -304,9 +298,9 @@ AVLTreeValue *avl_tree_to_array(AVLTree *tree);
 
 unsigned int avl_tree_num_entries(AVLTree *tree);
 
-AVLTreeValue avl_tree_change_value(AVLTree *tree, AVLTreeKey key, AVLTreeValue new_value);
+AVLTreeValue avl_tree_change_value(AVLTree *tree, int key, AVLTreeValue new_value);
 
-void print_avl_tree(AVLTree *tree, void (*f1)(AVLTreeValue), void (*f2)(AVLTreeValue));
+void print_avl_tree(AVLTree *tree, void (*f1)(AVLTreeValue), void (*f2)(int));
 
 #ifdef __cplusplus
 }

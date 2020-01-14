@@ -28,14 +28,11 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
 Pcsp generate_8_queens_puzzle(int n){
-	int i,j,k,l,count;
+	int i,j,k,l;
 	Pdomain d;
 	Pcsp csp;
 
 	char var_name[256];
-	int total_size = 2*n*n*n*n;
-
-	int* tab_int = calloc(total_size,sizeof(int));
 
 	/* FIRST : VARIABLES and DOMAINS*/
 	Pvariable v = new_variable(n);
@@ -50,18 +47,13 @@ Pcsp generate_8_queens_puzzle(int n){
 
 	/* SECOND : CONSTRAINTS*/
 	Pconstraint c = new_constraint(n);
-	count=0;
 	for (i = 0; i < n; i++){
 		for (j = 0; j < n; j++){
 			if (i != j){
 				for (k = 0; k < n; k++){
 					for (l = 0; l < n; l++){
 						if (k != l && k-i != l-j && k+i != l+j){
-							tab_int[count] = k;
-							count++;
-							tab_int[count] = l;
-							insert_constraint_tuple(c,i,j,&tab_int[count-1],tab_int[count],n);
-							count++;
+							insert_constraint_tuple(c,i,j,k,l,n);
 						}
 					}
 				}
@@ -69,7 +61,7 @@ Pcsp generate_8_queens_puzzle(int n){
 		}
 	}
 
-	csp = new_csp(v,c,tab_int,n,n);
+	csp = new_csp(v,c,n,n);
 
 	return csp;
 }

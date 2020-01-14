@@ -57,18 +57,22 @@ PSstruct free_Sstruct(PSstruct Ss){
 	return Ss;
 }
 
+void print_key_S(int c){
+	printf("%d \n",c);
+}
+
 void print_Sstruct(PSstruct Ss){
 	int size = Ss->size;
 	int i;
 	for (i = 0; i < size; i++){
 		printf("%d->\n",i);
 		if (Ss->duo_tree[i]!=NULL){
-			print_avl_tree(Ss->duo_tree[i],print_duostack,print_int);
+			print_avl_tree(Ss->duo_tree[i],print_duostack,print_key_S);
 		}
 	}
 }
 
-int insert_SStruct_duo(PSstruct Ss, int var, int* key, int var1, int val1){
+int insert_SStruct_duo(PSstruct Ss, int var, int key, int var1, int val1){
 	Pduostack dst = query_SStruct(Ss,var,key);
 	if (dst==NULL){
 		Pduostack pds = new_duostack();
@@ -82,7 +86,7 @@ int insert_SStruct_duo(PSstruct Ss, int var, int* key, int var1, int val1){
 	return 1;
 }
 
-Pduostack query_SStruct(PSstruct Ss, int var, int* key){
+Pduostack query_SStruct(PSstruct Ss, int var, int key){
 	PAVLTree* duo_tree =  Ss->duo_tree;
 	PAVLTree duo_tree_element = duo_tree[var];
 
