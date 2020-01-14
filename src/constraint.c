@@ -102,7 +102,7 @@ void print_constraint_light(Pconstraint c){
 	}
 }
 
-int insert_constraint_tuples(Pconstraint c, int variable1, int variable2, int* content, int size){
+int insert_constraint_tuples(Pconstraint c, int variable1, int variable2, int content, int size){
 
 	Ptuple t2 = query_constraint(c,variable1,variable2);
 
@@ -115,7 +115,7 @@ int insert_constraint_tuples(Pconstraint c, int variable1, int variable2, int* c
 	return 0;
 }
 
-int insert_constraint_tuple(Pconstraint c, int variable1, int variable2, int* content1, int content2, int size){
+int insert_constraint_tuple(Pconstraint c, int variable1, int variable2, int content1, int content2, int size){
 
 	if(query_constraint_tuples(c,variable1,variable2,content1) == NULL){
 		insert_constraint_tuples(c,variable1,variable2,content1,size);
@@ -145,7 +145,7 @@ Ptuple query_constraint(Pconstraint c, int variable1, int variable2){
 	return constraints[variable1][variable2];
 }
 
-Pdomain query_constraint_tuples(Pconstraint c, int variable1, int variable2, int* content){
+Pdomain query_constraint_tuples(Pconstraint c, int variable1, int variable2, int content){
 	Ptuple t = query_constraint(c,variable1,variable2);
 	if (t != NULL){
 		Pdomain d = query_tuple(t,content);
@@ -154,7 +154,7 @@ Pdomain query_constraint_tuples(Pconstraint c, int variable1, int variable2, int
 	return NULL;
 }
 
-int query_constraint_tuple(Pconstraint c, int variable1, int variable2, int* content1, int content2){
+int query_constraint_tuple(Pconstraint c, int variable1, int variable2, int content1, int content2){
 	Pdomain d = query_constraint_tuples(c,variable1,variable2,content1);
 	if (d != NULL){
 		int res = query_domain(d,content2);
@@ -170,13 +170,13 @@ int test_contraint_exists(Pconstraint c, int variable1, int variable2){
 }
 
 int test_contraint_value_exists(Pconstraint c, int variable1, int variable2, int val){
-	Pdomain d = query_constraint_tuples(c,variable1,variable2,&val);
+	Pdomain d = query_constraint_tuples(c,variable1,variable2,val);
 
 	return d!=NULL;
 }
 
 int test_contraint_tuple_exists(Pconstraint c, int variable1, int variable2, int val1, int val2){
-	int res = query_constraint_tuple(c,variable1,variable2,&val1,val2);
+	int res = query_constraint_tuple(c,variable1,variable2,val1,val2);
 
 	return res;
 }

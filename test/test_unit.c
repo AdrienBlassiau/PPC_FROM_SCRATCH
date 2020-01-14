@@ -534,10 +534,10 @@ void test_tuple_size(void){
 
 
 	int content1 = 1;
-	insert_tuple(t,&content1,d1);
+	insert_tuple(t,content1,d1);
 
 	int content2 = 2;
-	insert_tuple(t,&content2,d2);
+	insert_tuple(t,content2,d2);
 
 	size = get_tuple_number(t);
 	CU_ASSERT_EQUAL(size,2);
@@ -567,13 +567,13 @@ void test_tuple_iteration(void){
 		insert_in_domain(d3,tab3[i]);
 
 	int content1 = 0;
-	insert_tuple(t,&content1,d1);
+	insert_tuple(t,content1,d1);
 
 	int content2 = 1;
-	insert_tuple(t,&content2,d2);
+	insert_tuple(t,content2,d2);
 
 	int content3 = 2;
-	insert_tuple(t,&content3,d3);
+	insert_tuple(t,content3,d3);
 
 	CU_ASSERT_EQUAL(get_tuple_iterator(t),0);
 	begin_tuple_iteration(t);
@@ -640,19 +640,19 @@ void test_insert_in_tuple(void){
 		insert_in_domain(d3,tab3[i]);
 
 	int content1 = 1;
-	insert_tuple(t,&content1,d1);
+	insert_tuple(t,content1,d1);
 
 	int content2 = 2;
-	insert_tuple(t,&content2,d2);
+	insert_tuple(t,content2,d2);
 
 	int content3 = 3;
-	insert_tuple(t,&content3,d3);
+	insert_tuple(t,content3,d3);
 
-	Pdomain d11 = query_tuple(t,&content1);
+	Pdomain d11 = query_tuple(t,content1);
 	CU_ASSERT_EQUAL(get_domain_size(d11),data_size[0]);
-	Pdomain d12 = query_tuple(t,&content2);
+	Pdomain d12 = query_tuple(t,content2);
 	CU_ASSERT_EQUAL(get_domain_size(d12),data_size[1]);
-	Pdomain d13 = query_tuple(t,&content3);
+	Pdomain d13 = query_tuple(t,content3);
 	CU_ASSERT_EQUAL(get_domain_size(d13),data_size[2]);
 
 	free_tuple(t);
@@ -679,39 +679,39 @@ void test_remove_from_tuple(void){
 		insert_in_domain(d3,tab3[i]);
 
 	int content1 = 1;
-	insert_tuple(t,&content1,d1);
+	insert_tuple(t,content1,d1);
 
 	int content2 = 2;
-	insert_tuple(t,&content2,d2);
+	insert_tuple(t,content2,d2);
 
 	int content3 = 3;
-	insert_tuple(t,&content3,d3);
+	insert_tuple(t,content3,d3);
 
-	Pdomain d11 = query_tuple(t,&content1);
+	Pdomain d11 = query_tuple(t,content1);
 	CU_ASSERT_EQUAL(get_domain_size(d11),data_size[0]);
-	Pdomain d12 = query_tuple(t,&content2);
+	Pdomain d12 = query_tuple(t,content2);
 	CU_ASSERT_EQUAL(get_domain_size(d12),data_size[1]);
-	Pdomain d13 = query_tuple(t,&content3);
+	Pdomain d13 = query_tuple(t,content3);
 	CU_ASSERT_EQUAL(get_domain_size(d13),data_size[2]);
 
 	size = get_tuple_number(t);
 
 	CU_ASSERT_EQUAL(size,3);
 
-	remove_tuple(t,&content3);
-	CU_ASSERT_EQUAL(query_tuple(t,&content3),NULL);
+	remove_tuple(t,content3);
+	CU_ASSERT_EQUAL(query_tuple(t,content3),NULL);
 
 	size = get_tuple_number(t);
 	CU_ASSERT_EQUAL(size,2);
 
-	remove_tuple(t,&content1);
-	CU_ASSERT_EQUAL(query_tuple(t,&content1),NULL);
+	remove_tuple(t,content1);
+	CU_ASSERT_EQUAL(query_tuple(t,content1),NULL);
 
 	size = get_tuple_number(t);
 	CU_ASSERT_EQUAL(size,1);
 
-	remove_tuple(t,&content2);
-	CU_ASSERT_EQUAL(query_tuple(t,&content2),NULL);
+	remove_tuple(t,content2);
+	CU_ASSERT_EQUAL(query_tuple(t,content2),NULL);
 
 	size = get_tuple_number(t);
 	CU_ASSERT_EQUAL(size,0);
@@ -739,21 +739,21 @@ void test_remove_content(void){
 		insert_in_domain(d3,tab3[i]);
 
 	int content1 = 1;
-	insert_tuple(t,&content1,d1);
+	insert_tuple(t,content1,d1);
 
 	int content2 = 2;
-	insert_tuple(t,&content2,d2);
+	insert_tuple(t,content2,d2);
 
 	int content3 = 3;
-	insert_tuple(t,&content3,d3);
+	insert_tuple(t,content3,d3);
 
 	size = get_tuple_number(t);
 	CU_ASSERT_EQUAL(size,3);
 
 	int val_test = 8;
-	remove_value_of_content_domain(t,&content3,val_test);
+	remove_value_of_content_domain(t,content3,val_test);
 
-	Pdomain d13 = query_tuple(t,&content3);
+	Pdomain d13 = query_tuple(t,content3);
 	size = get_domain_size(d13);
 
 	CU_ASSERT_EQUAL(size,5);
@@ -787,23 +787,23 @@ void test_insert_constraint_1(void){
 
 	Ptuple t = query_constraint(c,var_name1,var_name2);
 	CU_ASSERT_EQUAL(get_tuple_number(t),0);
-	Pdomain d = query_constraint_tuples(c,var_name1,var_name2,&content[0]);
+	Pdomain d = query_constraint_tuples(c,var_name1,var_name2,content[0]);
 	CU_ASSERT_EQUAL(d,NULL);
 
-	int res = insert_constraint_tuples(c,var_name1,var_name2,&content[0],10);
+	int res = insert_constraint_tuples(c,var_name1,var_name2,content[0],10);
 	CU_ASSERT_EQUAL(res,1);
-	res = insert_constraint_tuples(c,var_name1,var_name2,&content[0],10);
+	res = insert_constraint_tuples(c,var_name1,var_name2,content[0],10);
 	CU_ASSERT_EQUAL(res,0);
 
 	for (i = 1; i < 10; ++i)
 	{
-		res = insert_constraint_tuples(c,var_name1,var_name2,&content[i],10);
+		res = insert_constraint_tuples(c,var_name1,var_name2,content[i],10);
 		CU_ASSERT_EQUAL(res,1);
 
-		res = insert_constraint_tuples(c,var_name1,var_name3,&content[i],10);
+		res = insert_constraint_tuples(c,var_name1,var_name3,content[i],10);
 		CU_ASSERT_EQUAL(res,1);
 
-		res = insert_constraint_tuples(c,var_name1,var_name4,&content[i],10);
+		res = insert_constraint_tuples(c,var_name1,var_name4,content[i],10);
 		CU_ASSERT_EQUAL(res,1);
 	}
 
@@ -825,45 +825,45 @@ void test_insert_constraint_2(void){
 
 	int content[10] = {0,1,2,3,4,5,6,7,8,9};
 
-	int res = insert_constraint_tuple(c,var_name1,var_name2,&content[0],content[0],10);
+	int res = insert_constraint_tuple(c,var_name1,var_name2,content[0],content[0],10);
 	CU_ASSERT_EQUAL(res,1);
-	res =  insert_constraint_tuple(c,var_name1,var_name2,&content[0],content[0],10);
+	res =  insert_constraint_tuple(c,var_name1,var_name2,content[0],content[0],10);
 	CU_ASSERT_EQUAL(res,0);
-	res =  insert_constraint_tuple(c,var_name1,var_name2,&content[0],content[1],10);
+	res =  insert_constraint_tuple(c,var_name1,var_name2,content[0],content[1],10);
 	CU_ASSERT_EQUAL(res,1);
-	res =  insert_constraint_tuple(c,var_name1,var_name2,&content[0],content[2],10);
-	CU_ASSERT_EQUAL(res,1);
-
-	res =  insert_constraint_tuple(c,var_name1,var_name3,&content[1],content[2],10);
+	res =  insert_constraint_tuple(c,var_name1,var_name2,content[0],content[2],10);
 	CU_ASSERT_EQUAL(res,1);
 
-	res =  insert_constraint_tuple(c,var_name1,var_name3,&content[1],content[3],10);
+	res =  insert_constraint_tuple(c,var_name1,var_name3,content[1],content[2],10);
 	CU_ASSERT_EQUAL(res,1);
 
-	res =  insert_constraint_tuple(c,var_name1,var_name3,&content[3],content[1],10);
+	res =  insert_constraint_tuple(c,var_name1,var_name3,content[1],content[3],10);
 	CU_ASSERT_EQUAL(res,1);
 
-	Pdomain dtest = query_constraint_tuples(c,var_name1,var_name2,&content[0]);
+	res =  insert_constraint_tuple(c,var_name1,var_name3,content[3],content[1],10);
+	CU_ASSERT_EQUAL(res,1);
+
+	Pdomain dtest = query_constraint_tuples(c,var_name1,var_name2,content[0]);
 	CU_ASSERT_EQUAL(get_domain_size(dtest),3);
 
-	dtest = query_constraint_tuples(c,var_name1,var_name3,&content[1]);
+	dtest = query_constraint_tuples(c,var_name1,var_name3,content[1]);
 	CU_ASSERT_EQUAL(get_domain_size(dtest),2);
 
-	dtest = query_constraint_tuples(c,var_name1,var_name3,&content[3]);
+	dtest = query_constraint_tuples(c,var_name1,var_name3,content[3]);
 	CU_ASSERT_EQUAL(get_domain_size(dtest),1);
 
 	res = test_contraint_value_exists(c,var_name1,var_name3,content[3]);
 	CU_ASSERT_EQUAL(res,1);
 
-	dtest = query_constraint_tuples(c,var_name1,var_name2,&content[1]);
+	dtest = query_constraint_tuples(c,var_name1,var_name2,content[1]);
 	CU_ASSERT_EQUAL(dtest,NULL);
 
 	res = test_contraint_value_exists(c,var_name1,var_name2,content[1]);
 	CU_ASSERT_EQUAL(res,0);
 
-	test = query_constraint_tuple(c,var_name1,var_name2,&content[0],content[0]);
+	test = query_constraint_tuple(c,var_name1,var_name2,content[0],content[0]);
 	CU_ASSERT_EQUAL(test,1);
-	test = query_constraint_tuple(c,var_name1,var_name2,&content[0],content[4]);
+	test = query_constraint_tuple(c,var_name1,var_name2,content[0],content[4]);
 	CU_ASSERT_EQUAL(test,0);
 
 	CU_ASSERT_NOT_EQUAL(test_contraint_exists(c,1,2),0);
@@ -984,15 +984,15 @@ void test_add_and_query_SStruct(void){
 		CU_ASSERT_NOT_EQUAL(Ss->duo_tree[i],NULL);
 	}
 
-	insert_SStruct_duo(Ss,5,&content[9],3,4);
-	insert_SStruct_duo(Ss,5,&content[9],3,5);
-	insert_SStruct_duo(Ss,5,&content[8],1,3);
-	insert_SStruct_duo(Ss,2,&content[0],8,2);
+	insert_SStruct_duo(Ss,5,content[9],3,4);
+	insert_SStruct_duo(Ss,5,content[9],3,5);
+	insert_SStruct_duo(Ss,5,content[8],1,3);
+	insert_SStruct_duo(Ss,2,content[0],8,2);
 
-	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,5,&content[9])),2);
-	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,5,&content[8])),1);
-	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,2,&content[0])),1);
-	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,0,&content[0])),0);
+	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,5,content[9])),2);
+	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,5,content[8])),1);
+	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,2,content[0])),1);
+	CU_ASSERT_EQUAL(duostack_length(query_SStruct(Ss,0,content[0])),0);
 
 	free_Sstruct(Ss);
 }
@@ -1019,11 +1019,11 @@ void test_counter_size(void){
 
 	int content1 = 1;
 	int c1 = 10;
-	insert_counter(c,&content1,&c1);
+	insert_counter(c,content1,&c1);
 
 	int content2 = 2;
 	int c2 = 14;
-	insert_counter(c,&content2,&c2);
+	insert_counter(c,content2,&c2);
 
 	size = get_counter_number(c);
 	CU_ASSERT_EQUAL(size,2);
@@ -1038,15 +1038,15 @@ void test_counter_iteration(void){
 
 	int content1 = 0;
 	int c1 = 1;
-	insert_counter(c,&content1,&c1);
+	insert_counter(c,content1,&c1);
 
 	int content2 = 1;
 	int c2 = 2;
-	insert_counter(c,&content2,&c2);
+	insert_counter(c,content2,&c2);
 
 	int content3 = 2;
 	int c3 = 3;
-	insert_counter(c,&content3,&c3);
+	insert_counter(c,content3,&c3);
 
 	CU_ASSERT_EQUAL(get_counter_iterator(c),0);
 	begin_counter_iteration(c);
@@ -1102,19 +1102,19 @@ void test_insert_in_counter(void){
 	int c3 = 3;
 
 	int content1 = 1;
-	insert_counter(c,&content1,&c1);
+	insert_counter(c,content1,&c1);
 
 	int content2 = 2;
-	insert_counter(c,&content2,&c2);
+	insert_counter(c,content2,&c2);
 
 	int content3 = 3;
-	insert_counter(c,&content3,&c3);
+	insert_counter(c,content3,&c3);
 
-	int* c11 = query_counter(c,&content1);
+	int* c11 = query_counter(c,content1);
 	CU_ASSERT_EQUAL(*c11,c1);
-	int* c12 = query_counter(c,&content2);
+	int* c12 = query_counter(c,content2);
 	CU_ASSERT_EQUAL(*c12,c2);
-	int* c13 = query_counter(c,&content3);
+	int* c13 = query_counter(c,content3);
 	CU_ASSERT_EQUAL(*c13,c3);
 
 	free_counter(c);
@@ -1131,39 +1131,39 @@ void test_remove_from_counter(void){
 	int c3 = 3;
 
 	int content1 = 1;
-	insert_counter(c,&content1,&c1);
+	insert_counter(c,content1,&c1);
 
 	int content2 = 2;
-	insert_counter(c,&content2,&c2);
+	insert_counter(c,content2,&c2);
 
 	int content3 = 3;
-	insert_counter(c,&content3,&c3);
+	insert_counter(c,content3,&c3);
 
-	int* c11 = query_counter(c,&content1);
+	int* c11 = query_counter(c,content1);
 	CU_ASSERT_EQUAL(*c11,c1);
-	int* c12 = query_counter(c,&content2);
+	int* c12 = query_counter(c,content2);
 	CU_ASSERT_EQUAL(*c12,c2);
-	int* c13 = query_counter(c,&content3);
+	int* c13 = query_counter(c,content3);
 	CU_ASSERT_EQUAL(*c13,c3);
 
 	size = get_counter_number(c);
 
 	CU_ASSERT_EQUAL(size,3);
 
-	remove_counter(c,&content3);
-	CU_ASSERT_EQUAL(query_counter(c,&content3),NULL);
+	remove_counter(c,content3);
+	CU_ASSERT_EQUAL(query_counter(c,content3),NULL);
 
 	size = get_counter_number(c);
 	CU_ASSERT_EQUAL(size,2);
 
-	remove_counter(c,&content1);
-	CU_ASSERT_EQUAL(query_counter(c,&content1),NULL);
+	remove_counter(c,content1);
+	CU_ASSERT_EQUAL(query_counter(c,content1),NULL);
 
 	size = get_counter_number(c);
 	CU_ASSERT_EQUAL(size,1);
 
-	remove_counter(c,&content2);
-	CU_ASSERT_EQUAL(query_counter(c,&content2),NULL);
+	remove_counter(c,content2);
+	CU_ASSERT_EQUAL(query_counter(c,content2),NULL);
 
 	size = get_counter_number(c);
 	CU_ASSERT_EQUAL(size,0);
@@ -1182,21 +1182,21 @@ void test_change_counter(void){
 	int c3 = 3;
 
 	int content1 = 1;
-	insert_counter(c,&content1,&c1);
+	insert_counter(c,content1,&c1);
 
 	int content2 = 2;
-	insert_counter(c,&content2,&c2);
+	insert_counter(c,content2,&c2);
 
 	int content3 = 3;
-	insert_counter(c,&content3,&c3);
+	insert_counter(c,content3,&c3);
 
 	size = get_counter_number(c);
 	CU_ASSERT_EQUAL(size,3);
 
 	int val_test = 8;
-	change_value_of_counter(c,&content3,&val_test);
+	change_value_of_counter(c,content3,&val_test);
 
-	int* c13 = query_counter(c,&content3);
+	int* c13 = query_counter(c,content3);
 	CU_ASSERT_EQUAL(*c13,val_test);
 
 	free_counter_bis(c);
@@ -1225,33 +1225,33 @@ void test_insert_count(void){
 
 	int content[10] = {0,1,2,3,4,5,6,7,8,9};
 
-	int res = insert_count_counter(c,var_name1,var_name2,&content[0],&content[0]);
+	int res = insert_count_counter(c,var_name1,var_name2,content[0],&content[0]);
 	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name2,&content[0],&content[2]);
+	res =  insert_count_counter(c,var_name1,var_name2,content[0],&content[2]);
 	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name2,&content[0],&content[1]);
+	res =  insert_count_counter(c,var_name1,var_name2,content[0],&content[1]);
 	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name2,&content[0],&content[0]);
+	res =  insert_count_counter(c,var_name1,var_name2,content[0],&content[0]);
 	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name3,&content[1],&content[2]);
+	res =  insert_count_counter(c,var_name1,var_name3,content[1],&content[2]);
 	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name3,&content[1],&content[3]);
+	res =  insert_count_counter(c,var_name1,var_name3,content[1],&content[3]);
 	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name3,&content[3],&content[1]);
+	res =  insert_count_counter(c,var_name1,var_name3,content[3],&content[1]);
 	CU_ASSERT_EQUAL(res,1);
 
-	int* dtest = query_count_counter(c,var_name1,var_name2,&content[0]);
+	int* dtest = query_count_counter(c,var_name1,var_name2,content[0]);
 	CU_ASSERT_EQUAL(*dtest,0);
 
-	dtest = query_count_counter(c,var_name1,var_name3,&content[1]);
+	dtest = query_count_counter(c,var_name1,var_name3,content[1]);
 	CU_ASSERT_EQUAL(*dtest,3);
 
-	dtest = query_count_counter(c,var_name1,var_name3,&content[3]);
+	dtest = query_count_counter(c,var_name1,var_name3,content[3]);
 	CU_ASSERT_EQUAL(*dtest,1);
 
-	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name1,var_name2,&content[0],0),1);
-	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name3,var_name1,&content[1],0),1);
-	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name1,var_name3,&content[1],0),0);
+	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name1,var_name2,content[0],0),1);
+	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name3,var_name1,content[1],0),1);
+	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name1,var_name3,content[1],0),0);
 
 	// print_count_light(c);
 	free_count(c);

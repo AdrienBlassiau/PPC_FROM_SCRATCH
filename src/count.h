@@ -92,7 +92,7 @@ void print_count_light(Pcount c);
  * @return           1 if success, 0 if the content1 is already associated to
  *                   content2.
  */
-int insert_count_counter(Pcount c, int variable1, int variable2, int* content1, int* content2);
+int insert_count_counter(Pcount c, int variable1, int variable2, int content1, int* content2);
 
 /**
  * This function queries the count struct.
@@ -123,7 +123,7 @@ Pcounter query_count(Pcount c, int variable1, int variable2);
  * @return           Zero if the variable is not in the struct, non-zero if the
  *                   variable is in the struct.
  */
-int* query_count_counter(Pcount c, int variable1, int variable2, int* content);
+int* query_count_counter(Pcount c, int variable1, int variable2, int content);
 
 
 /**
@@ -135,7 +135,7 @@ int* query_count_counter(Pcount c, int variable1, int variable2, int* content);
  * @param  comp   	 The comparison value.
  * @return           1 if success, 0 otherwise.
  */
-int test_count_counter_is_empty(Pcount c, int variable1, int variable2, int* content, int comp);
+int test_count_counter_is_empty(Pcount c, int variable1, int variable2, int content, int comp);
 
 
 #endif

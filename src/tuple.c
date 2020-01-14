@@ -75,7 +75,7 @@ void begin_tuple_iteration(Ptuple t){
 	PAVLTree tuples = get_tuples(t);
 	set_tuple_iterator(t,0);
 	AVLTreeValue * array1 = avl_tree_to_array(tuples);
-	AVLTreeValue * array2 = avl_tree_to_array_2(tuples);
+	int* array2 = avl_tree_to_array_2(tuples);
 	t->tuples_tab = array1;
 	t->tuples_key = array2;
 }
@@ -95,10 +95,10 @@ int tuple_can_iterate(Ptuple t){
 int get_tuple_current_key(Ptuple t){
 	int iterator = get_tuple_iterator(t);
 
-	AVLTreeValue* data_list = t->tuples_key;
-	int* data = (int*)(data_list[iterator]);
+	int* data_list = t->tuples_key;
+	int data =  data_list[iterator];
 
-	return *data;
+	return data;
 }
 
 Pdomain get_tuple_current_value(Ptuple t){
@@ -116,9 +116,8 @@ void get_next_tuple(Ptuple t){
 	set_tuple_iterator(t,iterator+1);
 }
 
-void print_content(void *vc){
-	int *c = (int*) vc;
-	printf("%d -> ",*c);
+void print_content(int c){
+	printf("%d -> ",c);
 }
 
 void print_tuple(void *vt){
@@ -126,7 +125,7 @@ void print_tuple(void *vt){
 	print_avl_tree(get_tuples(t),print_domain,print_content);
 }
 
-int insert_tuple(Ptuple t, int* content, Pdomain d){
+int insert_tuple(Ptuple t, int content, Pdomain d){
 	PAVLTree tuples = get_tuples(t);
 	AVLTreeNode *res = avl_tree_insert(tuples,content,d);
 	if (res == NULL){
@@ -135,7 +134,7 @@ int insert_tuple(Ptuple t, int* content, Pdomain d){
 	return 1;
 }
 
-int remove_tuple(Ptuple t, int* content){
+int remove_tuple(Ptuple t, int content){
 	PAVLTree tuples = get_tuples(t);
 
 	Pdomain d = query_tuple(t,content);
@@ -149,7 +148,7 @@ int remove_tuple(Ptuple t, int* content){
 	return res;
 }
 
-Pdomain remove_value_of_content_domain(Ptuple t, int* content, int value){
+Pdomain remove_value_of_content_domain(Ptuple t, int content, int value){
 	PAVLTree tuples = get_tuples(t);
 	Pdomain d = query_tuple(t,content);
 	remove_from_domain(d,value);
@@ -158,7 +157,7 @@ Pdomain remove_value_of_content_domain(Ptuple t, int* content, int value){
 	return res;
 }
 
-Pdomain query_tuple(Ptuple t, int* content){
+Pdomain query_tuple(Ptuple t, int content){
 	PAVLTree tuples = get_tuples(t);
 	Pdomain d =  avl_tree_lookup(tuples,content);
 

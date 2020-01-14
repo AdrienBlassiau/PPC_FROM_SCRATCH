@@ -75,7 +75,7 @@ void begin_counter_iteration(Pcounter c){
 	PAVLTree counters = get_counters(c);
 	set_counter_iterator(c,0);
 	AVLTreeValue * array1 = avl_tree_to_array(counters);
-	AVLTreeValue * array2 = avl_tree_to_array_2(counters);
+	int* array2 = avl_tree_to_array_2(counters);
 	c->counters_tab = array1;
 	c->counters_key = array2;
 }
@@ -95,10 +95,10 @@ int counter_can_iterate(Pcounter c){
 int get_counter_current_key(Pcounter c){
 	int iterator = get_counter_iterator(c);
 
-	AVLTreeValue* data_list = c->counters_key;
-	int* data = (int*)(data_list[iterator]);
+	int* data_list = c->counters_key;
+	int data = data_list[iterator];
 
-	return *data;
+	return data;
 }
 
 int get_counter_current_value(Pcounter c){
@@ -116,9 +116,8 @@ void get_next_counter(Pcounter c){
 	set_counter_iterator(c,iterator+1);
 }
 
-void print_key(void *vc){
-	int *c = (int*) vc;
-	printf("%d -> ",*c);
+void print_key(int c){
+	printf("%d -> ",c);
 }
 
 void print_counter(void *vc){
@@ -126,7 +125,7 @@ void print_counter(void *vc){
 	print_avl_tree(get_counters(c),print_int,print_key);
 }
 
-int insert_counter(Pcounter c, int* content, int* count){
+int insert_counter(Pcounter c, int content, int* count){
 	PAVLTree counters = get_counters(c);
 	AVLTreeNode *res = avl_tree_insert(counters,content,count);
 	if (res == NULL){
@@ -135,7 +134,7 @@ int insert_counter(Pcounter c, int* content, int* count){
 	return 1;
 }
 
-int remove_counter(Pcounter c, int* content){
+int remove_counter(Pcounter c, int content){
 	PAVLTree counters = get_counters(c);
 
 	int res = avl_tree_remove(counters,content);
@@ -143,14 +142,14 @@ int remove_counter(Pcounter c, int* content){
 	return res;
 }
 
-int* change_value_of_counter(Pcounter c, int* content, int* value){
+int* change_value_of_counter(Pcounter c, int content, int* value){
 	PAVLTree counters = get_counters(c);
 	int* res = avl_tree_change_value(counters,content,value);
 
 	return res;
 }
 
-int* query_counter(Pcounter c, int* content){
+int* query_counter(Pcounter c, int content){
 	PAVLTree counters = get_counters(c);
 	int* d =  avl_tree_lookup(counters,content);
 
