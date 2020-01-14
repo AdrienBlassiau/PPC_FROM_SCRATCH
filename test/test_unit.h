@@ -65,6 +65,8 @@ void test_insert_in_variable(void);
 
 void test_remove_from_variable(void);
 
+void test_copy_variable(void);
+
 /* ########################################################## */
 /* ##################### TUPLE.C TESTS ###################### */
 /* ########################################################## */

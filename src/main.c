@@ -29,19 +29,19 @@ int main(){
 	Pcsp csp;
 	int mode = 1;
 
-	if (mode == 0){
+	if (mode == 1){
 		char* filename = "inst/test/queen5_5.cspi";
 		csp = generate_from_file(filename);
 	}
 	else{
-		csp = generate_8_queens_puzzle(15);
+		csp = generate_8_queens_puzzle(5);
 	}
 
 	// print_csp(csp);
-	// AC4(csp);
+	// run_AC4(csp);
 	forward_checking(csp);
 	// print_csp(csp);
-	// backtrack(csp);
+	// run_backtrack(csp);
 
 	print_csp(csp);
 	free_csp(csp);

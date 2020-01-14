@@ -108,6 +108,67 @@ int remove_from_domain(Pdomain d, int value){
 	return set_remove(values,value);
 }
 
+void set_iterator(Pdomain d, int it){
+	d->values->iterator = it;
+}
+
+int get_iterator(Pdomain d){
+	return d->values->iterator;
+}
+
+int remove_all_except_one_from_domain(Pdomain d, int value){
+	int i,v;
+	int iterator = d->values->iterator;
+	begin_domain_iteration(d);
+
+	i = get_domain_size(d);
+	while(i>0){
+		v = get_current_value(d);
+		remove_from_domain(d,v);
+		i--;
+	}
+	insert_in_domain(d,value);
+	d->values->iterator = iterator;
+
+	return 1;
+}
+
+int fill_domain(Pdomain d, Pdomain d_copy){
+	int i,v;
+	int iterator = d->values->iterator;
+	begin_domain_iteration(d);
+
+	i = get_domain_size(d_copy);
+	while(i>0){
+		v = get_current_value(d_copy);
+		insert_in_domain(d,v);
+		i--;
+	}
+	d->values->iterator = iterator;
+
+	return 1;
+}
+
+Pdomain copy_domain(Pdomain d){
+	int i,v;
+	Pset values = get_domain_values(d);
+	int size = get_total_size(values);
+	Pdomain d_copy = new_domain(size);
+
+	int iterator = d->values->iterator;
+	begin_domain_iteration(d);
+
+	i = get_domain_size(d);
+	while(i>0){
+		v = get_current_value(d);
+		insert_in_domain(d_copy,v);
+		i--;
+	}
+	d->values->iterator = iterator;
+
+	return d_copy;
+}
+
 int query_domain(Pdomain d, int value){
 	Pset values = get_domain_values(d);
 	return set_query(values,value);

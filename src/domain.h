@@ -125,6 +125,44 @@ int insert_in_domain(Pdomain d, int value);
 int remove_from_domain(Pdomain d, int value);
 
 /**
+ * This function sets the iterator of a domain.
+ * @param  d  The domain.
+ * @param  it The value of the iterator.
+ * @return    1 if success, 0 otherwise.
+ */
+void set_iterator(Pdomain d, int it);
+
+/**
+ * This function gets the iterator of a domain.
+ * @param  d  The domain.
+ * @return    The iterator value.
+ */
+int get_iterator(Pdomain d);
+
+/**
+ * This function removes all elements except one from a domain.
+ * @param  d     The domain.
+ * @param  value The value we don't wat to remove.
+ * @return       1 if success, 0 otherwise.
+ */
+int remove_all_except_one_from_domain(Pdomain d, int value);
+
+/**
+ * This function fills a domain given an other domain.
+ * @param  d      The domain d we want to fill.
+ * @param  d_copy The domain used to fill the other domain.
+ * @return        1 if success, 0 otherwise.
+ */
+int fill_domain(Pdomain d, Pdomain d_copy);
+
+/**
+ * This function copies a domain.
+ * @param  d     The dpmain we want to copy.
+ * @return       The copy of the domain.
+ */
+Pdomain copy_domain(Pdomain d);
+
+/**
  * This function queries the domain
  * @param  d     The domain we want to query.
  * @param  value The value we are looking for in the domain.

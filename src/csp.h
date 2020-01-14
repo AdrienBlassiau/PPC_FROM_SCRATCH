@@ -51,6 +51,7 @@ typedef struct csp {
   Pcount count_list;
   int* tab_int;
   int size;
+  int mac;
   int max_dom_size;
   int* domain_size;
   int* degree_tab;
@@ -77,11 +78,13 @@ int** set_failure_tab(Pcsp c);
 
 void print_csp(void * pcsp);
 
-int backtrack(Pcsp c);
+int run_backtrack(Pcsp c);
 
 int initAC4(Pcsp csp, int* tab_alloc);
 
 int AC4(Pcsp csp);
+
+int run_AC4(Pcsp csp);
 
 int forward_checking(Pcsp csp);
 

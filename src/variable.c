@@ -117,6 +117,26 @@ int insert_variable(Pvariable v, int i, char* name, Pdomain d){
 	return 1;
 }
 
+Pvariable copy_variable(Pvariable v){
+	int i;
+	int size = v->size;
+	char* name;
+	Pdomain d, d_copy;
+	Pvariable v_copy = new_variable(size);
+	for (i = 0; i < size; i++){
+		name = v->variables_name[i];
+		d = v->variables[i];
+		d_copy = copy_domain(d);
+		insert_variable(v_copy,i,name,d_copy);
+	}
+
+	return v_copy;
+}
+
+void reset_variable(Pvariable v, int var, int it){
+	Pdomain d = v->variables[var];
+	set_iterator(d,it);
+}
 
 int remove_value_of_variable_domain(Pvariable v, int i, int value){
 	Pdomain d = v->variables[i];

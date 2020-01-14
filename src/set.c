@@ -149,6 +149,7 @@ void print_set(Pset set){
 	int** values = set->values;
 
 	for (i = 0; i < size; i++){
+		printf("ITERATOR : %d\n",set->iterator);
 		printf("[%d]: open:%d et value:%d \n",i,values[i][0],values[i][1]);
 	}
 }

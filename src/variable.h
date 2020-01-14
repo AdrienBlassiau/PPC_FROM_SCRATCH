@@ -113,6 +113,20 @@ void print_variable(Pvariable v);
  */
 int insert_variable(Pvariable v, int i, char* name, Pdomain d);
 
+/**
+ * This function copies a variable structure.
+ * @param  v The variable struc we want to copy.
+ * @return   A new variable struc.
+ */
+Pvariable copy_variable(Pvariable v);
+
+/**
+ * This function reset the iterator of a variable, given a value for it.
+ * @param v   THe variable.
+ * @param var The variable name.
+ * @param it  THe value of the iterator.
+ */
+void reset_variable(Pvariable v, int var, int it);
 
 /**
  * This function removes a value of a variable domain.

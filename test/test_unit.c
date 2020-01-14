@@ -60,7 +60,8 @@ int init_test(void){
 	if((NULL==CU_add_test(suite2, "Test new variable", test_new_variable))||
 		(NULL==CU_add_test(suite2, "Test var size", test_variable_size))||
 		(NULL==CU_add_test(suite2, "Test insert", test_insert_in_variable))||
-		(NULL==CU_add_test(suite2, "Test rm", test_remove_from_variable)))
+		(NULL==CU_add_test(suite2, "Test rm", test_remove_from_variable))||
+		(NULL==CU_add_test(suite2, "Test copy", test_copy_variable)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -241,12 +242,17 @@ void test_insert_in_domain(void){
 	size = get_domain_size(d);
 	CU_ASSERT_EQUAL(size,6);
 
-	for (i = 0; i < size; ++i)
-	{
+	for (i = 0; i < size; ++i){
 		CU_ASSERT_NOT_EQUAL(query_domain(d,tab[i]),0);
 	}
 
-	// print_domain(d);
+	Pdomain d_copy = copy_domain(d);
+
+	for (i = 0; i < size; ++i){
+		CU_ASSERT_EQUAL(query_domain(d,tab[i]),query_domain(d_copy,tab[i]));
+	}
+
+	free_domain(d_copy);
 	free_domain(d);
 }
 
@@ -256,13 +262,28 @@ void test_remove_from_domain(void){
 	int tab[6] = {1,2,5,6,12,23};
 	int i = 0;
 
-
-	for (i = 0; i < size; ++i)
-	{
+	for (i = 0; i < size; ++i){
 		insert_in_domain(d,tab[i]);
 	}
 
-	// print_domain(d);
+	Pdomain d_copy = copy_domain(d);
+
+	remove_all_except_one_from_domain(d,1);
+
+	CU_ASSERT_EQUAL(get_domain_size(d),1);
+
+	for (i = 0; i < size; ++i){
+		if (tab[i] != 1){
+			CU_ASSERT_EQUAL(query_domain(d,tab[i]),0);
+		}
+		else{
+			CU_ASSERT_EQUAL(query_domain(d,tab[i]),1);
+		}
+	}
+
+	fill_domain(d,d_copy);
+	free_domain(d_copy);
+
 	int val1 = 6;
 	size = get_domain_size(d);
 	CU_ASSERT_EQUAL(size,val1);
@@ -434,6 +455,60 @@ void test_remove_from_variable(void){
 
 	// print_variable(v);
 	free_variable(v);
+}
+
+void test_copy_variable(void){
+	int i;
+	int size = 3;
+	Pvariable v = new_variable(size);
+
+	Pdomain d1 = new_domain(4);
+	int tab1[4] = {1,2,5,6};
+	for (i = 0; i < 4; ++i)
+		insert_in_domain(d1,tab1[i]);
+
+	Pdomain d2 = new_domain(2);
+	int tab2[2] = {3,8};
+	for (i = 0; i < 2; ++i)
+		insert_in_domain(d2,tab2[i]);
+
+	Pdomain d3 = new_domain(6);
+	int tab3[6] = {6,7,8,9,10,11};
+	for (i = 0; i < 6; ++i)
+		insert_in_domain(d3,tab3[i]);
+
+	char var_name1[256] = "test1";
+	insert_variable(v,0,var_name1,d1);
+
+	char var_name2[256] = "test2";
+	insert_variable(v,1,var_name2,d2);
+
+	char var_name3[256] = "test3";
+	insert_variable(v,2,var_name3,d3);
+
+	Pvariable v_copy = copy_variable(v);
+
+	size = get_variable_number(v);
+	CU_ASSERT_EQUAL(size,3);
+	size = get_variable_number(v_copy);
+	CU_ASSERT_EQUAL(size,3);
+
+	int val = 1;
+	int re1 = remove_value_of_variable_domain(v,0,val);
+	CU_ASSERT_EQUAL(re1,1);
+
+
+	val = 1;
+	re1 = remove_value_of_variable_domain(v,0,val);
+	CU_ASSERT_EQUAL(re1,0);
+
+	// print_variable(v);
+	free_variable(v);
+
+	size = get_variable_number(v_copy);
+	CU_ASSERT_EQUAL(size,3);
+
+	free_variable(v_copy);
 }
 
 /* ########################################################## */

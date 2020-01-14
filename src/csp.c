@@ -41,6 +41,7 @@ Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size, int max_dom_
 	c->tab_int = tab_int;
 	c->instance_list = instance_list;
 	c->size = size;
+	c->mac = 0;
 	c->solution = 0;
 	c->Sstruct_list = Sstruct_list;
 	c->duo_list = new_duostack();
@@ -50,8 +51,9 @@ Pcsp new_csp(Pvariable v, Pconstraint cons, int* tab_int, int size, int max_dom_
 	c->degree_tab = set_degree_tab(c);
 	c->failure_tab = set_failure_tab(c);
 
-	set_var_heuristic(instance_list,9);
-	set_val_heuristic(instance_list,5);
+	set_var_heuristic(instance_list,2);
+	set_val_heuristic(instance_list,1);
+
 	shuffle_all_domain(c);
 
 	return c;
@@ -156,6 +158,25 @@ void reset_csp_count(Pcsp c){
 	c->count_list = count_list;
 }
 
+void reset_csp_S(Pcsp c){
+	int size = c->size;
+
+	PSstruct Sstruct_list;
+	Sstruct_list = new_Sstruct(size);
+
+	free_Sstruct(c->Sstruct_list);
+
+	c->Sstruct_list = Sstruct_list;
+}
+
+void reset_csp_Q(Pcsp c){
+	Pduostack duo_list;
+	duo_list = new_duostack();
+
+	free_duostack(c->duo_list);
+	c->duo_list = duo_list;
+}
+
 void add_failure(Pcsp csp, int i, int j){
 	csp->failure_tab[i][j]+=1;
 	csp->failure_tab[j][i]+=1;
@@ -256,6 +277,10 @@ int complete(Pcsp csp){
 	return get_number_of_linked(inst) == size;
 }
 
+int empty_domain(Pdomain d){
+	return get_domain_size(d) == 0;
+}
+
 int choose_non_instanciated(Pcsp csp){
 	Pconstraint cons = csp->constraint_list;
 	Pinstance inst = csp->instance_list;
@@ -277,11 +302,10 @@ Pdomain get_current_variable_domain(Pcsp csp, int var){
 	Pinstance inst = csp->instance_list;
 
 	if (inst->val_heuri == DYNAMIC_SUPPPORTED){
-		printf("entree\n");
 		shuffle_domain(inst,get_variable_domain(var_list,var),cons,var);
 	}
 
-	print_domain(get_variable_domain(var_list,var));
+	// print_domain(get_variable_domain(var_list,var));
 	return get_variable_domain(var_list,var);
 }
 
@@ -409,16 +433,59 @@ int is_free_variable(Pcsp csp, int var){
 	return is_free(inst,var);
 }
 
-int BT(Pcsp csp){
+Pvariable MAC(Pcsp csp, int var, int val){
+	Pvariable v =  csp->variable_list;
+	int mac = csp->mac;
+	Pvariable v_copy;
+	Pdomain d_copy;
+
+	if (mac){
+		v_copy = copy_variable(v);
+		d_copy = get_variable_domain(v_copy,var);
+		remove_all_except_one_from_domain(d_copy,val);
+		csp->variable_list = v_copy;
+		AC4(csp);
+		// printf("AFTER AC4\n");
+		// print_variable(v_copy);
+		// printf("AFTER AC4\n");
+		return v;
+	}
+
+	return NULL;
+}
+
+void revert_MAC(Pcsp csp, Pvariable v_copy){
+	Pvariable v = csp->variable_list;
+	int mac = csp->mac;
+	if (mac){
+		free_variable(v);
+		csp->variable_list = v_copy;
+		return;
+	}
+	return;
+}
+
+int revert_MAC_light(Pcsp csp, Pvariable v_copy){
+	int mac = csp->mac;
+	if (mac){
+		free_variable(v_copy);
+		return 1;
+	}
+	return 0;
+}
+
+int backtrack(Pcsp csp){
 	// printf("ENTREE\n");
 	// printf("#######\n");
 	// print_instance(csp->instance_list);
 	// printf("#######\n");
 	int x,v,i;
-
+	Pdomain d;
+	Pvariable vars;
 	csp->branch_explored++;
 
 	if (break_constraint(csp)){
+		// printf("BREAK\n");
 		return 0;
 	}
 	if (complete(csp)){
@@ -426,20 +493,31 @@ int BT(Pcsp csp){
 	}
 
 	x = choose_non_instanciated(csp);
-	Pdomain d = get_current_variable_domain(csp,x);
+	d = get_current_variable_domain(csp,x);
 
 	begin_domain_iteration(d);
 
 	i = get_domain_size(d);
 	while(i>0){
 		v = get_current_value(d);
+
 		// printf("ON CHOISIT : %d DE VALEUR : %d\n",x,v);
+
+		vars = MAC(csp,x,v);
+		// print_domain(d);
+		// printf("***\n");
+
 		complete_partial_instance(csp,x,v);
-		if (BT(csp)){
-			stop_csp(csp);
-			return 1;
+		if (!empty_domain(d)){
+			// printf("PAS EMPTY\n");
+			if (backtrack(csp)){
+				stop_csp(csp);
+				revert_MAC_light(csp,vars);
+				return 1;
+			}
 		}
 		remove_from_partial_instance(csp,x);
+		revert_MAC(csp,vars);
 		i--;
 	}
 	reverse_non_instanciated(csp,x);
@@ -447,9 +525,9 @@ int BT(Pcsp csp){
 	return 0;
 }
 
-int backtrack(Pcsp csp){
+int run_backtrack(Pcsp csp){
 	start_time(csp);
-	BT(csp);
+	backtrack(csp);
 	stop_time(csp);
 	return 1;
 }
@@ -522,7 +600,6 @@ int initAC4(Pcsp csp, int* tab_alloc){
 }
 
 int AC4(Pcsp csp){
-	start_time(csp);
 	int x,y,a,b,count;
 	Pduostack S;
 	int* tab_alloc = calloc(100000000,sizeof(int));
@@ -531,7 +608,6 @@ int AC4(Pcsp csp){
 
 	while(!Q_is_empty(csp)){
 		remove_Q(csp,&y,&b);
-
 		// printf("y:%d et b:%d\n",y,b);
 
 		S = get_S(csp,y,&b);
@@ -551,12 +627,19 @@ int AC4(Pcsp csp){
 
 		}
 	}
-	stop_time(csp);
 	reset_csp_count(csp);
+	reset_csp_S(csp);
+	reset_csp_Q(csp);
 	free(tab_alloc);
 	return 1;
 }
 
+int run_AC4(Pcsp csp){
+	start_time(csp);
+	AC4(csp);
+	stop_time(csp);
+	return 1;
+}
 
 int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 	int j,k,s,m;
@@ -575,49 +658,49 @@ int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 			while(k>0){
 				m = get_current_value(dj);
 
-				printf("FORWARD : ON CHOISIT : %d DE VALEUR : %d\n",j,m);
+				// printf("FORWARD : ON CHOISIT : %d DE VALEUR : %d\n",j,m);
 
 				if (empty_count(csp,j,j,&m,-1)){
 					s = get_instanciated_value(csp,i);
 
 					if (test_tuple(csp,i,j,s,m) || !test_constraint(csp,i,j)){
-						printf("%d->%d in C(%d,%d)\n",s,m,i,j);
+						// printf("%d->%d in C(%d,%d)\n",s,m,i,j);
 						dwo = 0;
 					}
 					else{
 						add_failure(csp,i,j);
-						printf("%d->%d NOT in C(%d,%d)\n",s,m,i,j);
+						// printf("%d->%d NOT in C(%d,%d)\n",s,m,i,j);
 						tab_alloc[*cc] = m;
 						(*cc)++;
 						tab_alloc[*cc] = i;
 						change_count(csp,j,j,&tab_alloc[(*cc)-1],&tab_alloc[*cc]);
 						(*cc)++;
-						printf("Count :\n");
-						print_count_light(csp->count_list);
+						// printf("Count :\n");
+						// print_count_light(csp->count_list);
 					}
 				}
 				k--;
 			}
 			if (dwo){
-				printf("BAD\n");
+				// printf("BAD\n");
 				return 0;
 			}
 
 		}
 	}
-	printf("GOOD\n");
+	// printf("GOOD\n");
 	return 1;
 }
 
 void restore(Pcsp csp, int i, int* tab_alloc, int* cc, int* zero){
-	printf("RESTORE\n");
+	// printf("RESTORE\n");
 	int j,k,m;
 	int N = get_N(csp);
 	Pdomain dj;
 
 	for (j = 0; j < N; j++){
 		if(is_free_variable(csp,j)){
-			printf("RESTORE %d\n",j);
+			// printf("RESTORE %d\n",j);
 			dj = get_current_variable_domain(csp,j);
 			begin_domain_iteration(dj);
 
@@ -640,11 +723,11 @@ void restore(Pcsp csp, int i, int* tab_alloc, int* cc, int* zero){
 }
 
 int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
-	printf("ENTREE \n");
-	printf("#######\n");
-	print_instance(csp->instance_list);
-	printf("#######\n");
-	printf("C%d\n",*cc);
+	// printf("ENTREE \n");
+	// printf("#######\n");
+	// print_instance(csp->instance_list);
+	// printf("#######\n");
+	// printf("C%d\n",*cc);
 	int i = choose_non_instanciated(csp);
 	int j,l,empty;
 
@@ -659,21 +742,21 @@ int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
 	while(j>0){
 		l = get_current_value(di);
 
-		print_domain(di);
-		printf("ON CHOISIT : %d DE VALEUR : %d\n",i,l);
+		// print_domain(di);
+		// printf("ON CHOISIT : %d DE VALEUR : %d\n",i,l);
 
 		complete_partial_instance(csp,i,l);
 		empty = empty_count(csp,i,i,&l,-1);
 		if (empty){
-			printf("%d DE VALEUR : %d VALIDE\n",i,l);
+			// printf("%d DE VALEUR : %d VALIDE\n",i,l);
 
 			if (complete(csp)){
-				printf("FIN\n");
+				// printf("FIN\n");
 				stop_csp(csp);
 				return 1;
 			}
 			else{
-				printf("FORWARD CHECK\n");
+				// printf("FORWARD CHECK\n");
 				if (check_forward(csp,i,tab_alloc,cc)){
 					if(FC(csp,tab_alloc,cc,zero)){
 						return 1;
@@ -682,7 +765,7 @@ int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
 				restore(csp,i,tab_alloc,cc,zero);
 			}
 		}
-		printf("%d DE VALEUR : %d INVALIDE car C(%d,%d) n'existe pas\n",i,l,i,empty_count(csp,i,i,&l,-1));
+		// printf("%d DE VALEUR : %d INVALIDE car C(%d,%d) n'existe pas\n",i,l,i,empty_count(csp,i,i,&l,-1));
 
 		remove_from_partial_instance(csp,i);
 		j--;
