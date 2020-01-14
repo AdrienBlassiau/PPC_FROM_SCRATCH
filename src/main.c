@@ -32,8 +32,8 @@ int main(){
 	Pcsp csp;
 	int mode = 1;
 
-	if (mode == 1){
-		char* filename = "inst/test/queen5_5.cspi";
+	if (mode == 0){
+		char* filename = "inst/test/anna.cspi";
 		csp = generate_from_file(filename);
 	}
 	else{

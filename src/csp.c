@@ -40,7 +40,7 @@ Pcsp new_csp(Pvariable v, Pconstraint cons, int size, int max_dom_size){
 	c->constraint_list = cons;
 	c->instance_list = instance_list;
 	c->size = size;
-	c->mac = 0;
+	c->mac = 1;
 	c->solution = 0;
 	c->Sstruct_list = Sstruct_list;
 	c->duo_list = new_duostack();
@@ -311,9 +311,9 @@ int remove_from_partial_instance(Pcsp csp, int v){
 	return remove_linked_variable(inst,v);
 }
 
-void change_count(Pcsp csp, int x, int y, int a, int* value){
+int change_count(Pcsp csp, int x, int y, int a, int* value){
 	Pcount count = csp->count_list;
-	insert_count_counter(count,x,y,a,value);
+	return insert_count_counter(count,x,y,a,value);
 }
 
 int decrement_count(Pcsp csp, int x, int y, int a){

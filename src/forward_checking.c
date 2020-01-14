@@ -32,7 +32,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "count.h"
 
 int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
-	int j,k,s,m;
+	int j,k,s,m,change;
 	int N = get_N(csp);
 	int dwo = 0;
 	Pdomain dj;
@@ -60,11 +60,9 @@ int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 					else{
 						add_failure(csp,i,j);
 						// printf("%d->%d NOT in C(%d,%d)\n",s,m,i,j);
-						tab_alloc[*cc] = m;
-						(*cc)++;
 						tab_alloc[*cc] = i;
-						change_count(csp,j,j,tab_alloc[(*cc)-1],&tab_alloc[*cc]);
-						(*cc)++;
+						change = change_count(csp,j,j,m,&tab_alloc[*cc]);
+						(*cc) = change ? *cc+1 : *cc;
 						// printf("Count :\n");
 						// print_count_light(csp->count_list);
 					}
@@ -82,7 +80,7 @@ int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 	return 1;
 }
 
-void restore(Pcsp csp, int i, int* tab_alloc, int* cc, int* zero){
+void restore(Pcsp csp, int i, int* zero){
 	// printf("RESTORE\n");
 	int j,k,m;
 	int N = get_N(csp);
@@ -99,11 +97,7 @@ void restore(Pcsp csp, int i, int* tab_alloc, int* cc, int* zero){
 				m = get_current_value(dj);
 
 				if (test_count(csp,j,j,m,i)){
-					tab_alloc[(*cc)] = m;
-					(*cc)++;
-					tab_alloc[(*cc)+1] = 0;
-					change_count(csp,j,j,tab_alloc[(*cc)-1],zero);
-					(*cc)++;
+					change_count(csp,j,j,m,zero);
 				}
 
 				k--;
@@ -156,7 +150,7 @@ int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
 						return 1;
 					}
 				}
-				restore(csp,i,tab_alloc,cc,zero);
+				restore(csp,i,zero);
 			}
 		}
 		// printf("%d DE VALEUR : %d INVALIDE car C(%d,%d) n'existe pas\n",i,l,i,empty_count(csp,i,i,&l,-1));
@@ -172,9 +166,8 @@ int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
 
 int forward_checking(Pcsp csp){
 	int zero=-1;
-	printf("A\n");
-	int* tab_alloc = calloc(1000000000,sizeof(int));
-	printf("B\n");
+	int* tab_alloc = calloc(csp->max_dom_size*csp->size,sizeof(int));
+
 	int cc = 0;
 	FC(csp,tab_alloc,&cc,&zero);
 	reset_csp_count(csp);

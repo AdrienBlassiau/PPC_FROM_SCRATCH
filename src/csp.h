@@ -110,7 +110,7 @@ int complete_partial_instance(Pcsp csp,  int v, int val);
 
 int remove_from_partial_instance(Pcsp csp, int v);
 
-void change_count(Pcsp csp, int x, int y, int a, int* value);
+int change_count(Pcsp csp, int x, int y, int a, int* value);
 
 int decrement_count(Pcsp csp, int x, int y, int a);
 

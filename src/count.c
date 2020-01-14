@@ -109,13 +109,15 @@ int insert_count_counter(Pcount c, int variable1, int variable2, int content1, i
 	int* d = query_count_counter(c,variable1,variable2,content1);
 
 	if (d==NULL){
+		// printf("NEW VALUE\n");
 		insert_counter(counter12,content1,content2);
+		return 1;
 	}
 	else{
-		change_value_of_counter(counter12,content1,content2);
+		// printf("CHANGE VALUE\n");
+		*d = *content2;
+		return 0;
 	}
-
-	return 1;
 }
 
 
