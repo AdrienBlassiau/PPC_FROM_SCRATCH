@@ -18,25 +18,23 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
 
-#ifndef __INCLUDE__
-#define __INCLUDE__
+/** @file params.h
+ *
+ * @brief This file manages the parameters of the executable.
+ */
 
-#define _DEFAULT_SOURCE
+#ifndef PARAMS__H
+#define PARAMS__H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
- #include <sys/time.h>
-#include <sys/stat.h>
-#include <pthread.h>
-#include <time.h>
-#include <math.h>
-#include <limits.h>
-#include <unistd.h>
-#include <signal.h>
+#include "include.h"
+#include "csp.h"
 
+int solve_csp(Pcsp* csp);
 
-const char* nameProcessus;
+int show_csp(Pcsp* csp);
+
+int clean_csp(Pcsp* csp);
+
+int generate_csp(int argc, char* argv[], Pcsp* csp);
 
 #endif

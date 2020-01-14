@@ -32,17 +32,25 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "count.h"
 
 int backtrack(Pcsp csp){
-	// printf("ENTREE\n");
-	// printf("#######\n");
-	// print_instance(csp->instance_list);
-	// printf("#######\n");
+
+	if (csp->v >= 3){
+		printf("ENTREE\n");
+		printf("#######\n");
+		print_instance(csp->instance_list);
+		printf("#######\n");
+	}
+
 	int x,v,i;
 	Pdomain d;
 	Pvariable vars;
 	csp->branch_explored++;
 
 	if (break_constraint(csp)){
-		// printf("BREAK\n");
+
+		if (csp->v >= 3){
+			printf("BREAK\n");
+		}
+
 		return 0;
 	}
 	if (complete(csp)){
@@ -58,15 +66,24 @@ int backtrack(Pcsp csp){
 	while(i>0){
 		v = get_current_value(d);
 
-		// printf("ON CHOISIT : %d DE VALEUR : %d\n",x,v);
+		if (csp->v >= 3){
+			printf("ON CHOISIT : %d DE VALEUR : %d\n",x,v);
+		}
 
 		vars = MAC(csp,x,v);
-		// print_domain(d);
-		// printf("***\n");
+
+		if (csp->v >= 3){
+			print_domain(d);
+			printf("***\n");
+		}
 
 		complete_partial_instance(csp,x,v);
 		if (!empty_domain(d)){
-			// printf("PAS EMPTY\n");
+
+			if (csp->v >= 3){
+				printf("NOT EMPTY\n");
+			}
+
 			if (backtrack(csp)){
 				stop_csp(csp);
 				revert_MAC_light(csp,vars);

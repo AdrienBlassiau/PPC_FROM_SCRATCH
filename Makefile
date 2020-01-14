@@ -29,13 +29,16 @@ all : main
 test : main_test.o test_unit.o tools.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm -lcunit
 
-main : main.o tools.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o ac4.o backtrack.o forward_checking.o problem.o duo.o Sstruct.o counter.o count.o
+main : main.o tools.o params.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o ac4.o backtrack.o forward_checking.o problem.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
 
-convert : graph.o tools.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o ac4.o backtrack.o forward_checking.o problem.o duo.o Sstruct.o counter.o count.o
+convert : graph.o tools.o params.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o ac4.o backtrack.o forward_checking.o problem.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
 
 main.o : src/main.c
+	$(CC) -c $< -o obj/$@
+
+params.o : src/params.c
 	$(CC) -c $< -o obj/$@
 
 graph.o : src/graph.c

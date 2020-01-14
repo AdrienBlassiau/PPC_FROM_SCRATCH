@@ -30,7 +30,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "count.h"
 
 
-Pcsp new_csp(Pvariable v, Pconstraint cons, int size, int max_dom_size){
+Pcsp new_csp(Pvariable v, Pconstraint cons, int size, int max_dom_size, int constraint_number,char* name){
 	Pcsp c = (csp*) calloc(1,sizeof(csp));
 	Pinstance instance_list = new_instance(size);
 	PSstruct Sstruct_list = new_Sstruct(size);
@@ -40,7 +40,7 @@ Pcsp new_csp(Pvariable v, Pconstraint cons, int size, int max_dom_size){
 	c->constraint_list = cons;
 	c->instance_list = instance_list;
 	c->size = size;
-	c->mac = 1;
+	c->cn = constraint_number;
 	c->solution = 0;
 	c->Sstruct_list = Sstruct_list;
 	c->duo_list = new_duostack();
@@ -49,6 +49,11 @@ Pcsp new_csp(Pvariable v, Pconstraint cons, int size, int max_dom_size){
 	c->domain_size = set_current_domain(c);
 	c->degree_tab = set_degree_tab(c);
 	c->failure_tab = set_failure_tab(c);
+	c->ac = 0;
+	c->fc = 0;
+	c->to = 0;
+	c->v = 0;
+	c->name = name;
 
 	set_var_heuristic(instance_list,2);
 	set_val_heuristic(instance_list,1);
@@ -72,6 +77,33 @@ Pcsp free_csp(Pcsp c){
 
 	return c;
 }
+
+void set_csp_hvar(Pcsp csp, int x){
+	Pinstance instance_list = csp->instance_list;
+	set_var_heuristic(instance_list,x);
+}
+
+void set_csp_hval(Pcsp csp, int x){
+	Pinstance instance_list = csp->instance_list;
+	set_val_heuristic(instance_list,x);
+}
+
+void set_csp_ac(Pcsp csp, int x){
+	csp->ac = x;
+}
+
+void set_csp_fc(Pcsp csp, int x){
+	csp->fc = x;
+}
+
+void set_csp_to(Pcsp csp, double x){
+	csp->to = x;
+}
+
+void set_csp_v(Pcsp csp, int x){
+	csp->v = x;
+}
+
 
 void shuffle_all_domain(Pcsp csp){
 	int i;
@@ -180,27 +212,52 @@ void add_failure(Pcsp csp, int i, int j){
 
 void print_csp(void * pcsp){
 	Pcsp c = (Pcsp) pcsp;
-	printf("VARIABLES + DOMAINES:\n");
-	print_variable(c->variable_list);
-	printf("\n");
-	printf("CONTRAINTES:\n");
-	// print_constraint(c->constraint_list,c->variable_list);
-	print_constraint(c->constraint_list,c->variable_list);
-	printf("\n");
-	printf("INSTANCIATION:\n");
-	print_instance(c->instance_list);
-	printf("SOLUTION: ");
-	if (c->solution) printf("OUI\n");
-	else printf("NON\n");
-	printf("SIZE:\n");
-	printf("max dom : %d\n",c->max_dom_size);
-	printf("var : %d\n",c->size);
-	printf("VARIABLE HEURISTIC : %s\n",get_var_heuristic(c->instance_list));
-	printf("VALUE HEURISTIC : %s\n",get_val_heuristic(c->instance_list));
-	printf("BRANCH EXPLORED : %d\n",c->branch_explored);
-	printf("PROCESS DURATION : %f\n",(float)(c->t2-c->t1)/CLOCKS_PER_SEC);
-	// printf("FAILURE TAB :\n");
-	// print_matrix(c->failure_tab,c->size);
+
+	if (c->v >= 2){
+		printf("Variables + Domains:\n");
+		print_variable(c->variable_list);
+		printf("\n");
+		printf("Constraints:\n");
+		print_constraint(c->constraint_list,c->variable_list);
+		printf("\n");
+	}
+
+	if (c->v >= 3){
+		printf("Failure tab :\n");
+		print_matrix(c->failure_tab,c->size);
+		printf("\n");
+	}
+
+	if (c->v >= 1){
+		printf("Instanciation:\n");
+		print_instance(c->instance_list);
+
+		printf("\nSolution		: 	%s\n",c->solution?"YES":"NO");
+
+
+		printf("The problem %s has	: 	%d VARIABLES and %d CONSTRAINTS\n", c->name, c->size, c->cn);
+
+		printf("Solving method are 	: 	");
+		if (c->fc == 0) printf("BACKTRACK + ");
+		else printf("FORWARD-CHEKING + ");
+
+		if (c->ac == 1) printf("AC4 (root) \n");
+		else if (c->ac == 2) printf("AC4 (MAC) \n");
+		else printf("NOTHING \n");
+
+		printf("Chosen heuristic are 	: 	%s for variables and %s for values\n",get_var_heuristic(c->instance_list),get_val_heuristic(c->instance_list));
+		printf("Number of nodes visited : 	%d\n\n",c->branch_explored);
+		printf("Solve time 		=	%f sec.\n",(float)(c->t2-c->t1)/CLOCKS_PER_SEC);
+		if (c->to > 0.){
+			printf("Time out 		=	%f sec.\n",c->to);
+		}
+		else{
+			printf("There is no time out.\n");
+		}
+
+		printf("\nVerbose mode is		:	%s\n",c->v?(c->v==1?"ON":(c->v==2?"DEBUG":"HARD DEBUG")):"OFF");
+
+	}
 }
 
 int test_unary_constraint(Pcsp csp){
@@ -216,7 +273,9 @@ int test_unary_constraint(Pcsp csp){
 			for (j = 0; j < size; j++){
 				if(test_contraint_exists(cons,i,j)){
 					if (!test_contraint_value_exists(cons,i,j,val_linked)){
-						// printf("%d,%d with value %d doesn't exist\n",i,j,val_linked);
+						if (csp->v == 3){
+							printf("%d,%d with value %d doesn't exist\n",i,j,val_linked);
+						}
 						add_failure(csp,i,j);
 						return 0;
 					}
@@ -237,11 +296,6 @@ int test_binary_constraint(Pcsp csp){
 
 	int** test_tab = generate_instance_constraint(inst,&size_g);
 
-	// printf("TUPLES À tester %d: \n",size_g);
-	// for (i = 0; i < size_g; i++){
-	// 	printf("(%d,%d)",test_tab[i][0],test_tab[i][1]);
-	// }
-
 	for (i = 0; i < size_g; i++){
 		var1 = test_tab[i][0];
 		var2 = test_tab[i][1];
@@ -250,7 +304,9 @@ int test_binary_constraint(Pcsp csp){
 
 		if(test_contraint_exists(cons,var1,var2)){
 			if (!test_contraint_tuple_exists(cons,var1,var2,val1,val2)){
-				// printf("%d,%d with value %d,%d doesn't exist\n",var1,var2,val1,val2);
+				if (csp->v == 3){
+					printf("%d,%d with value %d,%d doesn't exist\n",var1,var2,val1,val2);
+				}
 				add_failure(csp,var1,var2);
 				free_matrix(test_tab,size_g);
 				return 0;
@@ -297,7 +353,6 @@ Pdomain get_current_variable_domain(Pcsp csp, int var){
 		shuffle_domain(inst,get_variable_domain(var_list,var),cons,var);
 	}
 
-	// print_domain(get_variable_domain(var_list,var));
 	return get_variable_domain(var_list,var);
 }
 
@@ -351,9 +406,7 @@ void add_S(Pcsp csp, int x, int y, int a, int b){
 Pduostack get_S(Pcsp csp, int y, int b){
 	PSstruct Ss = csp->Sstruct_list;
 	Pduostack ds = query_SStruct(Ss,y,b);
-	// printf("STACK\n");
-	// print_duostack(ds);
-	// printf("STACK\n");
+
 	return ds;
 }
 

@@ -36,7 +36,7 @@ char** get_line_tab(int* pos, int* line_size, const char* file);
 /**
  * This function reads a file and create a csp struct
  * @param  filename The name of the file.
- * @return          A csp struct associated to the file.
+ * @return          1 if success, 0 otherwise
  */
 Pcsp generate_from_file(char* filename);
 

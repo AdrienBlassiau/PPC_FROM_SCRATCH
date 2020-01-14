@@ -33,19 +33,17 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 Pvariable MAC(Pcsp csp, int var, int val){
 	Pvariable v =  csp->variable_list;
-	int mac = csp->mac;
+	int ac = csp->ac;
 	Pvariable v_copy;
 	Pdomain d_copy;
 
-	if (mac){
+	if (ac == 2){
 		v_copy = copy_variable(v);
 		d_copy = get_variable_domain(v_copy,var);
 		remove_all_except_one_from_domain(d_copy,val);
 		csp->variable_list = v_copy;
 		AC4(csp);
-		// printf("AFTER AC4\n");
-		// print_variable(v_copy);
-		// printf("AFTER AC4\n");
+
 		return v;
 	}
 
@@ -54,8 +52,8 @@ Pvariable MAC(Pcsp csp, int var, int val){
 
 void revert_MAC(Pcsp csp, Pvariable v_copy){
 	Pvariable v = csp->variable_list;
-	int mac = csp->mac;
-	if (mac){
+	int ac = csp->ac;
+	if (ac == 2){
 		free_variable(v);
 		csp->variable_list = v_copy;
 		return;
@@ -64,8 +62,8 @@ void revert_MAC(Pcsp csp, Pvariable v_copy){
 }
 
 int revert_MAC_light(Pcsp csp, Pvariable v_copy){
-	int mac = csp->mac;
-	if (mac){
+	int ac = csp->ac;
+	if (ac == 2){
 		free_variable(v_copy);
 		return 1;
 	}
@@ -81,7 +79,9 @@ int initAC4(Pcsp csp, int* tab_alloc){
 	for (x = 0; x < size; x++){
 		for (y = 0; y < size; y++){
 			if(test_constraint(csp,x,y)){
-				// printf("#################### CONSTRAINT (%d,%d) EXISTS (####################\n",x,y);
+				if (csp->v >= 3){
+					printf("#################### CONSTRAINT (%d,%d) EXISTS (####################\n",x,y);
+				}
 
 				dx = get_current_variable_domain(csp,x);
 
@@ -93,26 +93,33 @@ int initAC4(Pcsp csp, int* tab_alloc){
 					a = get_current_value(dx);
 					dy = get_current_variable_domain(csp,y);
 
-					// printf("DOMAIN x:%d\n",x);
-					// print_domain(dx);
+					if (csp->v >= 3){
+						printf("DOMAIN x:%d\n",x);
+						print_domain(dx);
 
-					// printf("DOMAIN y:%d\n",y);
-					// print_domain(dy);
+						printf("DOMAIN y:%d\n",y);
+						print_domain(dy);
+					}
 
 					begin_domain_iteration(dy);
 
 					j = get_domain_size(dy);
 					while(j>0){
 						b = get_current_value(dy);
-						// printf("===> CURRENT TUPLE (a,b):(%d,%d)\n",a,b);
-
+						if (csp->v >= 3){
+							printf("===> CURRENT TUPLE (a,b):(%d,%d)\n",a,b);
+						}
 						if(test_tuple(csp,x,y,a,b)){
-							// printf("%d->%d in C(%d,%d)\n",a,b,x,y);
+							if (csp->v >= 3){
+								printf("%d->%d in C(%d,%d)\n",a,b,x,y);
+							}
 							total++;
 							add_S(csp,x,y,a,b);
-							// printf("Sstruct :\n");
-							// print_Sstruct(csp->Sstruct_list);
-							// printf("--\n");
+							if (csp->v >= 3){
+								printf("Sstruct :\n");
+								print_Sstruct(csp->Sstruct_list);
+								printf("--\n");
+							}
 						}
 						j--;
 					}
@@ -120,11 +127,13 @@ int initAC4(Pcsp csp, int* tab_alloc){
 					tab_alloc[cc] = total;
 					change_count(csp,x,y,a,&tab_alloc[cc]);
 					cc++;
-					// printf("Count :\n");
-					// print_count_light(csp->count_list);
+					if (csp->v >= 3){
+						printf("Count :\n");
+						print_count_light(csp->count_list);
+					}
 
 					if (empty_count(csp,x,y,a,0)){
-						// printf("IT'S EMPTY !\n");
+
 						remove_of_domain(csp,x,a);
 						add_Q(csp,x,a);
 					}

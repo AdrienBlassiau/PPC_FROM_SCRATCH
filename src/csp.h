@@ -50,7 +50,7 @@ typedef struct csp {
   Pduostack duo_list;
   Pcount count_list;
   int size;
-  int mac;
+  int cn;
   int max_dom_size;
   int* domain_size;
   int* degree_tab;
@@ -59,14 +59,31 @@ typedef struct csp {
   int branch_explored;
   clock_t t1;
   clock_t t2;
+  int ac;
+  int fc;
+  double to;
+  int v;
+  char* name;
 
 } csp, *Pcsp;
 
 
 
-Pcsp new_csp(Pvariable v, Pconstraint c, int size, int max_dom_size);
+Pcsp new_csp(Pvariable v, Pconstraint c, int size, int max_dom_size, int constraint_number, char* name);
 
 Pcsp free_csp(Pcsp c);
+
+void set_csp_hvar(Pcsp csp, int x);
+
+void set_csp_hval(Pcsp csp, int x);
+
+void set_csp_ac(Pcsp csp, int x);
+
+void set_csp_fc(Pcsp csp, int x);
+
+void set_csp_to(Pcsp csp, double x);
+
+void set_csp_v(Pcsp csp, int x);
 
 void shuffle_all_domain(Pcsp c);
 

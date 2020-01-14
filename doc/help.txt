@@ -1,0 +1,100 @@
+Utilisation : bin/main [OPTIONS]
+
+Affichage de différents fichiers d'aide :
+  --help                    affiche cette aide.
+
+  --format                  affiche une aide sur le format d'entrée des
+                            problèmes (.cspi).
+
+Choix du problème à résoudre :
+  -f    FILENAME            lance le solveur de programme de CSP binaires sur
+                            une instance formatée en .cspi dont le nom est
+                            FILENAME
+                            (--format pour obtenir des informations sur le
+                            format .cspi) (aucun fichier par DEFAUT).
+
+  -q    SIZE                lance le solveur de programme de CSP binaires sur
+                            une instance de n reines de taille SIZE
+                            (SIZE=5 par DEFAUT). Doit être strictement
+                            supérieur à 3.
+
+
+Choix des méthodes de résolution :
+  -ac   MODE                définit le mode MODE d'activation de l'algorithme
+                            d'arc-consistance AC4 :
+                            0 : pas d'arc consistance (DEFAUT)
+                            1 : arc-consistance uniquement à la racine
+                            2 : arc-constance après chaque instanciation
+                            partielle (maintain-arc-consistency ou MAC)
+
+  -fc   MODE                définit le mode MODE d'activation de l'algorithme
+                            de forward-checking :
+                            0 : pas de forward-checking (DEFAUT)
+                            1 : activation du forward-checking
+
+  -to   TIME                stoppe l'algorithme après le temps TIME précisé
+                            en paramètre, pas de time-out par DEFAUT.
+
+
+Choix des heuristiques :
+  -hvar HEURISTIC_TYPE_1    permet de choisir le type d'heuristique
+                            HEURISTIC_TYPE_1 avec lequel les variables sont
+                            choisies :
+                            1 : par ordre lexicographique (DEFAUT)
+                                (lex, statique)
+                            2 : par ordre inversement lexicographique
+                                (invlex, statique)
+                            3 : de manière aléatoire
+                                (random, statique)
+                            4 : par taille de leur domaine croissant
+                                (dom, statique)
+                            5 : par ordre décroissant du nombre de contraintes
+                                dans lesquelles elles apparaissent
+                                (deg, statique)
+                            6 : par ordre décroissant du nombre de contraintes
+                                avec des variables libres dans lesquelles elles
+                                apparaissent
+                                (ddeg, dynamique)
+                            7 : par ordre décroissant du nombre de contraintes,
+                                pondérées par leur nombre d'échecs, avec des
+                                variables libres dans lesquelles elles
+                                apparaissent
+                                (wdeg, dynamique)
+                            8 : par taille de le rapport dom/deg croissant
+                                (dom_deg, statique)
+                            9 : par taille de le rapport dom/ddeg croissant
+                                (dom_ddeg, dynamique)
+                            10 : par taille de le rapport dom/wdeg croissant
+                                (dom_wdeg, dynamique)
+
+  -hval HEURISTIC_TYPE_2    permet de choisir le type d'heuristique
+                            HEURISTIC_TYPE_2 avec lequel les valeur des
+                            variables sont choisies :
+                            1 : par ordre croissant (DEFAUT)
+                                (min_val, statique)
+                            2 : par ordre décroissant
+                                (max_val, statique)
+                            3 : de manière aléatoire
+                                (random, statique)
+                            4 : par ordre décroissant du nombres de contraintes
+                                dans lesquels la valeur, associée à sa
+                                variable, apparaît
+                                (supp, statique)
+                            5 : par ordre décroissant du nombres de contraintes
+                                avec des variables libres dans lesquels la
+                                valeur, associée à sa variable, apparaît
+                                (dsupp, statique)
+
+
+Contrôle de l'affichage :
+  -v    LEVEL               affiche plus ou moins de texte en fonction du
+                            niveau renseigné par le paramètre LEVEL :
+                            0 : aucun texte affiché
+                            1 : solution affiché (DEFAUT)
+                            2 : tous les textes de debug importants sont
+                                affichés
+                            3 : tous les textes de debug sont affichés (non conseillé, très long ...)
+
+
+
+Signalez toute anomalie à [adrien.blassiau,corentin.juvigny]@ensiie.fr

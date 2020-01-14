@@ -161,7 +161,7 @@ Pcsp generate_from_file(char* filename){
   char** var_tab;
 
   if (fd == NULL) {
-    fprintf(stderr,"%s: error while opening %s in r mode : %s\n",nameProcessus,filename,strerror(errno));
+    fprintf(stderr,"%s: erreur lors de l'ouverture de %s en mode r : %s\n",nameProcessus,filename,strerror(errno));
     return NULL;
   }
   if (fstat(fileno(fd),&info) == -1) {
@@ -170,7 +170,7 @@ Pcsp generate_from_file(char* filename){
   }
   buf = xmalloc(info.st_size);
   if (fread(buf,sizeof(char),info.st_size,fd) == 0) {
-    fprintf(stderr,"%s: error while reading of %s : %s\n",nameProcessus,filename,strerror(errno));
+    fprintf(stderr,"%s: erreur lors de la lecture de %s : %s\n",nameProcessus,filename,strerror(errno));
     return NULL;
   }
   fclose(fd);
@@ -188,7 +188,7 @@ Pcsp generate_from_file(char* filename){
   Pconstraint c = new_constraint(variable_number);
   make_constraint(&pos, buf, constraint_number, c, v, &max_dom_size);
 
-  csp = new_csp(v,c,variable_number,max_dom_size);
+  csp = new_csp(v,c,variable_number,max_dom_size,constraint_number,filename);
 
   xfree(buf);
 

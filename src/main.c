@@ -22,31 +22,22 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "tools.h"
 #include "csp.h"
 #include "ac4.h"
+#include "params.h"
 #include "backtrack.h"
 #include "forward_checking.h"
 #include "read_file.h"
 #include "problem.h"
 
-int main(){
+int main(int argc, char* argv[]){
+
 	srand(time(NULL));
-	Pcsp csp;
-	int mode = 1;
+	Pcsp csp = NULL;
 
-	if (mode == 0){
-		char* filename = "inst/test/anna.cspi";
-		csp = generate_from_file(filename);
-	}
-	else{
-		csp = generate_8_queens_puzzle(15);
-	}
+	generate_csp(argc,argv,&csp);
+	solve_csp(&csp);
+	show_csp(&csp);
+	clean_csp(&csp);
 
-	// print_csp(csp);
-	// run_AC4(csp);
-	run_forward_checking(csp);
-	// print_csp(csp);
-	// run_backtrack(csp);
-
-	print_csp(csp);
-	free_csp(csp);
 	return 0;
 }
+

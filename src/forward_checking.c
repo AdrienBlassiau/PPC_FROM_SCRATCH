@@ -48,47 +48,65 @@ int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 			while(k>0){
 				m = get_current_value(dj);
 
-				// printf("FORWARD : ON CHOISIT : %d DE VALEUR : %d\n",j,m);
+				if (csp->v >= 3){
+					printf("FORWARD : WE CHOOSE : %d OF VALUE : %d\n",j,m);
+				}
 
 				if (empty_count(csp,j,j,m,-1)){
 					s = get_instanciated_value(csp,i);
 
 					if (test_tuple(csp,i,j,s,m) || !test_constraint(csp,i,j)){
-						// printf("%d->%d in C(%d,%d)\n",s,m,i,j);
+
+						if (csp->v >= 3){
+							printf("%d->%d in C(%d,%d)\n",s,m,i,j);
+						}
+
 						dwo = 0;
 					}
 					else{
 						add_failure(csp,i,j);
-						// printf("%d->%d NOT in C(%d,%d)\n",s,m,i,j);
+
+						if (csp->v >= 3){
+							printf("%d->%d NOT in C(%d,%d)\n",s,m,i,j);
+						}
+
 						tab_alloc[*cc] = i;
 						change = change_count(csp,j,j,m,&tab_alloc[*cc]);
 						(*cc) = change ? *cc+1 : *cc;
-						// printf("Count :\n");
-						// print_count_light(csp->count_list);
+
+						if (csp->v >= 3){
+							printf("Count :\n");
+							print_count_light(csp->count_list);
+						}
 					}
 				}
 				k--;
 			}
 			if (dwo){
-				// printf("BAD\n");
+				if (csp->v >= 3){
+					printf("BAD\n");
+				}
 				return 0;
 			}
 
 		}
 	}
-	// printf("GOOD\n");
+	if (csp->v >= 3){
+		printf("GOOD\n");
+	}
 	return 1;
 }
 
 void restore(Pcsp csp, int i, int* zero){
-	// printf("RESTORE\n");
+	if (csp->v >= 3){
+		printf("RESTORE\n");
+	}
 	int j,k,m;
 	int N = get_N(csp);
 	Pdomain dj;
 
 	for (j = 0; j < N; j++){
 		if(is_free_variable(csp,j)){
-			// printf("RESTORE %d\n",j);
 			dj = get_current_variable_domain(csp,j);
 			begin_domain_iteration(dj);
 
@@ -107,11 +125,13 @@ void restore(Pcsp csp, int i, int* zero){
 }
 
 int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
-	// printf("ENTREE \n");
-	// printf("#######\n");
-	// print_instance(csp->instance_list);
-	// printf("#######\n");
-	// printf("C%d\n",*cc);
+	if (csp->v >= 3){
+		printf("ENTRYPOINT \n");
+		printf("#######\n");
+		print_instance(csp->instance_list);
+		printf("#######\n");
+		printf("C%d\n",*cc);
+	}
 	int i,j,l;
 	Pdomain di;
 	Pvariable vars;
@@ -126,24 +146,37 @@ int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
 	while(j>0){
 		l = get_current_value(di);
 
-		// print_domain(di);
-		// printf("ON CHOISIT : %d DE VALEUR : %d\n",i,l);
+		if (csp->v >= 3){
+			print_domain(di);
+			printf("WE CHOOSE : %d OF VALUE : %d\n",i,l);
+		}
 
 		vars = MAC(csp,i,l);
 
 		complete_partial_instance(csp,i,l);
 
 		if (empty_count(csp,i,i,l,-1)){
-			// printf("%d DE VALEUR : %d VALIDE\n",i,l);
+
+			if (csp->v >= 3){
+				printf("%d OF VALUE : %d VALID\n",i,l);
+			}
 
 			if (complete(csp)){
-				// printf("FIN\n");
+
+				if (csp->v >= 3){
+					printf("END\n");
+				}
+
 				stop_csp(csp);
 				revert_MAC_light(csp,vars);
 				return 1;
 			}
 			else{
-				// printf("FORWARD CHECK\n");
+
+				if (csp->v >= 3){
+					printf("FORWARD CHECK\n");
+				}
+
 				if (check_forward(csp,i,tab_alloc,cc)){
 					if(FC(csp,tab_alloc,cc,zero)){
 						revert_MAC_light(csp,vars);
@@ -153,7 +186,10 @@ int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
 				restore(csp,i,zero);
 			}
 		}
-		// printf("%d DE VALEUR : %d INVALIDE car C(%d,%d) n'existe pas\n",i,l,i,empty_count(csp,i,i,&l,-1));
+
+		if (csp->v >= 3){
+			printf("%d OF VALUE : %d NOT VALID BECAUSE C(%d,%d) DOES NOT EXIST\n",i,l,i,empty_count(csp,i,i,l,-1));
+		}
 
 		remove_from_partial_instance(csp,i);
 		revert_MAC(csp,vars);

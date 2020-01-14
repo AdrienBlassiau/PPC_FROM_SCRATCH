@@ -1,0 +1,27 @@
+V0 V1 V2 V3 V4 # La première ligne liste le nom des n variables, séparées par un espace
+1 2 3 4        # Les n lignes qui suivent renseignent le domaine des variables
+1 2 3 4
+1 2 3 4
+1 2 3 4
+1 2 3 4
+6              # La n+2 ième ligne renseigne le nombre de contraintes, sachant que C(x,y) != C(y,x)
+V0 V1 2        # Le format d'une contrainte est : var1 var2 m, m est le nombre de tuple.
+1 1            # On énumère les tuples, ici le premier
+1 2            # On enumère le deuxième tuple. La contrainte est donc : C(V0,V1) = {(1,1),(1,2)}
+V0 V2 2        # Deuxième contrainte
+1 4
+2 1
+V1 V0 2	       # Troisième contrainte
+1 1
+2 1
+V1 V2 3        # Quatrième contrainte
+1 3
+2 1
+2 4
+V2 V0 2        # Cinquième contrainte
+4 1
+1 2
+V2 V1 3        # Sixième contrainte
+1 2
+3 1
+4 2            # Il faut sauter une ligne après le dernier tuple du fichier.

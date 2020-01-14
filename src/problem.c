@@ -28,7 +28,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
 Pcsp generate_8_queens_puzzle(int n){
-	int i,j,k,l;
+	int i,j,k,l,cn;
 	Pdomain d;
 	Pcsp csp;
 
@@ -47,9 +47,11 @@ Pcsp generate_8_queens_puzzle(int n){
 
 	/* SECOND : CONSTRAINTS*/
 	Pconstraint c = new_constraint(n);
+	cn = 0;
 	for (i = 0; i < n; i++){
 		for (j = 0; j < n; j++){
 			if (i != j){
+				cn++;
 				for (k = 0; k < n; k++){
 					for (l = 0; l < n; l++){
 						if (k != l && k-i != l-j && k+i != l+j){
@@ -61,7 +63,7 @@ Pcsp generate_8_queens_puzzle(int n){
 		}
 	}
 
-	csp = new_csp(v,c,n,n);
+	csp = new_csp(v,c,n,n,cn,"queen");
 
 	return csp;
 }
