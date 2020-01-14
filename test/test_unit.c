@@ -27,7 +27,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "../src/domain.h"
 #include "../src/variable.h"
 #include "../src/tuple.h"
-#include "../src/compare_tuple.h"
 #include "../src/constraint.h"
 #include "../src/instance.h"
 #include "../src/duo.h"
@@ -80,68 +79,60 @@ int init_test(void){
 		return CU_get_error();
 	}
 
-	CU_pSuite suite4 = CU_add_suite("tuple_test",setup,teardown);
+	CU_pSuite suite4 = CU_add_suite("constraint_test",setup,teardown);
 
-	if((NULL==CU_add_test(suite4, "Test compare tuple", test_compare_tuple)))
+	if((NULL==CU_add_test(suite4, "Test new cons", test_new_constraint))||
+		(NULL==CU_add_test(suite4, "Test ins 1", test_insert_constraint_1))||
+		(NULL==CU_add_test(suite4, "Test ins 2", test_insert_constraint_2)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	CU_pSuite suite5 = CU_add_suite("constraint_test",setup,teardown);
+	CU_pSuite suite5 = CU_add_suite("instance_test",setup,teardown);
 
-	if((NULL==CU_add_test(suite5, "Test new cons", test_new_constraint))||
-		(NULL==CU_add_test(suite5, "Test ins 1", test_insert_constraint_1))||
-		(NULL==CU_add_test(suite5, "Test ins 2", test_insert_constraint_2)))
+	if((NULL==CU_add_test(suite5, "Test new inst", test_new_instance))||
+		(NULL==CU_add_test(suite5, "Test add inst", test_add_instance))||
+		(NULL==CU_add_test(suite5, "Test rm inst", test_remove_instance)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	CU_pSuite suite6 = CU_add_suite("instance_test",setup,teardown);
+	CU_pSuite suite6 = CU_add_suite("duo_test",setup,teardown);
 
-	if((NULL==CU_add_test(suite6, "Test new inst", test_new_instance))||
-		(NULL==CU_add_test(suite6, "Test add inst", test_add_instance))||
-		(NULL==CU_add_test(suite6, "Test rm inst", test_remove_instance)))
+	if((NULL==CU_add_test(suite6, "Test new duo", test_new_duo)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	CU_pSuite suite7 = CU_add_suite("duo_test",setup,teardown);
+	CU_pSuite suite7 = CU_add_suite("Sstruct_test",setup,teardown);
 
-	if((NULL==CU_add_test(suite7, "Test new duo", test_new_duo)))
+	if((NULL==CU_add_test(suite7, "Test new Sstruct", test_new_SStruct))||
+		(NULL==CU_add_test(suite7, "Test a+q Ss", test_add_and_query_SStruct)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	CU_pSuite suite8 = CU_add_suite("Sstruct_test",setup,teardown);
+	CU_pSuite suite8 = CU_add_suite("counter_test",setup,teardown);
 
-	if((NULL==CU_add_test(suite8, "Test new Sstruct", test_new_SStruct))||
-		(NULL==CU_add_test(suite8, "Test a+q Ss", test_add_and_query_SStruct)))
+	if((NULL==CU_add_test(suite8, "Test new counter", test_new_counter))||
+		(NULL==CU_add_test(suite8, "Test count size", test_counter_size))||
+		(NULL==CU_add_test(suite8, "Test count it", test_counter_iteration))||
+		(NULL==CU_add_test(suite8, "Test c insert", test_insert_in_counter))||
+		(NULL==CU_add_test(suite8, "Test rm c", test_remove_from_counter))||
+		(NULL==CU_add_test(suite8, "Test rm ccontent", test_change_counter)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
-	CU_pSuite suite9 = CU_add_suite("counter_test",setup,teardown);
+	CU_pSuite suite9 = CU_add_suite("count_test",setup,teardown);
 
-	if((NULL==CU_add_test(suite9, "Test new counter", test_new_counter))||
-		(NULL==CU_add_test(suite9, "Test count size", test_counter_size))||
-		(NULL==CU_add_test(suite9, "Test count it", test_counter_iteration))||
-		(NULL==CU_add_test(suite9, "Test c insert", test_insert_in_counter))||
-		(NULL==CU_add_test(suite9, "Test rm c", test_remove_from_counter))||
-		(NULL==CU_add_test(suite9, "Test rm ccontent", test_change_counter)))
-	{
-		CU_cleanup_registry();
-		return CU_get_error();
-	}
-
-	CU_pSuite suite10 = CU_add_suite("count_test",setup,teardown);
-
-	if((NULL==CU_add_test(suite10, "Test new count", test_new_count))||
-		(NULL==CU_add_test(suite10, "Test ins count", test_insert_count)))
+	if((NULL==CU_add_test(suite9, "Test new count", test_new_count))||
+		(NULL==CU_add_test(suite9, "Test ins count", test_insert_count)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -768,22 +759,6 @@ void test_remove_content(void){
 	CU_ASSERT_EQUAL(size,5);
 
 	free_tuple_bis(t);
-}
-
-/* ########################################################## */
-/* ################## COMPARE_TUPLE.C TESTS ################# */
-/* ########################################################## */
-
-void test_compare_tuple(void){
-	char *tuple1[2] = {"A", "B"};
-	char *tuple2[2] = {"A", "C"};
-	char *tuple3[2] = {"C", "D"};
-	char *tuple4[2] = {"A", "B"};
-
-	CU_ASSERT_EQUAL(tuple_compare(tuple1,tuple2),-1);
-	CU_ASSERT_EQUAL(tuple_compare(tuple2,tuple1),1);
-	CU_ASSERT_EQUAL(tuple_compare(tuple1,tuple3),-1);
-	CU_ASSERT_EQUAL(tuple_compare(tuple1,tuple4),0);
 }
 
 /* ########################################################## */
