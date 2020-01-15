@@ -154,18 +154,12 @@ int AC4(Pcsp csp){
 
 	while(!Q_is_empty(csp)){
 		remove_Q(csp,&y,&b);
-		// printf("y:%d et b:%d\n",y,b);
 
 		S = get_S(csp,y,b);
 		while(!S_is_empty(S)){
 			get_S_tuple(S,&x,&a);
-			// printf("x:%d et a:%d\n",x,a);
 			S = S->next;
-			// printf("AVANT\n");
-			// print_count_light(csp->count_list);
 			count = decrement_count(csp,x,y,a);
-			// print_count_light(csp->count_list);
-			// printf("APRES\n");
 			if (!count && in_domain(csp,x,a)){
 				remove_of_domain(csp,x,a);
 				add_Q(csp,x,a);

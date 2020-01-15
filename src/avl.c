@@ -23,6 +23,15 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "avl.h"
 
 
+/**
+ * A node in an AVL tree.
+ *
+ * @see avl_tree_node_left_child
+ * @see avl_tree_node_right_child
+ * @see avl_tree_node_parent
+ * @see avl_tree_node_key
+ * @see avl_tree_node_value
+ */
 struct _AVLTreeNode {
 	AVLTreeNode *children[2];
 	AVLTreeNode *parent;
@@ -31,6 +40,11 @@ struct _AVLTreeNode {
 	int height;
 };
 
+/**
+ * An AVL tree balanced binary tree.
+ *
+ * @see avl_tree_new
+ */
 struct _AVLTree {
 	AVLTreeNode *root_node;
 	AVLTreeCompareFunc compare_func;

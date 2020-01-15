@@ -104,7 +104,6 @@ void set_csp_v(Pcsp csp, int x){
 	csp->v = x;
 }
 
-
 void shuffle_all_domain(Pcsp csp){
 	int i;
 	int size = csp->size;
@@ -273,7 +272,7 @@ int test_unary_constraint(Pcsp csp){
 			for (j = 0; j < size; j++){
 				if(test_contraint_exists(cons,i,j)){
 					if (!test_contraint_value_exists(cons,i,j,val_linked)){
-						if (csp->v == 3){
+						if (csp->v >= 3){
 							printf("%d,%d with value %d doesn't exist\n",i,j,val_linked);
 						}
 						add_failure(csp,i,j);
@@ -304,7 +303,7 @@ int test_binary_constraint(Pcsp csp){
 
 		if(test_contraint_exists(cons,var1,var2)){
 			if (!test_contraint_tuple_exists(cons,var1,var2,val1,val2)){
-				if (csp->v == 3){
+				if (csp->v >= 3){
 					printf("%d,%d with value %d,%d doesn't exist\n",var1,var2,val1,val2);
 				}
 				add_failure(csp,var1,var2);

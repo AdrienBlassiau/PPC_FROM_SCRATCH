@@ -95,7 +95,7 @@ void print_count_light(Pcount c);
 int insert_count_counter(Pcount c, int variable1, int variable2, int content1, int* content2);
 
 /**
- * This function queries the count struct.
+ * This function queries the count struct first variable.
  * @param  c     	 The count struct we want to query.
  * @param  variable1 The first variables of the count.
  * @return           Zero if the variable is not in the struct, non-zero if the
@@ -104,7 +104,7 @@ int insert_count_counter(Pcount c, int variable1, int variable2, int content1, i
 Pcounter* query_all_count(Pcount c, int variable1);
 
 /**
- * This function queries the count struct.
+ * This function queries the count struct tuple.
  * @param  c     	 The count struct we want to query.
  * @param  variable1 The first variables of the count.
  * @param  variable2 The second variable of the count.
@@ -115,7 +115,7 @@ Pcounter query_count(Pcount c, int variable1, int variable2);
 
 
 /**
- * This function queries the count struct.
+ * This function queries the count struct tuple associated to a content.
  * @param  c     	 The count struct we want to query.
  * @param  variable1 The first variables of the count.
  * @param  variable2 The second variable of the count.

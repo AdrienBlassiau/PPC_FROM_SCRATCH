@@ -68,21 +68,65 @@ typedef struct csp {
 } csp, *Pcsp;
 
 
-
+/**
+ * This function creates a new csp.
+ * @param  v                 The variable list.
+ * @param  c                 The constraint list.
+ * @param  size              The size of the csp (number of variables).
+ * @param  max_dom_size      The maximum size of the domain of the variable.
+ * @param  constraint_number The number of the constraint.
+ * @param  name              The name of the problem.
+ * @return                   A new csp.
+ */
 Pcsp new_csp(Pvariable v, Pconstraint c, int size, int max_dom_size, int constraint_number, char* name);
 
+/**
+ * This function frees the allocated space in the heap for the csp.
+ * @param  c The csp we want to free.
+ * @return   A NULL pointer.
+ */
 Pcsp free_csp(Pcsp c);
 
+/**
+ * This function sets the hvar of the csp.
+ * @param csp THe csp struct.
+ * @param x   The value of the hvar.
+ */
 void set_csp_hvar(Pcsp csp, int x);
 
+/**
+ * This function sets the hval of the csp.
+ * @param csp THe csp struct.
+ * @param x   The value of the hval.
+ */
 void set_csp_hval(Pcsp csp, int x);
 
+/**
+ * This function sets the arc-consistency mode of the csp.
+ * @param csp THe csp struct.
+ * @param x   The value of the arc-consistency mode.
+ */
 void set_csp_ac(Pcsp csp, int x);
 
+/**
+ * This function sets the forward-checking mode of the csp.
+ * @param csp THe csp struct.
+ * @param x   The value of the forward-checking mode.
+ */
 void set_csp_fc(Pcsp csp, int x);
 
+/**
+ * This function sets the time-out option of the csp.
+ * @param csp THe csp struct.
+ * @param x   The value of the time-out.
+ */
 void set_csp_to(Pcsp csp, double x);
 
+/**
+ * This function sets the verbose mode of the csp.
+ * @param csp THe csp struct.
+ * @param x   The value of the verbose mode.
+ */
 void set_csp_v(Pcsp csp, int x);
 
 void shuffle_all_domain(Pcsp c);

@@ -87,18 +87,19 @@ int read_flag(int* i, int type, char* string_to_print, char* flag, char* argv[],
 }
 
 int solve_csp(Pcsp* csp){
-	signal(SIGALRM, exitfunc);
-
-	if ((*csp)->to > 0.){
-		if ((*csp)->to <= 1.){
-			alarm(1);
-		}
-		else{
-			alarm((*csp)->to);
-		}
-	}
-
 	if (*csp != NULL){
+
+		signal(SIGALRM, exitfunc);
+
+		if ((*csp)->to > 0.){
+			if ((*csp)->to <= 1.){
+				alarm(1);
+			}
+			else{
+				alarm((*csp)->to);
+			}
+		}
+
 		int ac = (*csp)->ac;
 		int fc = (*csp)->fc;
 		if (ac > 0){
@@ -110,10 +111,10 @@ int solve_csp(Pcsp* csp){
 		else{
 			run_backtrack(*csp);
 		}
-		return 1;
+		return !(*csp)->solution;
 	}
 
-	return 0;
+	return 1;
 
 }
 
@@ -166,7 +167,7 @@ int generate_csp(int argc, char* argv[], Pcsp* csp){
 			!read_flag(&i,0,"LEVEL","-v",argv,&v,argc))
 		{
 
-			return 0;
+			return 1;
 		}
 
 	}
@@ -211,5 +212,5 @@ int generate_csp(int argc, char* argv[], Pcsp* csp){
 
 	set_csp_v(*csp,v);
 
-	return 1;
+	return 0;
 }

@@ -29,15 +29,14 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "problem.h"
 
 int main(int argc, char* argv[]){
-
+	int status;
 	srand(time(NULL));
 	Pcsp csp = NULL;
 
 	generate_csp(argc,argv,&csp);
-	solve_csp(&csp);
+	status = solve_csp(&csp);
 	show_csp(&csp);
 	clean_csp(&csp);
 
-	return 0;
+	return status;
 }
-

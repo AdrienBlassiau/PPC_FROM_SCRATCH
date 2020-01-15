@@ -28,6 +28,11 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "csp.h"
 
+/**
+ * This function runs the backtrack algorithm.
+ * @param  c The csp we want to backtrack.
+ * @return   1 if success, 0 otherwise.
+ */
 int run_backtrack(Pcsp c);
 
 #endif

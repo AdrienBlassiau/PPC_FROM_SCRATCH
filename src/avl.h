@@ -54,36 +54,28 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef ALGORITHM_AVLTREE_H
 #define ALGORITHM_AVLTREE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * An AVL tree balanced binary tree.
  *
  * @see avl_tree_new
  */
-
 typedef struct _AVLTree AVLTree;
 
 /**
- * An AVL tree balanced binary tree.
+ * An AVL tree balanced binary tree pointer.
  *
  * @see avl_tree_new
  */
-
 typedef struct _AVLTree *PAVLTree;
 
 /**
  * A value stored in an @ref AVLTree.
  */
-
 typedef void *AVLTreeValue;
 
 /**
  * A null @ref AVLTreeValue.
  */
-
 #define AVL_TREE_NULL ((void *) 0)
 
 /**
@@ -95,13 +87,11 @@ typedef void *AVLTreeValue;
  * @see avl_tree_node_key
  * @see avl_tree_node_value
  */
-
 typedef struct _AVLTreeNode AVLTreeNode;
 
 /**
  * An @ref AVLTreeNode can have left and right children.
  */
-
 typedef enum {
 	AVL_TREE_NODE_LEFT = 0,
 	AVL_TREE_NODE_RIGHT = 1
@@ -117,7 +107,6 @@ typedef enum {
  *                         be sorted before value1, zero if the two keys
  *                         are equal.
  */
-
 typedef int (*AVLTreeCompareFunc)(AVLTreeValue value1, AVLTreeValue value2);
 
 /**
@@ -127,7 +116,6 @@ typedef int (*AVLTreeCompareFunc)(AVLTreeValue value1, AVLTreeValue value2);
  * @return                A new AVL tree, or NULL if it was not possible
  *                        to allocate the memory.
  */
-
 AVLTree *avl_tree_new(AVLTreeCompareFunc compare_func);
 
 /**
@@ -135,10 +123,13 @@ AVLTree *avl_tree_new(AVLTreeCompareFunc compare_func);
  *
  * @param tree            The tree to destroy.
  */
-
 void avl_tree_free(AVLTree *tree);
 
-
+/**
+ *  This function free a node of a tree.
+ *  @param tree			  The tree we want to free.
+ *  @param f 			  A function to free the node.
+ */
 void avl_tree_free_and_node(AVLTree *tree, void (*f)(void *));
 
 /**
@@ -151,7 +142,6 @@ void avl_tree_free_and_node(AVLTree *tree, void (*f)(void *));
  *                        key and value, or NULL if it was not possible
  *                        to allocate the new memory.
  */
-
 AVLTreeNode *avl_tree_insert(AVLTree *tree, int key,
                              AVLTreeValue value);
 
@@ -161,7 +151,6 @@ AVLTreeNode *avl_tree_insert(AVLTree *tree, int key,
  * @param tree            The tree.
  * @param node            The node to remove
  */
-
 void avl_tree_remove_node(AVLTree *tree, AVLTreeNode *node);
 
 /**
@@ -174,7 +163,6 @@ void avl_tree_remove_node(AVLTree *tree, AVLTreeNode *node);
  *                        found in the tree, non-zero (true) if a node with
  *                        the specified key was removed.
  */
-
 int avl_tree_remove(AVLTree *tree, int key);
 
 /**
@@ -186,7 +174,6 @@ int avl_tree_remove(AVLTree *tree, int key);
  * @return                The tree node containing the given key, or NULL
  *                        if no entry with the given key is found.
  */
-
 AVLTreeNode *avl_tree_lookup_node(AVLTree *tree, int key);
 
 /**
@@ -201,7 +188,6 @@ AVLTreeNode *avl_tree_lookup_node(AVLTree *tree, int key);
  *                        @ref AVL_TREE_NULL if no entry with the given key is
  *                        found.
  */
-
 AVLTreeValue avl_tree_lookup(AVLTree *tree, int key);
 
 /**
@@ -211,7 +197,6 @@ AVLTreeValue avl_tree_lookup(AVLTree *tree, int key);
  * @return                The root node of the tree, or NULL if the tree is
  *                        empty.
  */
-
 AVLTreeNode *avl_tree_root_node(AVLTree *tree);
 
 /**
@@ -220,7 +205,6 @@ AVLTreeNode *avl_tree_root_node(AVLTree *tree);
  * @param node            The tree node.
  * @return                The key to the given node.
  */
-
 int avl_tree_node_key(AVLTreeNode *node);
 
 /**
@@ -229,7 +213,6 @@ int avl_tree_node_key(AVLTreeNode *node);
  * @param node            The tree node.
  * @return                The value at the given node.
  */
-
 AVLTreeValue avl_tree_node_value(AVLTreeNode *node);
 
 /**
@@ -240,7 +223,6 @@ AVLTreeValue avl_tree_node_value(AVLTreeNode *node);
  * @return                The child of the tree node, or NULL if the
  *                        node has no child on the given side.
  */
-
 AVLTreeNode *avl_tree_node_child(AVLTreeNode *node, AVLTreeNodeSide side);
 
 /**
@@ -250,7 +232,6 @@ AVLTreeNode *avl_tree_node_child(AVLTreeNode *node, AVLTreeNodeSide side);
  * @return                The parent node of the tree node, or NULL if
  *                        this is the root node.
  */
-
 AVLTreeNode *avl_tree_node_parent(AVLTreeNode *node);
 
 /**
@@ -259,7 +240,6 @@ AVLTreeNode *avl_tree_node_parent(AVLTreeNode *node);
  * @param node            The root node of the subtree.
  * @return                The height of the subtree.
  */
-
 int avl_tree_subtree_height(AVLTreeNode *node);
 
 /**
@@ -272,7 +252,6 @@ int avl_tree_subtree_height(AVLTreeNode *node);
  *                        is equal to the number of entries in the tree
  *                        (see @ref avl_tree_num_entries).
  */
-
 int* avl_tree_to_array_2(AVLTree *tree);
 
 
@@ -286,7 +265,6 @@ int* avl_tree_to_array_2(AVLTree *tree);
  *                        is equal to the number of entries in the tree
  *                        (see @ref avl_tree_num_entries).
  */
-
 AVLTreeValue *avl_tree_to_array(AVLTree *tree);
 
 /**
@@ -295,15 +273,24 @@ AVLTreeValue *avl_tree_to_array(AVLTree *tree);
  * @param tree            The tree.
  * @return                The number of key-value pairs stored in the tree.
  */
-
 unsigned int avl_tree_num_entries(AVLTree *tree);
 
+/**
+ * This function change the value of an avl.
+ * @param  tree      The avl tree.
+ * @param  key       The key of the value we want to change.
+ * @param  new_value The new value.
+ * @return           The tree.
+ */
 AVLTreeValue avl_tree_change_value(AVLTree *tree, int key, AVLTreeValue new_value);
 
+/**
+ * This function prints an avl tree.
+ * @param  tree      The tree we want to print.
+ * @param  f1 		 The first print function (for the value).
+ * @param  f2 		 The second print function (for the key).
+ */
 void print_avl_tree(AVLTree *tree, void (*f1)(AVLTreeValue), void (*f2)(int));
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif /* #ifndef ALGORITHM_AVLTREE_H */
+#endif

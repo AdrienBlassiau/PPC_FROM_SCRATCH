@@ -30,13 +30,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  * For case insensitive versions, see @ref string_nocase_compare and
  * @ref string_nocase_equal.
  */
-
 #ifndef ALGORITHM_COMPARE_STRING_H
 #define ALGORITHM_COMPARE_STRING_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /**
  * Compare two strings to determine if they are equal.
@@ -46,7 +41,6 @@ extern "C" {
  * @return                Non-zero if the strings are equal, zero if they are
  *                        not equal.
  */
-
 int string_equal(void *string1, void *string2);
 
 /**
@@ -59,7 +53,6 @@ int string_equal(void *string1, void *string2);
  *                        first string should be sorted after the second,
  *                        zero if the two strings are equal.
  */
-
 int string_compare(void *string1, void *string2);
 
 /**
@@ -71,7 +64,6 @@ int string_compare(void *string1, void *string2);
  * @return                Non-zero if the strings are equal, zero if they are
  *                        not equal.
  */
-
 int string_nocase_equal(void *string1, void *string2);
 
 /**
@@ -84,12 +76,9 @@ int string_nocase_equal(void *string1, void *string2);
  *                        first string should be sorted after the second,
  *                        zero if the two strings are equal.
  */
-
 int string_nocase_compare(void *string1, void *string2);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* #ifndef ALGORITHM_COMPARE_STRING_H */
 

@@ -54,7 +54,8 @@ typedef struct constraint {
 Pconstraint new_constraint(int size);
 
 /**
- * This function free the allocated space on the heap for our constraint struc.
+ * This function frees the allocated space on the heap for our constraint
+ * struct.
  * @param  c The constraint struct.
  * @return   A NULL pointer;
  */
@@ -75,9 +76,9 @@ int get_constraint_total_number(Pconstraint c);
 void print_constraint(Pconstraint c, Pvariable v);
 
 /**
- * This function prints the constraint struct.
+ * This function prints the constraint struct without the real name of the
+ * variables.
  * @param c The constraint struct.
- * @param v The variable struct.
  */
 void print_constraint_light(Pconstraint c);
 
@@ -102,13 +103,15 @@ int insert_constraint_tuples(Pconstraint c, int variable1, int variable2, int co
  * @param  variable2 The second variable of the constraint.
  * @param  content1  The value of the first variable.
  * @param  content2  The value of the seconde variable.
+ * @param  size   	 The size of the domain.
  * @return           1 if success, 0 if the content1 is already associated to
  *                   content2.
  */
 int insert_constraint_tuple(Pconstraint c, int variable1, int variable2, int content1, int content2, int size);
 
 /**
- * This function queries the constraint struct.
+ * This function queries the constraint struct to find if a variable belong to
+ * a constraint.
  * @param  c     	 The constraint struct we want to query.
  * @param  variable1 The first variables of the constraint.
  * @return           Zero if the variable is not in the struct, non-zero if the
@@ -117,7 +120,8 @@ int insert_constraint_tuple(Pconstraint c, int variable1, int variable2, int con
 Ptuple* query_all_constraint(Pconstraint c, int variable1);
 
 /**
- * This function queries the constraint struct.
+ * This function queries the constraint struct to find if a variable tuple
+ * belong to a constraint.
  * @param  c     	 The constraint struct we want to query.
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
@@ -128,7 +132,8 @@ Ptuple query_constraint(Pconstraint c, int variable1, int variable2);
 
 
 /**
- * This function queries the constraint struct.
+ * This function queries the constraint struct to find if a variable tuple
+ * associated to the value of the first variable belong to a constraint.
  * @param  c     	 The constraint struct we want to query.
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
@@ -140,12 +145,14 @@ Pdomain query_constraint_tuples(Pconstraint c, int variable1, int variable2, int
 
 
 /**
- * This function queries the constraint struct.
+ * This function queries the constraint struct to find if a variable tuple
+ * associated to the value of the first variable and the second variable
+ * belong to a constraint.
  * @param  c     	 The constraint struct we want to query.
  * @param  variable1 The first variables of the constraint.
  * @param  variable2 The second variable of the constraint.
  * @param  content1  The value of the first variable.
- * @param  content2  The value of the seconde variable.
+ * @param  content2  The value of the second variable.
  * @return           Zero if the variable is not in the struct, non-zero if the
  *                   variable is in the struct.
  */
@@ -165,7 +172,7 @@ int test_contraint_exists(Pconstraint c, int variable1, int variable2);
  * @param  c         The constraint struct.
  * @param  variable1 The first variable.
  * @param  variable2 The second variable.
- * @param  val  The value of the first variable.
+ * @param  val  	 The value of the first variable.
  * @return           1 if success, 0 otherwise.
  */
 int test_contraint_value_exists(Pconstraint c, int variable1, int variable2, int val);
