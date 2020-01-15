@@ -30,7 +30,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "include.h"
 
 /**
- * THis function genrates a random integer between 0 and limit included
+ * This function genrates a random integer between 0 and limit included
  * @param  limit The limit.
  * @return       The random int.
  */
@@ -44,7 +44,7 @@ void print_string(void *vs);
 
 /**
  * This function print an int.
- * @param vs    The integer we want to print.
+ * @param vi    The integer we want to print.
  */
 void print_int(void *vi);
 
@@ -65,7 +65,7 @@ void print_array(int* a, int size);
 
 /**
  * This function allocate a matrix, given two sizes.
- * @param m    	 A null pointer.
+ * @param  m     A null pointer.
  * @param  size1 The size of the matrix.
  * @param  size2 The size of the sub-matrix.
  * @return       1 if succeed otherwise 0.
@@ -89,20 +89,16 @@ int free_matrix(int** m, int size);
 int free_matrix_string(char** m, int size);
 
 /**
- * Allocate memory according to the size of an object.
- *
+ * This function allocate memory according to the size of an object.
  * @param n 	The size to allocate.
- *
  * @return 		A void pointer.
  */
 void* xmalloc(size_t n);
 
 /**
- * Allocate memory according to the size and numeber of objects.
- *
+ * This function allocate memory according to the size and numeber of objects.
  * @param nmemb 	The number of objects to allocate.
  * @param n 		The size to allocate.
- *
  * @return 			A void pointer.
  */
 void* xcalloc(size_t nmemb,size_t size);

@@ -34,7 +34,11 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "tools.h"
 #include "csp.h"
 
-
+/**
+ * This function creates an 8 queens instance of size n.
+ * @param  n The size of the n queens instance.
+ * @return   The created csp.
+ */
 Pcsp generate_8_queens_puzzle(int n);
 
 #endif

@@ -28,6 +28,11 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include "csp.h"
 
+/**
+ * This function runs the forward-checking algorithm.
+ * @param  csp The csp struct.
+ * @return     1 if success, 0 otherwise.
+ */
 int run_forward_checking(Pcsp csp);
 
 #endif

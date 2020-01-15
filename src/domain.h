@@ -43,8 +43,8 @@ typedef struct domain {
 
 /**
  * This function create a new domain d.
- * @param  d The size if the domain d.
- * @return A new domain.
+ * @param  size The size if the domain d.
+ * @return A 	new domain.
  */
 Pdomain new_domain(int size);
 
@@ -85,7 +85,7 @@ void begin_domain_iteration(Pdomain d);
 /**
  * This function iterates over the domain while it is possible.
  * @param d The domain d.
- * @param d The current position d.
+ * @param i The current position in d.
  * @return  The next value from the set, or @ref SET_NULL if no
  *          more values are available.
  */
@@ -94,6 +94,7 @@ int domain_can_iterate(Pdomain d, int i);
 /**
  * This function iterates and get the current value of the iteration.
  * @param d The domain d.
+ * @return  The current value.
  */
 int get_current_value(Pdomain d);
 
@@ -128,7 +129,6 @@ int remove_from_domain(Pdomain d, int value);
  * This function sets the iterator of a domain.
  * @param  d  The domain.
  * @param  it The value of the iterator.
- * @return    1 if success, 0 otherwise.
  */
 void set_iterator(Pdomain d, int it);
 

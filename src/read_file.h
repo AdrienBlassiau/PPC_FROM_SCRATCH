@@ -31,6 +31,14 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "csp.h"
 
 
+/**
+ * This function returns a line of a file translated as an array of string (
+ * We cut at blank space)
+ * @param  pos       The position of the cursor in the file.
+ * @param  line_size The size of the line.
+ * @param  file      The name of the file.
+ * @return           A list of string associated to the line.
+ */
 char** get_line_tab(int* pos, int* line_size, const char* file);
 
 /**

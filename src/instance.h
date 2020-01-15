@@ -114,6 +114,7 @@ int remove_linked_variable(Pinstance inst, int v);
  * This function adds a linked variable.
  * @param  inst The instance struct.
  * @param  v    The variable we want to make linked.
+ * @param  v    The value of the instantiated variable.
  * @return      1 if success, 0 otherwise.
  */
 int add_linked_variable(Pinstance inst, int v, int val);

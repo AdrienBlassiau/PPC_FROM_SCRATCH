@@ -61,8 +61,7 @@ Ptuple free_tuple(Ptuple t);
 
 /**
  * This function free the allocated space on the heap for our tuple struc.
- * @param  t The tuple struct.
- * @return   A NULL pointer;
+ * @param  vt The tuple struct.
  */
 void free_tuple_bis(void *vt);
 
@@ -82,14 +81,14 @@ PAVLTree get_tuples(Ptuple t);
 
 /**
  * This function set the tuple struc iterator.
- * @param v   The tuple struct.
+ * @param t   The tuple struct.
  * @param val The value of the iterator.
  */
 void set_tuple_iterator(Ptuple t, unsigned int val);
 
 /**
  * This function begins the tuple list iterations.
- * @param v The tuple struct.
+ * @param t The tuple struct.
  */
 void begin_tuple_iteration(Ptuple t);
 
@@ -116,9 +115,9 @@ Pdomain get_tuple_current_value(Ptuple t);
 
 /**
  * This function iterates one more step/
- * @param v The vrariable structure.
+ * @param t The vrariable structure.
  */
-void get_next_tuple(Ptuple v);
+void get_next_tuple(Ptuple t);
 
 /**
  * This function returns the value of the iterator.
@@ -129,7 +128,7 @@ unsigned int get_tuple_iterator(Ptuple t);
 
 /**
  * Thi function prints the tuple struct.
- * @param v The tuple struct.
+ * @param t The tuple struct.
  */
 void print_tuple(void *t);
 
@@ -145,7 +144,7 @@ int insert_tuple(Ptuple t, int content,  Pdomain d);
 /**
  * This function removes a content
  * @param  t        The variable struc.
- * @param  variable The content we want to remove.
+ * @param  content 	The content we want to remove.
  * @return          1 if success, 0 if the content do not exist.
  */
 int remove_tuple(Ptuple t, int content);

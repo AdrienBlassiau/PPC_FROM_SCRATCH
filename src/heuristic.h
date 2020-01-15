@@ -32,6 +32,11 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "constraint.h"
 #include "instance.h"
 
+/**
+ * \enum heuristic_var
+ * \brief The different type of variable heuristic.
+ *
+ */
 enum heuristic_var{
 	LEX = 1,
 	INVLEX = 2,
@@ -45,6 +50,11 @@ enum heuristic_var{
 	DOM_WDEG = 10
 };
 
+/**
+ * \enum heuristic_val
+ * \brief The different type of value heuristic.
+ *
+ */
 enum heuristic_val{
 	MIN_VAL = 1,
 	MAX_VAL = 2,
@@ -55,20 +65,27 @@ enum heuristic_val{
 
 /**
  * This function change the current heuristic
- * @param  inst The instance struct.
+ * @param  inst  The instance struct.
+ * @param  heuri The heuristic type.
  */
 void set_var_heuristic(Pinstance inst, int heuri);
 
 /**
  * This function change the current heuristic
- * @param  inst The instance struct.
+ * @param  inst  The instance struct.
+ * @param  heuri The heuristic type.
  */
 void set_val_heuristic(Pinstance inst, int heuri);
 
 /**
- * This function returns a free variable.
- * @param  inst The instance struct.
- * @return      The free variable.
+ * This function applieq the good heuristic according to the given parameter.
+ * @param  inst         The instance struct.
+ * @param  domain_size  The domain size struct.
+ * @param  max_dom_size The max domain size.
+ * @param  degree_tab   The degree tab.
+ * @param  cons         The constraint struct.
+ * @param  failure_tab  The failure tab.
+ * @return              1 if success, 0 otherwise.
  */
 int select_variable(Pinstance inst, int* domain_size, int max_dom_size, int* degree_tab, Pconstraint cons, int** failure_tab);
 
@@ -95,50 +112,66 @@ int pop_random_var(Pinstance inst);
 
 /**
  * This function returns the var with the lowest domain size.
- * @param  inst The instance struct.
- * @return      The free variable.
+ * @param  inst 		The instance struct.
+ * @param  domain_size  The domain size struct.
+ * @param  max_dom_size The max domain size.
+ * @return      		The free variable.
  */
 int pop_min_dom_var(Pinstance inst, int* domain_size, int max_dom_size);
 
 /**
  * This function returns the var with the greates degree.
- * @param  inst The instance struct.
- * @return      The free variable.
+ * @param  inst 		The instance struct.
+ * @param  degree_tab   The degree tab.
+ * @return      		The free variable.
  */
 int pop_max_degree_var(Pinstance inst, int* degree_tab);
 
 /**
  * This function returns the var with the greates degree.
  * @param  inst The instance struct.
+ * @param  cons The constraint struct.
  * @return      The free variable.
  */
 int pop_max_dynamic_degree_var(Pinstance inst, Pconstraint cons);
 
 /**
  * This function returns the var with the greates degree.
- * @param  inst The instance struct.
- * @return      The free variable.
+ * @param  inst 		The instance struct.
+ * @param  cons 		The constraint struct.
+ * @param  failure_tab  The failure tab.
+ * @return      		The free variable.
  */
 int pop_max_weighted_degree_var(Pinstance inst, Pconstraint cons, int** failure_tab);
 
 /**
  * This function returns the var with the greates degree.
- * @param  inst The instance struct.
- * @return      The free variable.
+ * @param  inst 		The instance struct.
+ * @param  degree_tab   The degree tab.
+ * @param  domain_size  The domain size struct.
+ * @param  max_dom_size The max domain size.
+ * @return      		The free variable.
  */
 int pop_min_dom_degree_var(Pinstance inst, int* degree_tab, int* domain_size, int max_dom_size);
 
 /**
  * This function returns the var with the greates degree.
- * @param  inst The instance struct.
- * @return      The free variable.
+ * @param  inst 		The instance struct.
+ * @param  cons 		The constraint struct.
+ * @param  domain_size  The domain size struct.
+ * @param  max_dom_size The max domain size.
+ * @return      		The free variable.
  */
 int pop_min_dom_dynamic_degree_var(Pinstance inst, Pconstraint cons, int* domain_size, int max_dom_size);
 
 /**
  * This function returns the var with the greates degree.
- * @param  inst The instance struct.
- * @return      The free variable.
+ * @param  inst 		The instance struct.
+ * @param  cons 		The constraint struct.
+ * @param  failure_tab  The failure tab.
+ * @param  domain_size  The domain size struct.
+ * @param  max_dom_size The max domain size.
+ * @return      		The free variable.
  */
 int pop_min_dom_weighted_degree_var(Pinstance inst, Pconstraint cons, int** failure_tab, int* domain_size, int max_dom_size);
 

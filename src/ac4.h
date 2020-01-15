@@ -61,14 +61,14 @@ int revert_MAC_light(Pcsp csp, Pvariable v_copy);
 int initAC4(Pcsp csp, int* tab_alloc);
 
 /**
- * THis function runs the AC4 algorithm
+ * This function runs the AC4 algorithm
  * @param  csp The cs sructure
  * @return     Always 1.
  */
 int AC4(Pcsp csp);
 
 /**
- * THis function runs the AC4 algorithm and measures time.
+ * This function runs the AC4 algorithm and measures time.
  * @param  csp The csp structure.
  * @return     Always 1
  */
