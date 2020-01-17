@@ -8,5 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: List files
+      run: ls
     - name: make test
-      run: bin/test
+      run: make test
+    - name: run test
+      run: ./bin/test
+    
+      
