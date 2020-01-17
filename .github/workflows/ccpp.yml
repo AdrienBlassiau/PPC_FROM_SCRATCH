@@ -9,4 +9,4 @@ jobs:
     
     steps:
     - name: make test
-      run: ./bin/test
+      run: bin/test
