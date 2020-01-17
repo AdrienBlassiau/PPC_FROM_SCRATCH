@@ -18,40 +18,47 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 */
 
+/** @file draw.h
+ *
+ * @brief This file manages the drawing of the tree associated to the problem.
+ */
+
+
+#ifndef DRAW__H
+#define DRAW__H
+
 #include "include.h"
-#include "tools.h"
+#include "variable.h"
+#include "instance.h"
+#include "constraint.h"
+#include "Sstruct.h"
+#include "duo.h"
+#include "count.h"
 #include "csp.h"
-#include "ac4.h"
-#include "params.h"
-#include "backtrack.h"
-#include "forward_checking.h"
-#include "read_file.h"
-#include "problem.h"
 
-#if GMODE
-	#include "draw.h"
+#define SHOW_PYTHON 1
+
+/**
+ * This function inits the python environment.
+ */
+void init_py();
+
+/**
+ * THis function init the graph associated to the constraint.
+ * @param csp The csp structure.
+ */
+void init_graph(Pcsp csp);
+
+/**
+ * This function close the python environment.
+ */
+void end_py();
+
+/**
+ * THis function init the graph associated to the constraint.
+ * @param csp The csp structure.
+ */
+void draw_graph(Pcsp csp);
+
+
 #endif
-
-int main(int argc, char* argv[]){
-	int status;
-	srand(time(NULL));
-	Pcsp csp = NULL;
-
-	generate_csp(argc,argv,&csp);
-
-#if GMODE
-	init_py();
-	init_graph(csp);
-#endif
-
-	status = solve_csp(&csp);
-	show_csp(&csp);
-
-#if GMODE
-	end_py();
-#endif
-
-	clean_csp(&csp);
-
-	return status;
-}

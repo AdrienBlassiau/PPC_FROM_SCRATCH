@@ -1,4 +1,4 @@
-Utilisation : bin/main [OPTIONS]
+Utilisation : bin/main [OPTIONS] ou bin/main-g [OPTIONS]
 
 Affichage de différents fichiers d'aide :
   --help                    affiche cette aide.
@@ -15,7 +15,7 @@ Choix du problème à résoudre :
 
   -q    SIZE                lance le solveur de programme de CSP binaires sur
                             une instance de n reines de taille SIZE
-                            (SIZE=5 par DEFAUT). Doit être strictement
+                            (SIZE=5 par DEFAUT). Doit être strictement être
                             supérieur à 3.
 
 
@@ -25,7 +25,7 @@ Choix des méthodes de résolution :
                             0 : pas d'arc consistance (DEFAUT)
                             1 : arc-consistance uniquement à la racine
                             2 : arc-constance après chaque instanciation
-                            partielle (maintain-arc-consistency ou MAC)
+                                partielle (maintain-arc-consistency ou MAC)
 
   -fc   MODE                définit le mode MODE d'activation de l'algorithme
                             de forward-checking :
@@ -90,10 +90,11 @@ Contrôle de l'affichage :
   -v    LEVEL               affiche plus ou moins de texte en fonction du
                             niveau renseigné par le paramètre LEVEL :
                             0 : aucun texte affiché
-                            1 : solution affiché (DEFAUT)
+                            1 : solution affichée (DEFAUT)
                             2 : tous les textes de debug importants sont
                                 affichés
-                            3 : tous les textes de debug sont affichés (non conseillé, très long ...)
+                            3 : tous les textes de debug sont affichés (non
+                                conseillé, très long ...)
 
 
 

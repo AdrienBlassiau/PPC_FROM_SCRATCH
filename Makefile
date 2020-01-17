@@ -16,13 +16,16 @@
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #----------------------------------------------------------------------
 
+PYTHON_VERSION := "python3.6m"
 
 #----------------------------------------------------------------------
 #           GLOBAL MAKEFILE, NOT TO BE MODIFIED
 #----------------------------------------------------------------------
 
-
-CC=gcc -Wall -Wextra -std=c11 -O2 -pthread -lm
+main: CC=gcc -Wall -Wextra -std=c11 -O2 -pthread -lm -DGMODE=0
+test: CC=gcc -Wall -Wextra -std=c11 -O2 -pthread -lm -DGMODE=0
+convert: CC=gcc -Wall -Wextra -std=c11 -O2 -pthread -lm -DGMODE=0
+g-main: CC=gcc -Wall -Wextra -std=c11 -O2 -pthread -lm -I/usr/include/${PYTHON_VERSION} -l${PYTHON_VERSION} -DGMODE=1
 
 all : main
 
@@ -32,10 +35,16 @@ test : main_test.o test_unit.o tools.o compare_int.o compare_string.o set.o avl.
 main : main.o tools.o params.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o ac4.o backtrack.o forward_checking.o problem.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
 
+g-main : main_g.o tools.o params.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o ac4.o backtrack.o forward_checking.o problem.o duo.o Sstruct.o counter.o count.o draw.o
+	cd obj/ && $(CC)  $^ -o ../bin/$@ -lm -I/usr/include/${PYTHON_VERSION} -l${PYTHON_VERSION}
+
 convert : graph.o tools.o params.o compare_int.o compare_string.o set.o avl.o domain.o variable.o tuple.o constraint.o stack.o instance.o read_file.o heuristic.o csp.o ac4.o backtrack.o forward_checking.o problem.o duo.o Sstruct.o counter.o count.o
 	cd obj/ && $(CC) $^ -o ../bin/$@ -lm
 
 main.o : src/main.c
+	$(CC) -c $< -o obj/$@
+
+main_g.o : src/main.c
 	$(CC) -c $< -o obj/$@
 
 params.o : src/params.c
@@ -99,6 +108,9 @@ count.o : src/count.c src/count.h
 	$(CC) -c $< -o obj/$@
 
 heuristic.o : src/heuristic.c src/heuristic.h
+	$(CC) -c $< -o obj/$@
+
+draw.o : src/draw.c src/draw.h
 	$(CC) -c $< -o obj/$@
 
 compare_int.o : src/compare_int.c src/compare_int.h

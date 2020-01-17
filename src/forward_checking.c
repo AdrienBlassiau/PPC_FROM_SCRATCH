@@ -31,6 +31,10 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "duo.h"
 #include "count.h"
 
+#if GMODE
+	#include "draw.h"
+#endif
+
 int check_forward(Pcsp csp, int i, int* tab_alloc, int* cc){
 	int j,k,s,m,change;
 	int N = get_N(csp);
@@ -154,6 +158,10 @@ int FC(Pcsp csp, int* tab_alloc, int* cc, int* zero){
 		vars = MAC(csp,i,l);
 
 		complete_partial_instance(csp,i,l);
+
+#if GMODE
+		draw_graph(csp);
+#endif
 
 		if (empty_count(csp,i,i,l,-1)){
 

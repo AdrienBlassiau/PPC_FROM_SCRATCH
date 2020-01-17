@@ -31,6 +31,10 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "duo.h"
 #include "count.h"
 
+#if GMODE
+	#include "draw.h"
+#endif
+
 int backtrack(Pcsp csp){
 
 	if (csp->v >= 3){
@@ -78,6 +82,11 @@ int backtrack(Pcsp csp){
 		}
 
 		complete_partial_instance(csp,x,v);
+
+#if GMODE
+		draw_graph(csp);
+#endif
+
 		if (!empty_domain(d)){
 
 			if (csp->v >= 3){

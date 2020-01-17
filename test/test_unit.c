@@ -138,6 +138,7 @@ int init_test(void){
 		return CU_get_error();
 	}
 
+
 	CU_basic_run_tests();
 	CU_basic_show_failures(CU_get_failure_list());
 	CU_cleanup_registry();
@@ -1219,39 +1220,42 @@ void test_new_count(void){
 void test_insert_count(void){
 	int size = 4;
 	Pcount c = new_count(size);
-	int var_name1 = 1;
-	int var_name2 = 2;
-	int var_name3 = 3;
 
-	int content[10] = {0,1,2,3,4,5,6,7,8,9};
+	int a1 = 0;
+	int res = insert_count_counter(c,1,2,0,&a1);
+	CU_ASSERT_EQUAL(res,1);
+	int a2 = 2;
+	res =  insert_count_counter(c,1,2,0,&a2);
+	CU_ASSERT_EQUAL(res,0);
+	int a3 = 1;
+	res =  insert_count_counter(c,1,2,0,&a3);
+	CU_ASSERT_EQUAL(res,0);
+	int a4 = 0;
+	res =  insert_count_counter(c,1,2,0,&a4);
+	CU_ASSERT_EQUAL(res,0);
+	int a5 = 2;
+	res =  insert_count_counter(c,1,3,1,&a5);
+	CU_ASSERT_EQUAL(res,1);
+	int a6 = 3;
+	res =  insert_count_counter(c,1,3,1,&a6);
+	CU_ASSERT_EQUAL(res,0);
+	int a7 = 1;
+	res =  insert_count_counter(c,1,3,3,&a7);
+	CU_ASSERT_EQUAL(res,1);
 
-	int res = insert_count_counter(c,var_name1,var_name2,content[0],&content[0]);
-	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name2,content[0],&content[2]);
-	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name2,content[0],&content[1]);
-	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name2,content[0],&content[0]);
-	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name3,content[1],&content[2]);
-	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name3,content[1],&content[3]);
-	CU_ASSERT_EQUAL(res,1);
-	res =  insert_count_counter(c,var_name1,var_name3,content[3],&content[1]);
-	CU_ASSERT_EQUAL(res,1);
 
-	int* dtest = query_count_counter(c,var_name1,var_name2,content[0]);
+	int* dtest = query_count_counter(c,1,2,0);
 	CU_ASSERT_EQUAL(*dtest,0);
 
-	dtest = query_count_counter(c,var_name1,var_name3,content[1]);
+	dtest = query_count_counter(c,1,3,1);
 	CU_ASSERT_EQUAL(*dtest,3);
 
-	dtest = query_count_counter(c,var_name1,var_name3,content[3]);
+	dtest = query_count_counter(c,1,3,3);
 	CU_ASSERT_EQUAL(*dtest,1);
 
-	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name1,var_name2,content[0],0),1);
-	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name3,var_name1,content[1],0),1);
-	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,var_name1,var_name3,content[1],0),0);
+	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,1,2,0,0),1);
+	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,3,1,1,0),1);
+	CU_ASSERT_EQUAL(test_count_counter_is_empty(c,1,3,1,0),0);
 
 	// print_count_light(c);
 	free_count(c);
