@@ -11,8 +11,8 @@ Sommaire
 4. Conseils d'utilisation
 
 
-1. Introduction                 
-===============================================================================
+
+# 1. Introduction                 
 
 Ceci est le README du projet **PPC FROM SCRATCH** réalisé dans le cadre du
 cours de Programmation Par Contraintes (PPC) du MPRO. Ce projet consiste en
@@ -35,8 +35,7 @@ NOTE: Nous vous invitons à lire notre rapport qui vous renseignera sur la
 démarche et les choix engagés dans ce projet.
 
 
-2. Arborescence des fichiers
-===============================================================================
+# 2. Arborescence des fichiers
 
 Nous avons l’arborescence suivante :
 
@@ -54,8 +53,7 @@ Nous avons l’arborescence suivante :
 * Dans */src* le code source du projet.
 * Dans */test* les tests unitaires du code source.
 
-2. Instructions d'installation des différents outils
-===============================================================================
+# 3. Instructions d'installation des différents outils
 
 
 **Utilisateur Linux**
@@ -120,8 +118,7 @@ variable PYTHON_VERSION (trouvable au niveau de /usr/include/).
 *******************************************************************************
 
 
-3. Conseils d'utilisation
-===============================================================================
+# 4. Conseils d'utilisation
 
 Le projet est constitué de 4 exécutables différents :
 
