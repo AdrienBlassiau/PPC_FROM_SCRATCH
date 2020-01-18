@@ -26,3 +26,7 @@ jobs:
       run: ./bin/main
     - name: Run test 
       run: ./bin/test
+    - name: Run test 
+      run: ./bin/test
+    - name: Run dichotomie 
+      run: bash run_test_graph.sh myciel5 10
