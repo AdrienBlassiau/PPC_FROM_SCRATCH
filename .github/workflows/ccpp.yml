@@ -1,20 +1,12 @@
 name: C/C++ CI
 
 on: [push]
-    
-stages: # Ici on déclare toutes nos étapes
-  - build
-  - test
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    stage: make # On déclare que ce `job` fait partie de l'étape build
-    script: make main
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    stage: test # On déclare que ce `job` fait partie de l'étape test
-    script: make test
-          
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: make
+      run: make
