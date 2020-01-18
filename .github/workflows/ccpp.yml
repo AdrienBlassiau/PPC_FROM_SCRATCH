@@ -8,9 +8,10 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - name: Create obj directory
+    - name: create obj directory
       run: mkdir obj
-    - name: List all files
+    - name: list all files
+      run: ls
     - name: make
       run: make
     - name: make test
