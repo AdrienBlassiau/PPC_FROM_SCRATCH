@@ -22,11 +22,11 @@ jobs:
       run: make
     - name: make test
       run: make test
+    - name: make convert 
+      run: make convert
     - name: run 
       run: ./bin/main
-    - name: Run test 
+    - name: run test 
       run: ./bin/test
-    - name: Run test 
-      run: ./bin/test
-    - name: Run dichotomie 
+    - name: run dichotomie 
       run: bash run_test_graph.sh myciel5 10
