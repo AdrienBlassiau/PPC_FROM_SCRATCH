@@ -11,11 +11,11 @@ jobs:
     - name: Create obj directory
       run: mkdir obj
     - name: List all files
-    - name: Make
+    - name: make
       run: make
-    - name: Make test
+    - name: make test
       run: make test
-    - name: Run 
+    - name: run 
       run: ./bin/main
     - name: Run test 
       run: ./bin/test
