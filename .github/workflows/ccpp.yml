@@ -10,6 +10,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: create obj directory
       run: mkdir obj
+    - name: create bin directory
+      run: mkdir bin
     - name: list all files
       run: ls
     - name: make
