@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Create obj directory
-      run: mkdir obj/
+      run: mkdir obj
     - name: List all files
     - name: Make
       run: make
