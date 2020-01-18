@@ -8,6 +8,10 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: install dependencies
+      run: |
+        sudo apt-get install doxygen libcunit1 libcunit1-doc \
+        libcunit1-dev valgrind python3-dev
     - name: create obj directory
       run: mkdir obj
     - name: create bin directory
