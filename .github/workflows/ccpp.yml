@@ -1,0 +1,32 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: install dependencies
+      run: |
+        sudo apt-get install doxygen libcunit1 libcunit1-doc \
+        libcunit1-dev valgrind python3-dev
+    - name: create obj directory
+      run: mkdir obj
+    - name: create bin directory
+      run: mkdir bin
+    - name: list all files
+      run: ls
+    - name: make
+      run: make
+    - name: make test
+      run: make test
+    - name: make convert 
+      run: make convert
+    - name: run 
+      run: ./bin/main
+    - name: run test 
+      run: ./bin/test
+    - name: run dichotomie 
+      run: bash run_test_graph.sh myciel5 10
