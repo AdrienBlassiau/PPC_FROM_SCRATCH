@@ -64,6 +64,21 @@ void print_array(int* a, int size){
 	}
 }
 
+int print_file(char* filename){
+	FILE *fp;
+	char str[1000];
+
+	fp = fopen(filename, "r");
+	if (fp == NULL){
+		fprintf(stderr,"%s: erreur lors de l'ouverture de %s en mode r : %s\n",nameProcessus,filename,strerror(errno));
+		return 0;
+	}
+	while (fgets(str, 1000, fp) != NULL)
+		printf("%s", str);
+	fclose(fp);
+	return 1;
+}
+
 int allocate_matrix(int*** m, int size1, int size2){
 	int i;
 	*m = (int**)malloc(size1 * sizeof *(*m));

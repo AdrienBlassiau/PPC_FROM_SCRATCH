@@ -42,21 +42,6 @@ void exitfunc(){
 	_exit(1);
 }
 
-int print_help_file(char* filename){
-	FILE *fp;
-	char str[1000];
-
-	fp = fopen(filename, "r");
-	if (fp == NULL){
-		fprintf(stderr,"%s: erreur lors de l'ouverture de %s en mode r : %s\n",nameProcessus,filename,strerror(errno));
-		return 0;
-	}
-	while (fgets(str, 1000, fp) != NULL)
-		printf("%s", str);
-	fclose(fp);
-	return 1;
-}
-
 int read_flag(int* i, int type, char* string_to_print, char* flag, char* argv[], void* vparam, int argc){
 	char *buf;
 
@@ -148,12 +133,12 @@ int generate_csp(int argc, char* argv[], Pcsp* csp){
 	for(i=0; i<argc; ++i){
 
 		if (strcmp(argv[i], "--help") == 0){
-			print_help_file("doc/help.txt");
+			print_file("doc/help.txt");
 			return 1;
 		}
 
 		if (strcmp(argv[i], "--format") == 0){
-			print_help_file("doc/format.txt");
+			print_file("doc/format.txt");
 			return 1;
 		}
 

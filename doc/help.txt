@@ -1,4 +1,4 @@
-Utilisation : bin/main [OPTIONS] ou bin/main-g [OPTIONS]
+Utilisation : ./bin/main [OPTIONS] ou bin/main-g [OPTIONS]
 
 Affichage de différents fichiers d'aide :
   --help                    affiche cette aide.

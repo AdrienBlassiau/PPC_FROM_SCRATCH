@@ -102,14 +102,17 @@ void full_converter(int* pos, const char* file, FILE* fp, int domain_size){
   return ;
 }
 
-
 int main(int argc, char const *argv[]){
 
   char filename1[256];
   char filename2[256];
 
-  if ( argc > 5 || argc < 4)
-  {
+  if (strcmp(argv[1], "--help") == 0){
+      print_file("doc/help2.txt");
+      return 1;
+  }
+
+  if ( argc > 5 || argc < 4){
     printf("Usage: %s infile outfile dom_size\n",argv[0]);
     return 0;
   }

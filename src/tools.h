@@ -64,6 +64,13 @@ void print_matrix(int** m, int size);
 void print_array(int* a, int size);
 
 /**
+ * This function prints a file.
+ * @param  filename THe name of the file we want to print.
+ * @return 1 if success, 0 otherwise.
+ */
+int print_file(char* filename);
+
+/**
  * This function allocate a matrix, given two sizes.
  * @param  m     A null pointer.
  * @param  size1 The size of the matrix.

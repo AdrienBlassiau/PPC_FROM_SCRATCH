@@ -1,0 +1,14 @@
+Utilisation : ./bin/convert [ENTREE] [SORTIE] [TAILLE]
+
+  ENTREE                    le nom du fichier sous format DIMACS (.col) que
+                            l'on veut convertir.
+
+  SORTIE                    le nom du fichier de sortie en .cspi dans lequel
+                            sera copiée l'instance .col convertie.
+
+  TAILLE                    la taille des domaines des variables de l'instance,
+                            c'est le nombre maximum de couleurs que l'on se
+                            donne pour colorier le graphe.
+
+
+Signalez toute anomalie à [adrien.blassiau,corentin.juvigny]@ensiie.fr
