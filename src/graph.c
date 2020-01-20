@@ -66,7 +66,7 @@ void full_converter(int* pos, const char* file, FILE* fp, int domain_size){
   }
 
   /* THIRD we write the number of constraint (=number of edges) */
-  sprintf(int_buffer, "%d", constraint_number_int*2);
+  sprintf(int_buffer, "%d", constraint_number_int);
   fputs(int_buffer, fp);
   fputs("\n", fp);
 
@@ -85,16 +85,16 @@ void full_converter(int* pos, const char* file, FILE* fp, int domain_size){
         }
       }
     }
-    fprintf(fp, "%s %s %d",line_tab[2],line_tab[1],tuple_number);
-    fputs("\n", fp);
-    for (j = 1; j <= domain_size; j++){
-      for (k = 1; k <= domain_size; k++){
-        if (j!=k){
-          fprintf(fp, "%d %d",j,k);
-          fputs("\n", fp);
-        }
-      }
-    }
+    // fprintf(fp, "%s %s %d",line_tab[2],line_tab[1],tuple_number);
+    // fputs("\n", fp);
+    // for (j = 1; j <= domain_size; j++){
+    //   for (k = 1; k <= domain_size; k++){
+    //     if (j!=k){
+    //       fprintf(fp, "%d %d",j,k);
+    //       fputs("\n", fp);
+    //     }
+    //   }
+    // }
 
     free_matrix_string(line_tab,line_size);
   }

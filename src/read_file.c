@@ -141,6 +141,7 @@ Pconstraint make_constraint(int* pos, const char* file, int constraint_number, P
 			b = (int) strtol(tuple2, (char **)NULL, 10);
 
 			insert_constraint_tuple(c,constraint1_int,constraint2_int,a,b,*max_dom_size);
+      insert_constraint_tuple(c,constraint2_int,constraint1_int,b,a,*max_dom_size);
 			free_matrix_string(current_constraint_line,line_size);
 		}
    i++;
