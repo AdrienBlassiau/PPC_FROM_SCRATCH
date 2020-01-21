@@ -324,7 +324,7 @@ considérablement l’exécution du programme) :
 > valgrind [NOM DE L'EXECUTBALE QUE VOUS VOULEZ]
 
 **Attention** : ne SURTOUT pas tester cette commande avec le mode graphique
-activé (exécutable ./bin/g-main). L'exécution de python créée
+activé (exécutable ./bin/g-main). L'exécution de python crée
 énormément de fuites mémoires ...
 
 *Comment lire les résultats de valgrind ?*
