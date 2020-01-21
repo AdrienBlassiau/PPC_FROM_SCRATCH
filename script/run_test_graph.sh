@@ -34,7 +34,7 @@ dicho() {
 		# echo "middle : $middle, up : $up, down : $down, val : $val"
 
 		./bin/convert "inst/source/$1.col" "inst/test/$1.cspi" $middle
-		./bin/main -f "inst/test/$1.cspi" -fc 1 -hvar 1 -to 5 -v 0
+		./bin/main -f "inst/test/$1.cspi" -fc 1 -hvar 1 -to 10 -v 0
 		status=$?
 		if [[ "$status" -ne "0" ]]; then
 			# echo "NO SOLUTION FOR $middle"
