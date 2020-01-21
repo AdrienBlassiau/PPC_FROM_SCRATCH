@@ -32,7 +32,7 @@ Choix des méthodes de résolution :
                             0 : pas de forward-checking (DEFAUT)
                             1 : activation du forward-checking
 
-  -to   TIME                stoppe l'algorithme après le temps TIME précisé
+  -to   TIME                stoppe le solveur après le temps TIME précisé
                             en paramètre, pas de time-out par DEFAUT.
 
 
@@ -60,11 +60,11 @@ Choix des heuristiques :
                                 variables libres dans lesquelles elles
                                 apparaissent
                                 (wdeg, dynamique)
-                            8 : par taille de le rapport dom/deg croissant
+                            8 : par taille du rapport dom/deg croissant
                                 (dom_deg, statique)
-                            9 : par taille de le rapport dom/ddeg croissant
+                            9 : par taille du rapport dom/ddeg croissant
                                 (dom_ddeg, dynamique)
-                            10 : par taille de le rapport dom/wdeg croissant
+                            10 : par taille du rapport dom/wdeg croissant
                                 (dom_wdeg, dynamique)
 
   -hval HEURISTIC_TYPE_2    permet de choisir le type d'heuristique

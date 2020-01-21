@@ -255,7 +255,10 @@ void print_csp(void * pcsp){
 		}
 
 		printf("\nVerbose mode is		:	%s\n",c->v?(c->v==1?"ON":(c->v==2?"DEBUG":"HARD DEBUG")):"OFF");
-
+		// printf("%s,",c->name);
+		// printf("%d,",c->size);
+		// printf("%f,",(float)(c->t2-c->t1)/CLOCKS_PER_SEC);
+		// printf("%d,", c->branch_explored);
 	}
 }
 

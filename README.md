@@ -43,6 +43,7 @@ Nous avons l’arborescence suivante :
     /doc
     /inst
     /obj
+    /script
     /src
     /test
 
@@ -50,6 +51,8 @@ Nous avons l’arborescence suivante :
 * Dans */doc* se trouvent la documentation du code générée avec Doxygen.
 * Dans */inst* se trouvent les instances de test.
 * Dans */obj* les fichiers objets .o.
+* Dans */script* les fichiers de script permettant d'obtenir des résultats sur
+* les benchmarks.
 * Dans */src* le code source du projet.
 * Dans */test* les tests unitaires du code source.
 
@@ -271,11 +274,11 @@ d'optimisation de recherche du nombre chromatique d'un graphe. Cet algorithme
 effectue une dichotomie sur le nombre de couleurs testées. Ce script se nomme
 *run_test_graph.sh*. Son utilisation est simple :  
 
-> bash run_test_graph.sh [NOM DU GRAPHE] [BORNE MAX]
+> bash script/run_test_graph.sh [NOM DU GRAPHE] [BORNE MAX]
 
 Par exemple :
 
-> bash run_test_graph.sh myciel5 10
+> bash script/run_test_graph.sh myciel5 10
 
 ... lance une dichotomie sur le graphe myciel5 en fixant la borne supérieurs à
 10 (Cette borne pourrait être le degré maximum + 1 ...).
