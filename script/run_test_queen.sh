@@ -17,7 +17,7 @@
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-for (( i = 4; i < 70; i++ ));do
+for (( i = 4; i < 20; i++ ));do
 	bin/main -q $i -hvar 3 -fc 1 >> $1
 	echo "" >> $1
 done

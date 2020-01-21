@@ -52,7 +52,7 @@ Nous avons l’arborescence suivante :
 * Dans */inst* se trouvent les instances de test.
 * Dans */obj* les fichiers objets .o.
 * Dans */script* les fichiers de script permettant d'obtenir des résultats sur
-* les benchmarks.
+  les benchmarks.
 * Dans */src* le code source du projet.
 * Dans */test* les tests unitaires du code source.
 
@@ -170,12 +170,12 @@ variables l'ordre lexicographique inversé , il faudra entrer :
 
 > ./bin/main -f inst/test/myciel5.cspi -fc 1 -hvar 2 
 
-**Très Important** : Pour plus d'information sur les différents paramètres, 
+**Très Important** : Pour plus d'informations sur les différents paramètres, 
 nous mettons à votre disposition un petit manuel de secours avec la commande
 suivante :
 
 **Entrez dans votre console** : 
-> ./bin/main --help
+> ./bin/main \-\-help
 
 **Très Important** : Un grand nombre d'instance sont déjà présentes dans
 le dossier *inst/test*. Si vous souhaitez écrire vous même une instance d'un
@@ -183,7 +183,7 @@ problème à résoudre avec le solveur, nous mettons à votre disposition un
 petit manuel de secours sur le format .cspi, avec la commande suivante :
 
 **Entrez dans votre console** : 
-> ./bin/main --format
+> ./bin/main  \-\-format
 
 Lancer le programme via une console avec le mode graphique activé
 ------------------------
@@ -203,7 +203,7 @@ Pour lancer le solveur en mode graphique, il faut utiliser l’exécutable
 **2. Entrez dans votre console (compiler et lancer)** : 
 > make g-main && ./bin/g-main
 
-Les autres instructions sont les mêmes que pour exécutables ./bin/main
+Les autres instructions sont les mêmes que pour l'exécutable ./bin/main
 
 Lancer les tests unitaires 
 ------------------------
@@ -250,7 +250,7 @@ dans le dossier *inst/source*. Un certain nombre de graphes ont déjà été
 convertis et se trouvent dans le dossier *inst/test*. Lors d'une conversion, il
 faut précise le fichier d'entrée, le fichier de sortie et la taille du domaine,
 c'est-a-dire le nombre de couleurs avec lesquelles on va essayer de colorier le
-graphe (c'est un problème de décision !). Un exécutable est déjà présent dans le rendu. Les commandes importantes sont les suivantes :
+graphe (c'est un problème d'opimisation !). Un exécutable est déjà présent dans le rendu. Les commandes importantes sont les suivantes :
 
 **1. Entrez dans votre console (compiler)** : 
 > make convert 
@@ -263,11 +263,11 @@ graphe (c'est un problème de décision !). Un exécutable est déjà présent d
 
 Un exemple : 
 
-> ./bin/convert inst/source/myciel5.col inst/test/myciel5.cspi 8
+> ./bin/convert inst/source/myciel5.col inst/test/myciel5.cspi 6
 
 Cette commande convertit myciel5.col en myciel5.cspi avec des domaines de 
-taille 8 pour les variables. Le problème de décision associé à ce graphe est 
-donc : *"Peut-on colorier myciel5 avec avec 8 couleurs ?"*.
+taille 6 pour les variables. Le problème de décision associé à ce graphe est 
+donc : *"Peut-on colorier myciel5 avec avec 6 couleurs ?"*.
 
 **Important** : Un petit script permet de résoudre automatiquement le problème
 d'optimisation de recherche du nombre chromatique d'un graphe. Cet algorithme
